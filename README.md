@@ -1,4 +1,4 @@
-# editdata.org
+# [editdata.org](http://editdata.org)
 
 Edit tabular data from GitHub repositories.
 
