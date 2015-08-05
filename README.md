@@ -1,7 +1,5 @@
 # [editdata.org](http://editdata.org)
 
-Edit tabular data from GitHub repositories.
-
 ## About
 editdata.org repurposes components from [flatsheet](http://github.com/flatsheet/flatsheet) to provide a a simple free tool for editing data.
 
