@@ -7,8 +7,10 @@
   },
   "main": "app.js",
   "scripts": {
-    "test": "",
+    "deploy": "npm run bundle && surge . editdata.org",
     "bundle-css": "cssnext assets/deps.css assets/bundle.css",
+    "bundle-js": "browserify app.js -o assets/bundle.js",
+    "bundle": "npm run bundle-css && npm run bundle-js",
     "start": "budo app.js:assets/bundle.js --live"
   },
   "dependencies": {
