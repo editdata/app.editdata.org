@@ -22,6 +22,7 @@
     "dom-value": "0.0.0",
     "element-class": "^0.2.1",
     "extend": "^3.0.0",
+    "filter-object": "^2.0.0",
     "github-api": "^0.10.6",
     "hash-match": "^1.0.1",
     "inherits": "^2.0.1",

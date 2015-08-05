@@ -2,7 +2,7 @@ var BaseElement = require('base-element')
 var inherits = require('inherits')
 var request = require('xhr')
 var profile = require('../lib/get-profile')
-
+var config = require('../config')
 module.exports = Auth
 inherits(Auth, BaseElement)
 
@@ -35,7 +35,7 @@ Auth.prototype.render = function (state) {
   var self = this
 
   if (!state.user) {
-    var url = 'https://github.com/login/oauth/authorize?client_id=65dda308caf01e56f912&scope=gist&redirect_uri=http://127.0.0.1:9966'
+    var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist&redirect_uri=' + config.redirect_uri
 
     var button = h('a.button.small', { href: url }, [
       h('i.fa.fa-github-square'),

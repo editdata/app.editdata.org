@@ -313,6 +313,19 @@ header button.small,
    height: 40px;
 }
 
+.welcome {
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 100px auto 0px auto;
+  max-width: 450px;
+  padding: 20px 20px 30px 20px;
+  text-align: center;
+}
+
+.welcome h2 {
+  
+}
+
 /*
 @media (min-width: 840px) {
   .container {

@@ -9,8 +9,17 @@ function Actions (options) {
   element.call(this)
 }
 
-Actions.prototype.render = function (list) {
+Actions.prototype.render = function (state) {
   var self = this
+
+  var saveText = state.gist ? 'update gist' : 'save data as gist'
+  var saveGist = this.html('li.menu-item', [
+    this.html('button#save-gist', {
+      onclick: function (e) {
+        self.send('save-gist', e)
+      }
+    }, saveText)
+  ])
 
   var newColumn = this.html('li.menu-item', [
     this.html('button#new-column', {
@@ -29,15 +38,15 @@ Actions.prototype.render = function (list) {
   ])
 
   var destroy = this.html('li.menu-item', [
-    this.html('button#destroy', {
+    this.html('button#new-dataset', {
       onclick: function (e) {
-        self.send('destroy', e)
+        self.send('new-dataset', e)
       }
-    }, 'destroy all data')
+    }, 'new dataset')
   ])
 
   var vtree = this.html('div.menubar', [
-    this.html('ul', [newColumn, newRow, destroy])
+    this.html('ul', [saveGist, newColumn, newRow, destroy])
   ])
 
   return this.afterRender(vtree)

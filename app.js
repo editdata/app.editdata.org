@@ -3,12 +3,13 @@ var cookie = require('cookie-cutter')
 var profile = require('./lib/get-profile')
 var router = require('./lib/router')
 var state = require('./lib/state')
-var editor = require('./lib/editor')()
+var editor = require('./lib/editor')(state)
 var github
 
 var content = require('./elements/content')()
 var header = require('./elements/header')()
 var auth = require('./elements/github-auth')()
+var landing = require('./elements/landing')()
 
 auth.addEventListener('sign-out', function () {
   cookie.set('editdata', '', { expires: new Date(0) })
@@ -16,19 +17,43 @@ auth.addEventListener('sign-out', function () {
   window.location = window.location.origin
 })
 
+//   this.store.set('state', JSON.stringify({ data: data, properties: properties }))
+
 router.on('/', function (params) {
+  renderLanding()
+})
+
+router.on('/edit', function (params) {
+  if (state.gist) {
+    window.location.hash = '/edit/' + state.gist
+  } else {
+    renderEditor()
+    editor.listActive()
+  }
+})
+
+router.on('/edit/:gist', function (params) {
+  var gist = github.getGist(params.gist)
+  gist.read(function (err, data) {
+    if (err) console.error(err)
+    state.gist = data
+    state.data = JSON.parse(data.files['data.json'].content)
+    state.properties = JSON.parse(data.files['metadata.json'].content).properties
+    console.log('wwhuwhywyhwyhwhywyhw', state)
+    renderEditor({ data: state.data })
+    editor.listActive()
+  })
+})
+
+function renderLanding (options) {
   content.render([
     header.render([
       auth.render(state)
     ], state),
-    auth.render(state)
+    auth.render(state),
+    landing.render()
   ])
-})
-
-router.on('/edit', function (params) {
-  renderEditor()
-  editor.listActive()
-})
+}
 
 function renderEditor (options) {
   content.render([
@@ -38,6 +63,8 @@ function renderEditor (options) {
     editor.render(options)
   ])
 }
+
+window.renderEditor = renderEditor
 
 if (state.url.query.code) {
   auth.verify(state.url.query.code, function (err, user) {
@@ -49,14 +76,17 @@ if (state.url.query.code) {
       auth: 'oauth'
     })
     router.start()
-    window.location = window.location.origin + '/#/edit'
+    if (!state.gist) window.location = window.location.origin + '/#/edit'
   })
 } else if (state.user && state.user.token) {
+  github = new GitHub({
+    token: state.user.token,
+    auth: 'oauth'
+  })
   profile(state.user.token, function (err, profile) {
     if (err) console.log(err)
     state.user.profile = profile
     router.start()
-    window.location = window.location.origin + '/#/edit'
   })
 } else {
   router.start()
@@ -80,20 +110,65 @@ editor.filter.addEventListener('reset', function (results, length) {
 })
 
 editor.list.addEventListener('load', function () {
-  renderEditor({ data: editor.data })
+  renderEditor({ data: state.data })
 })
 
 editor.item.addEventListener('input', function (property, row, e) {
   renderEditor({ row: row })
 })
 
+editor.actions.addEventListener('save-gist', function (e) {
+  if (state.gist) updateGist()
+  else createGist()
+})
+
+function updateGist (callback) {
+  var gist = github.getGist(state.gist.id)
+  gist.update({
+    files: {
+      'data.json': {
+        content: editor.toJSON()
+      },
+      'metadata.json': {
+        content: JSON.stringify({ properties: state.properties })
+      }
+    }
+  }, function (err, res) {
+    console.log(err, res)
+    if (err) console.error(err)
+    if (callback) callback()
+  })
+}
+
+function createGist () {
+  var gist = github.getGist()
+  gist.create({
+    description: 'data! from editdata.org!',
+    public: true,
+    files: {
+      'data.json': {
+        content: editor.toJSON()
+      },
+      'metadata.json': {
+        content: JSON.stringify({ properties: state.properties })
+      },
+      'readme.md': {
+        content: 'This gist was created using [editdata.org](http://editdata.org)'
+      }
+    }
+  }, function (err, res) {
+    if (err) console.error(err)
+    window.location.hash = '/edit/' + res.id
+  })
+}
+
 editor.actions.addEventListener('new-row', function (e) {
   var row = {
-    key: editor.data.length + 1,
+    key: state.data.length + 1,
     value: {}
   }
 
-  editor.properties.forEach(function (key) {
+  state.properties.forEach(function (key) {
     row.value[key] = null
   })
 
@@ -107,10 +182,11 @@ editor.actions.addEventListener('new-column', function (e) {
   editor.checkListWidth()
 })
 
-editor.actions.addEventListener('destroy', function (e) {
-  if (window.confirm('wait. are you sure you want to destroy all this data?')) {
-    editor.destroy()
-    renderEditor()
+editor.actions.addEventListener('new-dataset', function (e) {
+  if (window.confirm('are you sure you want to start a new dataset? your current work will be saved to your gist.')) {
+    updateGist(function () {
+      window.location.hash = '/edit'
+    })
   }
 })
 

@@ -12,7 +12,7 @@ function Headers (appendTo) {
 Headers.prototype.render = function (headers) {
   var self = this
   var items = []
-
+  console.log(headers)
   headers.forEach(function (header) {
     items.push(self.html('li.list-header-item.data-list-property', [
       header,
