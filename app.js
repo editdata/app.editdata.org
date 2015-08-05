@@ -20,7 +20,8 @@ auth.addEventListener('sign-out', function () {
 //   this.store.set('state', JSON.stringify({ data: data, properties: properties }))
 
 router.on('/', function (params) {
-  renderLanding()
+  if (state.user) window.location.hash = '/edit'
+  else renderLanding()
 })
 
 router.on('/edit', function (params) {
