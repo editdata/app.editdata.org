@@ -1,0 +1,130 @@
+@import "normalize.css";
+@import "basscss-grid";
+@import "csskit";
+
+:root {
+  --blue: #536DFE;
+  --teal: #009688;
+  --orange: #FF6138;
+}
+
+/*
+* forms
+*/
+
+fieldset {
+  padding: 0px;
+}
+
+.button, .button:link {
+  margin-bottom: 0px;
+}
+
+.button-grey,
+.button-grey:link,
+.button-grey:visited,
+input.button-grey {
+  background-color: #fafafa;
+  border: 1px solid #fafafa;
+}
+
+input.button-grey:hover,
+.button-grey:hover,
+.button-grey:focus,
+.button-grey:active {
+  background-color: #f3f3f3;
+  border: 1px solid #f3f3f3;
+  color: #000;
+}
+
+/*
+* blue button
+*/
+
+.button-blue,
+.button-blue:link,
+.button-blue:visited,
+input.button-blue {
+  background-color: color(var(--blue) tint(10%));
+  border: 1px solid color(var(--blue) tint(10%));
+  color: #fff;
+}
+
+input.button-blue:hover,
+.button-blue:hover,
+.button-blue:focus,
+.button-blue:active {
+  background-color: var(--blue);
+  border: 1px solid var(--blue);
+  color: #000;
+  color: #fff;
+}
+
+/*
+* teal button
+*/
+
+.button-teal,
+.button-teal:link,
+.button-teal:visited,
+input.button-teal {
+  background-color: color(var(--teal) tint(10%));
+  border: 1px solid color(var(--teal) tint(10%));
+  color: #fff;
+}
+
+input.button-teal:hover,
+.button-teal:hover,
+.button-teal:focus,
+.button-teal:active {
+  background-color: var(--teal);
+  border: 1px solid var(--teal);
+  color: #000;
+  color: #fff;
+}
+
+/*
+* orange button
+*/
+
+.button-orange,
+.button-orange:link,
+.button-orange:visited,
+input.button-orange {
+  background-color: color(var(--orange) tint(10%));
+  border: 1px solid color(var(--orange) tint(10%));
+  color: #fff;
+}
+
+input.button-orange:hover,
+.button-orange:hover,
+.button-orange:focus,
+.button-orange:active {
+  background-color: var(--orange);
+  border: 1px solid var(--orange);
+  color: #000;
+  color: #fff;
+}
+
+/*
+* red button
+*/
+
+.button-red,
+.button-red:link,
+.button-red:visited,
+input.button-red {
+  background-color: color(var(--red) tint(10%));
+  border: 1px solid color(var(--red) tint(10%));
+  color: #fff;
+}
+
+input.button-red:hover,
+.button-red:hover,
+.button-red:focus,
+.button-red:active {
+  background-color: var(--red);
+  border: 1px solid var(--red);
+  color: #000;
+  color: #fff;
+}

@@ -1,0 +1,42 @@
+{
+  "name": "editdata.org",
+  "description": "edit tabular data. save it on github.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "git://github.com/flatsheet/editdata.org.git"
+  },
+  "main": "app.js",
+  "scripts": {
+    "test": "",
+    "bundle-css": "cssnext assets/deps.css assets/bundle.css",
+    "start": "budo app.js:assets/bundle.js --live"
+  },
+  "dependencies": {
+    "base-element": "^3.0.1",
+    "basscss-grid": "^1.0.3",
+    "cookie-cutter": "^0.1.1",
+    "csskit": "^1.1.1",
+    "data-set": "^4.0.0",
+    "dom-value": "0.0.0",
+    "element-class": "^0.2.1",
+    "extend": "^3.0.0",
+    "github-api": "^0.10.6",
+    "hash-match": "^1.0.1",
+    "inherits": "^2.0.1",
+    "lodash.debounce": "^3.1.1",
+    "normalize.css": "^3.0.3",
+    "popupjs": "^1.3.0",
+    "simple-local-storage": "^1.0.3",
+    "through2": "^2.0.0",
+    "view-list": "^2.0.0",
+    "virtual-dom": "^2.1.0",
+    "wayfarer": "^4.2.0",
+    "xhr": "^2.0.3"
+  },
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "budo": "^4.1.0",
+    "cssnext": "^1.8.2",
+    "sheetify": "^2.0.0"
+  }
+}
