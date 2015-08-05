@@ -1,9 +1,3 @@
----
-title: Contributing to makerlog.org
-permalink: /contributing/
-layout: page
----
-
 ## How to contribute
 
 ### Prerequisites:
