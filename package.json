@@ -9,7 +9,7 @@
   "scripts": {
     "deploy": "npm run bundle && surge . editdata.org",
     "bundle-css": "cssnext assets/deps.css assets/bundle.css",
-    "bundle-js": "browserify app.js -o -t [ envify --NODE_ENV production ] assets/bundle.js",
+    "bundle-js": "browserify app.js -t [ envify --NODE_ENV production ] -o  assets/bundle.js",
     "bundle": "npm run bundle-css && npm run bundle-js",
     "start": "budo app.js:assets/bundle.js --live -- -t [ envify --NODE_ENV development ]"
   },

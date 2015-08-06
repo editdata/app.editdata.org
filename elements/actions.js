@@ -10,6 +10,7 @@ function Actions (options) {
 }
 
 Actions.prototype.render = function (state) {
+  var elements = []
   var self = this
 
   var saveText = state.gist ? 'update gist' : 'save data as gist'
@@ -45,8 +46,28 @@ Actions.prototype.render = function (state) {
     }, 'new dataset')
   ])
 
+  elements = [saveGist, newColumn, newRow, destroy]
+
+  if (state.gist) {
+    elements.push(this.html('li.menu-item', [
+      this.html('button#download-csv', {
+        onclick: function (e) {
+          window.open(state.gist.files['data.csv'].raw_url)
+        }
+      }, 'csv')
+    ]))
+    
+    elements.push(this.html('li.menu-item', [
+      this.html('button#download-csv', {
+        onclick: function (e) {
+          window.open(state.gist.files['data.json'].raw_url)
+        }
+      }, 'json')
+    ]))
+  }
+
   var vtree = this.html('div.menubar', [
-    this.html('ul', [saveGist, newColumn, newRow, destroy])
+    this.html('ul', elements)
   ])
 
   return this.afterRender(vtree)
