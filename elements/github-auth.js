@@ -34,6 +34,16 @@ Auth.prototype.render = function (state) {
   var elements = []
   var self = this
 
+  elements.push(h('a.external', {
+    href: 'http://flatsheet.io',
+    target: '_blank'
+  }, 'flatsheet'))
+
+  elements.push(h('a.external', {
+    href: 'http://github.com/flatsheet/editdata.org',
+    target: '_blank'
+  }, 'source on github'))
+
   if (!state.user) {
     var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist&redirect_uri=' + config.redirect_uri
 
@@ -49,19 +59,19 @@ Auth.prototype.render = function (state) {
       target: '_blank'
     }
 
-    elements = [(h('div.profile', [
+    elements.push(h('div.profile', [
       h('a', options, [
         h('img', { src: state.user.profile.avatar_url }),
         h('span', state.user.profile.name)
       ])
-    ])),
-    h('a.sign-out', {
+    ]))
+    elements.push(h('a.sign-out', {
       href: '#',
       onclick: function (e) {
         e.preventDefault()
         self.send('sign-out', e)
       }
-    }, 'sign out')]
+    }, 'sign out'))
   }
 
   var vtree = h('div.github-auth' + (state.user ? '.active' : ''), elements)

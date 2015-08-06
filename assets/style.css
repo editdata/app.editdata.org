@@ -62,6 +62,10 @@ header .github-auth img {
   vertical-align: middle;
 }
 
+header a.external {
+  margin-right: 10px;
+}
+
 .container {
   width: 100%;
   max-width: 100%;
