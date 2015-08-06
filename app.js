@@ -10,7 +10,7 @@ var editor = require('./lib/editor')(state)
 var github
 
 var content = require('./elements/content')()
-var header = require('./elements/header')()
+var header = require('./elements/header')(document.querySelector('header'))
 var auth = require('./elements/github-auth')()
 var landing = require('./elements/landing')()
 var dataset = require('./elements/new-dataset')()
@@ -18,15 +18,16 @@ var dataset = require('./elements/new-dataset')()
 auth.addEventListener('sign-out', function () {
   cookie.set('editdata', '', { expires: new Date(0) })
   state.user = null
+  state.gist = null
+  state.data = []
+  state.properties = []
   window.location = window.location.origin
 })
-
-//   this.store.set('state', JSON.stringify({ data: data, properties: properties }))
 
 router.on('/', function (params) {
   if (state.user && state.gist) window.location.hash = '/edit/' + state.gist.id
   else if (state.user && !state.gist) window.location.hash = '/edit/new'
-  else renderLanding()
+  else renderContent([landing.render(state)])
 })
 
 router.on('/edit/new', function (params) {
@@ -35,12 +36,9 @@ router.on('/edit/new', function (params) {
   state.data = []
   state.properties = []
   if (state.editing) {
-    renderEditor({ data: state.data, properties: state.properties })
+    renderEditor()
   } else {
-    content.render([
-      header.render([
-        auth.render(state)
-      ], state),
+    renderContent([
       dataset.render(state)
     ])
   }
@@ -53,27 +51,23 @@ router.on('/edit/:gist', function (params) {
     state.gist = data
     state.data = JSON.parse(data.files['data.json'].content)
     state.properties = JSON.parse(data.files['metadata.json'].content).properties
-    renderEditor({ data: state.data })
+    renderEditor()
     editor.listActive()
   })
 })
 
-function renderLanding (options) {
-  content.render([
-    header.render([
-      auth.render(state)
-    ], state),
-    landing.render()
-  ])
+function renderContent (elements) {
+  document.getElementById('editor').style.display = 'none'
+  document.getElementById('content').style.display = 'initial'
+  header.render([auth.render(state)], state)
+  content.render(elements)
 }
 
-function renderEditor (options) {
-  content.render([
-    header.render([
-      auth.render(state)
-    ], state),
-    editor.render(options)
-  ])
+function renderEditor () {
+  document.getElementById('editor').style.display = 'initial'
+  document.getElementById('content').style.display = 'none'
+  header.render([auth.render(state)], state)
+  editor.render(state)
 }
 
 if (state.url.query.code) {
@@ -121,14 +115,15 @@ dataset.addEventListener('csv', function (csv) {
     .on('end', function () {
       state.data = data
       state.properties = properties
-      renderEditor({ data: data, properties: properties })
+      renderEditor()
       state.uploadCSV = false
     })
 })
 
 editor.list.addEventListener('click', function (e, row) {
+  editor.item.render(row)
   editor.itemActive()
-  renderEditor({ row: row })
+  renderEditor()
 })
 
 editor.item.addEventListener('close', function (e) {
@@ -136,7 +131,7 @@ editor.item.addEventListener('close', function (e) {
 })
 
 editor.filter.addEventListener('filter', function (results, length) {
-  renderEditor({ data: results })
+  renderEditor()
 })
 
 editor.filter.addEventListener('reset', function (results, length) {
@@ -144,11 +139,11 @@ editor.filter.addEventListener('reset', function (results, length) {
 })
 
 editor.list.addEventListener('load', function () {
-  renderEditor({ data: state.data })
+  renderEditor()
 })
 
 editor.item.addEventListener('input', function (property, row, e) {
-  renderEditor({ row: row })
+  renderEditor()
 })
 
 editor.actions.addEventListener('save-gist', function (e) {

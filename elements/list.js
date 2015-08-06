@@ -10,7 +10,7 @@ module.exports = function (opts) {
     eachrow: rows,
     editable: true,
     properties: {},
-    height: window.innerHeight - 160
+    height: 643
   }, opts)
 
   var list = ViewList(options)

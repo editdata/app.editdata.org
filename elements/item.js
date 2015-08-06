@@ -4,9 +4,9 @@ var inherits = require('inherits')
 module.exports = Item
 inherits(Item, BaseElement)
 
-function Item (options) {
-  if (!(this instanceof Item)) return new Item(options)
-  BaseElement.call(this)
+function Item (appendTo) {
+  if (!(this instanceof Item)) return new Item(appendTo)
+  BaseElement.call(this, appendTo)
 }
 
 Item.prototype.render = function (obj, options) {

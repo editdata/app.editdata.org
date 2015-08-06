@@ -4,9 +4,9 @@ var inherits = require('inherits')
 module.exports = Actions
 inherits(Actions, element)
 
-function Actions (options) {
-  if (!(this instanceof Actions)) return new Actions(options)
-  element.call(this)
+function Actions (appendTo) {
+  if (!(this instanceof Actions)) return new Actions(appendTo)
+  element.call(this, appendTo)
 }
 
 Actions.prototype.render = function (state) {

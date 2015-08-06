@@ -4,9 +4,9 @@ var inherits = require('inherits')
 module.exports = Header
 inherits(Header, BaseElement)
 
-function Header (options) {
-  if (!(this instanceof Header)) return new Header(options)
-  BaseElement.call(this)
+function Header (appendTo) {
+  if (!(this instanceof Header)) return new Header(appendTo)
+  BaseElement.call(this, appendTo)
 }
 
 Header.prototype.render = function (elements, state) {
@@ -17,9 +17,6 @@ Header.prototype.render = function (elements, state) {
     h('h1.site-title', state.site.title)
   ].concat(elements)
 
-  var vtree = h('header', [
-    h('div.container', elements)
-  ])
-
+  var vtree = h('div.container', elements)
   return this.afterRender(vtree)
 }

@@ -5,9 +5,9 @@ var inherits = require('inherits')
 module.exports = Filter
 inherits(Filter, element)
 
-function Filter (options) {
-  if (!(this instanceof Filter)) return new Filter(options)
-  element.call(this)
+function Filter (appendTo) {
+  if (!(this instanceof Filter)) return new Filter(appendTo)
+  element.call(this, appendTo)
 }
 
 Filter.prototype.render = function (list) {
