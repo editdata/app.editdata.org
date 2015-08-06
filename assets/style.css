@@ -17,9 +17,13 @@ body {
   box-sizing: border-box;
 }
 
-
 a {
   text-decoration: none;
+  color: #555;
+}
+
+a:hover, a:focus {
+  color: #000;
 }
 
 header {
