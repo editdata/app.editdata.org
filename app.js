@@ -157,21 +157,14 @@ function updateGist (callback) {
     if (err) console.error(err)
     gist.update({
       files: {
-        'data.json': {
-          content: editor.toJSON()
-        },
-        'data.csv': {
-          content: csv
-        },
-        'metadata.json': {
-          content: JSON.stringify({ properties: state.properties })
-        },
-        'readme.md': {
-          content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + state.gist.id
-        }
+        'data.json': { content: editor.toJSON() },
+        'data.csv': { content: csv },
+        'metadata.json': { content: JSON.stringify({ properties: state.properties }) },
+        'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + state.gist.id }
       }
     }, function (err, res) {
       if (err) console.error(err)
+      state.gist = res
       if (callback) callback()
     })
   })
@@ -185,29 +178,21 @@ function createGist () {
       description: 'data! from editdata.org!',
       public: true,
       files: {
-        'data.json': {
-          content: editor.toJSON()
-        },
-        'data.csv': {
-          content: csv
-        },
-        'metadata.json': {
-          content: JSON.stringify({ properties: state.properties })
-        },
-        'readme.md': {
-          content: 'This gist was created using [editdata.org](http://editdata.org)'
-        }
+        'data.json': { content: editor.toJSON() },
+        'data.csv': { content: csv },
+        'metadata.json': { content: JSON.stringify({ properties: state.properties }) },
+        'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)' }
       }
     }, function (err, res) {
       if (err) console.error(err)
+      state.gist = res
       var gist = github.getGist(res.id)
       gist.update({
         files: {
-          'readme.md': {
-            content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + res.id
-          }
+          'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + res.id }
         }
       }, function (err, res) {
+        state.gist = res
         if (err) console.error(err)
         window.location.hash = '/edit/' + res.id
       })
