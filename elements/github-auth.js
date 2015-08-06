@@ -5,7 +5,7 @@ var profile = require('../lib/get-profile')
 var config = require('../config')[process.env.NODE_ENV]
 module.exports = Auth
 inherits(Auth, BaseElement)
-console.log('coooooooooonf', config)
+
 function Auth (options) {
   if (!(this instanceof Auth)) return new Auth(options)
   BaseElement.call(this)

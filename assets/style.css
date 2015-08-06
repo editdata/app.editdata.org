@@ -313,7 +313,8 @@ header button.small,
    height: 40px;
 }
 
-.welcome {
+.welcome,
+.dataset {
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   margin: 100px auto 0px auto;
@@ -322,8 +323,8 @@ header button.small,
   text-align: center;
 }
 
-.welcome h2 {
-  
+.dataset .button {
+  margin: 0px 5px;
 }
 
 /*

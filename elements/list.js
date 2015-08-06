@@ -16,7 +16,6 @@ module.exports = function (opts) {
   var list = ViewList(options)
 
   function rows (row) {
-    console.log('what rows', row)
     var properties = Object.keys(row.value)
     var elements = properties.map(element)
 

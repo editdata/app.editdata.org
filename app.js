@@ -1,5 +1,8 @@
 var GitHub = require('github-api')
 var cookie = require('cookie-cutter')
+var fromString = require('from2-string')
+var csvParser = require('csv-parser')
+var union = require('lodash.union')
 var profile = require('./lib/get-profile')
 var router = require('./lib/router')
 var state = require('./lib/state')
@@ -10,6 +13,7 @@ var content = require('./elements/content')()
 var header = require('./elements/header')()
 var auth = require('./elements/github-auth')()
 var landing = require('./elements/landing')()
+var dataset = require('./elements/new-dataset')()
 
 auth.addEventListener('sign-out', function () {
   cookie.set('editdata', '', { expires: new Date(0) })
@@ -20,17 +24,22 @@ auth.addEventListener('sign-out', function () {
 //   this.store.set('state', JSON.stringify({ data: data, properties: properties }))
 
 router.on('/', function (params) {
-  if (state.user) window.location.hash = '/edit'
+  if (state.user && state.gist) window.location.hash = '/edit/' + state.gist.id
+  else if (state.user && !state.gist) window.location.hash = '/edit/new'
   else renderLanding()
 })
 
-router.on('/edit', function (params) {
-  if (state.gist) {
-    window.location.hash = '/edit/' + state.gist
-  } else {
-    renderEditor()
-    editor.listActive()
-  }
+router.on('/edit/new', function (params) {
+  state.gist = null
+  state.data = []
+  state.properties = []
+
+  content.render([
+    header.render([
+      auth.render(state)
+    ], state),
+    dataset.render(state)
+  ])
 })
 
 router.on('/edit/:gist', function (params) {
@@ -40,7 +49,6 @@ router.on('/edit/:gist', function (params) {
     state.gist = data
     state.data = JSON.parse(data.files['data.json'].content)
     state.properties = JSON.parse(data.files['metadata.json'].content).properties
-    console.log('wwhuwhywyhwyhwhywyhw', state)
     renderEditor({ data: state.data })
     editor.listActive()
   })
@@ -51,7 +59,6 @@ function renderLanding (options) {
     header.render([
       auth.render(state)
     ], state),
-    auth.render(state),
     landing.render()
   ])
 }
@@ -65,20 +72,17 @@ function renderEditor (options) {
   ])
 }
 
-window.renderEditor = renderEditor
-
 if (state.url.query.code) {
   auth.verify(state.url.query.code, function (err, user) {
-    if (err) console.log(err)
+    if (err) console.error(err)
     state.user = user
-    console.log(state)
     cookie.set('editdata', user.token)
     github = new GitHub({
       token: user.token,
       auth: 'oauth'
     })
     router.start()
-    if (!state.gist) window.location = window.location.origin + '/#/edit'
+    if (!state.gist) window.location = window.location.origin + '/#/edit/new'
   })
 } else if (state.user && state.user.token) {
   github = new GitHub({
@@ -86,13 +90,37 @@ if (state.url.query.code) {
     auth: 'oauth'
   })
   profile(state.user.token, function (err, profile) {
-    if (err) console.log(err)
+    if (err) console.error(err)
     state.user.profile = profile
     router.start()
   })
 } else {
   router.start()
 }
+
+dataset.addEventListener('empty', function (csv) {
+  renderEditor({ data: [], properties: [] })
+  state.empty = false
+})
+
+dataset.addEventListener('csv', function (csv) {
+  var i = 0
+  var data = []
+  var properties = []
+  fromString(csv)
+    .pipe(csvParser())
+    .on('data', function (row) {
+      data.push({ key: i, value: row })
+      properties = union(properties, Object.keys(row))
+      i++
+    })
+    .on('end', function () {
+      state.data = data
+      state.properties = properties
+      renderEditor({ data: data, properties: properties })
+      state.uploadCSV = false
+    })
+})
 
 editor.list.addEventListener('click', function (e, row) {
   editor.itemActive()
@@ -138,6 +166,9 @@ function updateGist (callback) {
         },
         'metadata.json': {
           content: JSON.stringify({ properties: state.properties })
+        },
+        'readme.md': {
+          content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + state.gist.id
         }
       }
     }, function (err, res) {
@@ -170,7 +201,17 @@ function createGist () {
       }
     }, function (err, res) {
       if (err) console.error(err)
-      window.location.hash = '/edit/' + res.id
+      var gist = github.getGist(res.id)
+      gist.update({
+        files: {
+          'readme.md': {
+            content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + res.id
+          }
+        }
+      }, function (err, res) {
+        if (err) console.error(err)
+        window.location.hash = '/edit/' + res.id
+      })
     })
   })
 }
@@ -198,7 +239,10 @@ editor.actions.addEventListener('new-column', function (e) {
 editor.actions.addEventListener('new-dataset', function (e) {
   if (window.confirm('are you sure you want to start a new dataset? your current work will be saved to your gist.')) {
     updateGist(function () {
-      window.location.hash = '/edit'
+      window.location.hash = '/edit/new'
+      state.gist = null
+      state.data = []
+      state.properties = []
     })
   }
 })

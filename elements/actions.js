@@ -41,7 +41,6 @@ Actions.prototype.render = function (state) {
   elements = [saveGist, newColumn, newRow]
 
   if (state.gist) {
-    console.log(state.gist)
     elements.push(this.html('li.menu-item', [
       this.html('button#download-csv', {
         onclick: function (e) {

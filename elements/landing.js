@@ -13,10 +13,10 @@ function Landing (options) {
 Landing.prototype.render = function (state) {
   var h = this.html.bind(this)
   var elements = []
-  
+
   var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist&redirect_uri=' + config.redirect_uri
 
-  var button = h('a.button.large', { href: url }, [
+  var button = h('a.button.large.button-blue', { href: url }, [
     h('i.fa.fa-github-square'),
     ' Sign in with GitHub'
   ])
