@@ -66,8 +66,25 @@ header .github-auth img {
   vertical-align: middle;
 }
 
+header a {
+  font-size: 15px;
+  vertical-align: middle;
+}
+
 header a.external {
   margin-right: 10px;
+}
+
+header a:link.button {
+  vertical-align: middle;
+}
+
+#content a {
+  text-decoration: underline;
+}
+
+#content a.button {
+  text-decoration: none;
 }
 
 .container {
