@@ -125,41 +125,52 @@ editor.actions.addEventListener('save-gist', function (e) {
 
 function updateGist (callback) {
   var gist = github.getGist(state.gist.id)
-  gist.update({
-    files: {
-      'data.json': {
-        content: editor.toJSON()
-      },
-      'metadata.json': {
-        content: JSON.stringify({ properties: state.properties })
-      }
-    }
-  }, function (err, res) {
-    console.log(err, res)
+  editor.toCSV(function (err, csv) {
     if (err) console.error(err)
-    if (callback) callback()
+    gist.update({
+      files: {
+        'data.json': {
+          content: editor.toJSON()
+        },
+        'data.csv': {
+          content: csv
+        },
+        'metadata.json': {
+          content: JSON.stringify({ properties: state.properties })
+        }
+      }
+    }, function (err, res) {
+      if (err) console.error(err)
+      if (callback) callback()
+    })
   })
 }
 
 function createGist () {
   var gist = github.getGist()
-  gist.create({
-    description: 'data! from editdata.org!',
-    public: true,
-    files: {
-      'data.json': {
-        content: editor.toJSON()
-      },
-      'metadata.json': {
-        content: JSON.stringify({ properties: state.properties })
-      },
-      'readme.md': {
-        content: 'This gist was created using [editdata.org](http://editdata.org)'
-      }
-    }
-  }, function (err, res) {
+  editor.toCSV(function (err, csv) {
     if (err) console.error(err)
-    window.location.hash = '/edit/' + res.id
+    gist.create({
+      description: 'data! from editdata.org!',
+      public: true,
+      files: {
+        'data.json': {
+          content: editor.toJSON()
+        },
+        'data.csv': {
+          content: csv
+        },
+        'metadata.json': {
+          content: JSON.stringify({ properties: state.properties })
+        },
+        'readme.md': {
+          content: 'This gist was created using [editdata.org](http://editdata.org)'
+        }
+      }
+    }, function (err, res) {
+      if (err) console.error(err)
+      window.location.hash = '/edit/' + res.id
+    })
   })
 }
 
