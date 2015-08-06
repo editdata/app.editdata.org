@@ -38,15 +38,7 @@ Actions.prototype.render = function (state) {
     }, 'new row')
   ])
 
-  var destroy = this.html('li.menu-item', [
-    this.html('button#new-dataset', {
-      onclick: function (e) {
-        self.send('new-dataset', e)
-      }
-    }, 'new dataset')
-  ])
-
-  elements = [saveGist, newColumn, newRow, destroy]
+  elements = [saveGist, newColumn, newRow]
 
   if (state.gist) {
     console.log(state.gist)
@@ -57,7 +49,7 @@ Actions.prototype.render = function (state) {
         }
       }, 'csv')
     ]))
-    
+
     elements.push(this.html('li.menu-item', [
       this.html('button#download-json', {
         onclick: function (e) {
@@ -65,13 +57,21 @@ Actions.prototype.render = function (state) {
         }
       }, 'json')
     ]))
-    
+
     elements.push(this.html('li.menu-item', [
       this.html('button#gist', {
         onclick: function (e) {
           window.open(state.gist.html_url)
         }
       }, 'gist')
+    ]))
+
+    elements.push(this.html('li.menu-item', [
+      this.html('button#new-dataset', {
+        onclick: function (e) {
+          self.send('new-dataset', e)
+        }
+      }, 'new dataset')
     ]))
   }
 
