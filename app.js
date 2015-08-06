@@ -30,16 +30,20 @@ router.on('/', function (params) {
 })
 
 router.on('/edit/new', function (params) {
+  if (!state.user) window.location.hash = '/'
   state.gist = null
   state.data = []
   state.properties = []
-
-  content.render([
-    header.render([
-      auth.render(state)
-    ], state),
-    dataset.render(state)
-  ])
+  if (state.editing) {
+    renderEditor({ data: state.data, properties: state.properties })
+  } else {
+    content.render([
+      header.render([
+        auth.render(state)
+      ], state),
+      dataset.render(state)
+    ])
+  }
 })
 
 router.on('/edit/:gist', function (params) {
@@ -99,8 +103,8 @@ if (state.url.query.code) {
 }
 
 dataset.addEventListener('empty', function (csv) {
-  renderEditor({ data: [], properties: [] })
-  state.empty = false
+  state.editing = true
+  window.location.hash = '/edit/new'
 })
 
 dataset.addEventListener('csv', function (csv) {
@@ -239,10 +243,11 @@ editor.actions.addEventListener('new-column', function (e) {
 editor.actions.addEventListener('new-dataset', function (e) {
   if (window.confirm('are you sure you want to start a new dataset? your current work will be saved to your gist.')) {
     updateGist(function () {
-      window.location.hash = '/edit/new'
       state.gist = null
       state.data = []
       state.properties = []
+      state.editing = false
+      window.location.hash = '/edit/new'
     })
   }
 })
