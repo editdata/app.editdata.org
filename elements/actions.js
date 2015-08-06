@@ -49,6 +49,7 @@ Actions.prototype.render = function (state) {
   elements = [saveGist, newColumn, newRow, destroy]
 
   if (state.gist) {
+    console.log(state.gist)
     elements.push(this.html('li.menu-item', [
       this.html('button#download-csv', {
         onclick: function (e) {
@@ -58,11 +59,19 @@ Actions.prototype.render = function (state) {
     ]))
     
     elements.push(this.html('li.menu-item', [
-      this.html('button#download-csv', {
+      this.html('button#download-json', {
         onclick: function (e) {
           window.open(state.gist.files['data.json'].raw_url)
         }
       }, 'json')
+    ]))
+    
+    elements.push(this.html('li.menu-item', [
+      this.html('button#gist', {
+        onclick: function (e) {
+          window.open(state.gist.html_url)
+        }
+      }, 'gist')
     ]))
   }
 
