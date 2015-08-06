@@ -2,10 +2,10 @@ var BaseElement = require('base-element')
 var inherits = require('inherits')
 var request = require('xhr')
 var profile = require('../lib/get-profile')
-var config = require('../config')
+var config = require('../config')[process.env.NODE_ENV]
 module.exports = Auth
 inherits(Auth, BaseElement)
-
+console.log('coooooooooonf', config)
 function Auth (options) {
   if (!(this instanceof Auth)) return new Auth(options)
   BaseElement.call(this)
@@ -14,7 +14,7 @@ function Auth (options) {
 Auth.prototype.verify = function (code, callback) {
   var user = {}
   var options = {
-    url: 'http://192.241.225.150:9999/authenticate/' + code,
+    url: config.gatekeeper + '/authenticate/' + code,
     json: true
   }
 

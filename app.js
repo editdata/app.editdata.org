@@ -71,6 +71,7 @@ if (state.url.query.code) {
   auth.verify(state.url.query.code, function (err, user) {
     if (err) console.log(err)
     state.user = user
+    console.log(state)
     cookie.set('editdata', user.token)
     github = new GitHub({
       token: user.token,

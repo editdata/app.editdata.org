@@ -1,6 +1,6 @@
 var BaseElement = require('base-element')
 var inherits = require('inherits')
-var config = require('../config')
+var config = require('../config')[process.env.NODE_ENV]
 
 module.exports = Landing
 inherits(Landing, BaseElement)
