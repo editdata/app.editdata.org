@@ -56,6 +56,11 @@ router.on('/edit/:gist', function (params) {
   })
 })
 
+router.on('/view/:gist', function (params) {
+  // TODO: make this a read-only version of the editor
+  window.location.hash = '/edit/' + params.gist
+})
+
 function renderContent (elements) {
   document.getElementById('editor').style.display = 'none'
   document.getElementById('content').style.display = 'initial'
