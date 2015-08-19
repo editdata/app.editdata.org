@@ -1,5 +1,13 @@
 # [editdata.org](http://editdata.org)
 
+## Getting Started
+
+* Register a new developer application on Github.
+* Download [gatekeeper](https://github.com/prose/gatekeeper) and add your Github keys to `config.json`, and run gatekeeper.
+* Download [gatekeeper] adding your Github keys to `config.json`
+* update `config.json` with your github client_id
+* run `npm run bundle` and `npm start`
+
 ## About
 editdata.org repurposes components from [flatsheet](http://github.com/flatsheet/flatsheet) to provide a a simple free tool for editing data.
 
