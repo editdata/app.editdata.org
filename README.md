@@ -4,7 +4,7 @@
 
 * Register a new developer application on Github.
 * Clone the [gatekeeper](https://github.com/prose/gatekeeper) repository, add your Github keys to `config.json`, and run gatekeeper.
-* Clone this repository and add your Github keys to `config.js`
+* Clone this repository and add your Github keys to the `development` config in `config.js`
 * update `config.json` with your github client_id
 * run `npm run bundle` and `npm start`
 
