@@ -15,7 +15,6 @@ var content = require('./elements/content')()
 var header = require('./elements/header')(document.querySelector('header'))
 var auth = require('./elements/github-auth')()
 var landing = require('./elements/landing')()
-var dataset = require('./elements/new-dataset')()
 
 auth.addEventListener('sign-out', function () {
   cookie.set('editdata', '', { expires: new Date(0) })
@@ -40,35 +39,9 @@ router.on('/about', function (params) {
 
 router.on('/edit/new', function (params) {
   if (!state.user) window.location.hash = '/'
-  state.gist = null
   state.data = []
   state.properties = []
   renderEditor()
-})
-
-router.on('/edit/gist/:gist', function (params) {
-  var gist = github.getGist(params.gist)
-  gist.read(function (err, data) {
-    if (err) console.error(err)
-    state.gist = data
-    state.data = JSON.parse(data.files['data.json'].content)
-    state.properties = JSON.parse(data.files['metadata.json'].content).properties
-    renderEditor()
-    editor.listActive()
-  })
-})
-
-router.on('/view/gist/:gist', function (params) {
-  // TODO: make this a read-only version of the editor
-  window.location.hash = '/gist/edit/' + params.gist
-})
-
-router.on('/edit/github/:user/:repo/:branch/:file', function (params) {
-  // TODO: use this route for editing data in github repos
-})
-
-router.on('/view/github/:user/:repo/:branch/:file', function (params) {
-  // TODO: use this route for viewing data in github repos
 })
 
 function renderContent (elements) {
@@ -110,11 +83,6 @@ if (state.url.query.code) {
 } else {
   router.start()
 }
-
-dataset.addEventListener('empty', function (csv) {
-  state.editing = true
-  window.location.hash = '/edit/new'
-})
 
 editor.openEmpty.addEventListener('click', function (e) {
   editor.popup.open([
@@ -236,7 +204,7 @@ editor.save.addEventListener('click', function (e) {
   if (!state.save.type || !state.save.source || !state.save.location) {
     return console.error('need save information')
   }
-  console.log(state.save)
+
   if (state.save.source === 'github') {
     if (state.save.type === 'csv') {
       editor.toCSV(function (err, data) {
@@ -255,11 +223,7 @@ editor.save.addEventListener('click', function (e) {
             onclick: function (e) {
               e.preventDefault()
               require('./lib/github-save-blob')(state.user, state.save, data, message, function (err, body) {
-                if (err) return console.log('the error', err)
-                console.log('response from PUT', body)
-                require('./lib/github-get-blob')(state.user, { login: state.save.owner }, { name: state.save.repo }, { path: body.content.path}, function (err, getbody) {
-
-                })
+                if (err) return console.error(err)
                 state.save.location.sha = body.content.sha
                 state.save.location.url = body.content.git_url
                 editor.popup.close()

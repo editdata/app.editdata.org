@@ -429,6 +429,10 @@ menu-item button:focus {
   position: fixed;
 }
 
+.popup-header {
+  height: 50px;
+}
+
 .popup {
   padding: 0px 20px 10px 20px;
 }
@@ -447,6 +451,7 @@ menu-item button:focus {
   height: 32px;
   line-height: 1;
   color: #ccc;
+  float: right;
 }
 
 .popup-close:hover {
