@@ -1,11 +1,9 @@
 var GitHub = require('github-api')
 var cookie = require('cookie-cutter')
-var fromString = require('from2-string')
-var csvParser = require('csv-parser')
-var union = require('lodash.union')
 var h = require('virtual-dom/h')
 
 var orgs = require('./lib/github-organizations')
+var orgRepos = require('./lib/github-org-repos')
 var repos = require('./lib/github-user-repos')
 var profile = require('./lib/github-user-profile')
 var router = require('./lib/router')
@@ -118,42 +116,10 @@ dataset.addEventListener('empty', function (csv) {
   window.location.hash = '/edit/new'
 })
 
-dataset.addEventListener('csv', function (csv) {
-  var i = 0
-  var data = []
-  var properties = []
-  fromString(csv)
-    .pipe(csvParser())
-    .on('data', function (row) {
-      data.push({ key: i, value: row })
-      properties = union(properties, Object.keys(row))
-      i++
-    })
-    .on('end', function () {
-      state.data = data
-      state.properties = properties
-      renderEditor()
-      state.uploadCSV = false
-    })
-})
-
 editor.openEmpty.addEventListener('click', function (e) {
   editor.popup.open([
     h('h1', 'Create a new dataset')
   ])
-  renderEditor()
-})
-
-editor.openGithub.addEventListener('click', function (e) {
-  editor.popup.open([
-    h('h1', 'Open a file from GitHub')
-  ])
-  orgs(state.user, function (err, orgs) {
-    console.log(err, orgs)
-  })
-  // repos(state.user, function (err, repos) {
-  //   console.log(err, repos)
-  // })
   renderEditor()
 })
 
@@ -181,15 +147,130 @@ editor.item.addEventListener('close', function (e) {
   editor.listActive()
 })
 
-/*
-editor.filter.addEventListener('filter', function (results, length) {
+editor.openGithub.addEventListener('click', function (e) {
+  orgs(state.user, function (err, orgs) {
+    var list = []
+
+    list.push(h('li.org.item', {
+      onclick: function (e) {
+        repos(state.user, function (err, repos) {
+          console.log(repos)
+          renderRepos(repos, state.user.profile)
+        })
+      }
+    }, state.user.profile.login))
+
+    orgs.forEach(function (org) {
+      list.push(h('li.org.item', {
+        onclick: function (e) {
+          orgRepos(state.user, org.login, function (err, repos) {
+            console.log(repos)
+            renderRepos(repos, org)
+          })
+        }
+      }, org.login))
+    })
+
+    editor.popup.open([
+      h('h1', 'Open a file from GitHub'),
+      h('h2', 'Choose an organization:'),
+      h('ul.item-list', list)
+    ])
+  })
+
+  function renderRepos (repos, owner) {
+    var list = []
+    repos.forEach(function (repo) {
+      list.push(h('li.repo.item', {
+        onclick: function (e) {
+          console.log(repo.url, repo.default_branch)
+          require('./lib/github-repo-files')(state.user, owner, repo, function (err, res) {
+            renderFiles(res, repo, owner)
+          })
+        }
+      }, repo.name))
+    })
+
+    editor.popup.open([
+      h('h1', 'Open a file from GitHub'),
+      h('h2', 'Choose a repository:'),
+      h('ul.item-list', list)
+    ])
+  }
+
+  function renderFiles (files, repo, owner) {
+    var list = []
+
+    files.tree.forEach(function (file) {
+      list.push(h('li.file.item', {
+        onclick: function (e) {
+          require('./lib/github-get-blob')(state.user, owner, repo, file, function (err, data, properties, type) {
+            if (err) return console.error(err)
+            state.data = data
+            state.properties = properties
+            state.save.type = type
+            state.save.source = 'github'
+            state.save.location = file
+            state.save.branch = repo.default_branch
+            state.save.owner = owner.login
+            state.save.repo = repo.name
+            console.log(state.save)
+            editor.popup.close()
+            renderEditor()
+          })
+        }
+      }, file.path))
+    })
+
+    editor.popup.open([
+      h('h1', 'Open a file from GitHub'),
+      h('h2', 'Choose a JSON or CSV file:'),
+      h('ul.item-list', list)
+    ])
+  }
+
   renderEditor()
 })
 
-editor.filter.addEventListener('reset', function (results, length) {
-  renderEditor()
+editor.save.addEventListener('click', function (e) {
+  if (!state.save.type || !state.save.source || !state.save.location) {
+    return console.error('need save information')
+  }
+  console.log(state.save)
+  if (state.save.source === 'github') {
+    if (state.save.type === 'csv') {
+      editor.toCSV(function (err, data) {
+        var message = ''
+        editor.popup.open([
+          h('h1', 'Save to GitHub repo'),
+          h('h2', 'Add a commit message:'),
+          h('input', {
+            type: 'text',
+            value: message,
+            oninput: function (e) {
+              message = e.target.value
+            }
+          }),
+          h('button', {
+            onclick: function (e) {
+              e.preventDefault()
+              require('./lib/github-save-blob')(state.user, state.save, data, message, function (err, body) {
+                if (err) return console.log('the error', err)
+                console.log('response from PUT', body)
+                require('./lib/github-get-blob')(state.user, { login: state.save.owner }, { name: state.save.repo }, { path: body.content.path}, function (err, getbody) {
+
+                })
+                state.save.location.sha = body.content.sha
+                state.save.location.url = body.content.git_url
+                editor.popup.close()
+              })
+            }
+          }, 'Save to GitHub')
+        ])
+      })
+    }
+  }
 })
-*/
 
 editor.list.addEventListener('load', function () {
   renderEditor()
@@ -199,61 +280,6 @@ editor.item.addEventListener('input', function (property, row, e) {
   renderEditor()
 })
 
-/*
-editor.actions.addEventListener('save-gist', function (e) {
-  if (state.gist) updateGist()
-  else createGist()
-})
-
-function updateGist (callback) {
-  var gist = github.getGist(state.gist.id)
-  editor.toCSV(function (err, csv) {
-    if (err) console.error(err)
-    gist.update({
-      files: {
-        'data.json': { content: editor.toJSON() },
-        'data.csv': { content: csv },
-        'metadata.json': { content: JSON.stringify({ properties: state.properties }) },
-        'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + state.gist.id }
-      }
-    }, function (err, res) {
-      if (err) console.error(err)
-      state.gist = res
-      if (callback) callback()
-    })
-  })
-}
-
-function createGist () {
-  var gist = github.getGist()
-  editor.toCSV(function (err, csv) {
-    if (err) console.error(err)
-    gist.create({
-      description: 'data! from editdata.org!',
-      public: true,
-      files: {
-        'data.json': { content: editor.toJSON() },
-        'data.csv': { content: csv },
-        'metadata.json': { content: JSON.stringify({ properties: state.properties }) },
-        'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)' }
-      }
-    }, function (err, res) {
-      if (err) console.error(err)
-      state.gist = res
-      var gist = github.getGist(res.id)
-      gist.update({
-        files: {
-          'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + res.id }
-        }
-      }, function (err, res) {
-        state.gist = res
-        if (err) console.error(err)
-        window.location.hash = '/edit/' + res.id
-      })
-    })
-  })
-}
-*/
 editor.newRowMenu.addEventListener('click', function (e) {
   newRow()
   renderEditor()
@@ -278,20 +304,6 @@ editor.newColumnMenu.addEventListener('click', function (e) {
   renderEditor()
   editor.checkListWidth()
 })
-
-/*
-editor.actions.addEventListener('new-dataset', function (e) {
-  if (window.confirm('are you sure you want to start a new dataset? your current work will be saved to your gist.')) {
-    updateGist(function () {
-      state.gist = null
-      state.data = []
-      state.properties = []
-      state.editing = false
-      window.location.hash = '/edit/new'
-    })
-  }
-})
-*/
 
 editor.item.addEventListener('destroy-row', function (row, e) {
   if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
@@ -320,4 +332,3 @@ editor.list.addEventListener('active', function (active) {
     document.getElementById(active.itemPropertyId).focus()
   }, 0)
 })
-
