@@ -1,8 +1,7 @@
 var BaseElement = require('base-element')
 var inherits = require('inherits')
-var request = require('xhr')
-var profile = require('../lib/get-profile')
-var config = require('../config')[process.env.NODE_ENV]
+var auth = require('../lib/github-auth')
+var config = require('../config')
 module.exports = Auth
 inherits(Auth, BaseElement)
 
@@ -12,66 +11,58 @@ function Auth (options) {
 }
 
 Auth.prototype.verify = function (code, callback) {
-  var user = {}
-  var options = {
-    url: config.gatekeeper + '/authenticate/' + code,
-    json: true
-  }
-
-  request(options, function (err, res, body) {
-    if (err) return callback(err)
-    user.token = body.token
-    profile(user.token, function (err, res) {
-      if (err) return callback(err)
-      user.profile = res
-      callback(null, user)
-    })
-  })
+  auth(code, callback)
 }
 
-Auth.prototype.render = function (state) {
-  var h = this.html.bind(this)
+Auth.prototype.renderButton = function () {
+  var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist,user,repo,read:org&redirect_uri=' + config.redirect_uri
+
+  return this.html('a.button.small', { href: url }, [
+    this.html('i.fa.fa-github-square'),
+    ' Sign in with GitHub'
+  ])
+}
+
+Auth.prototype.renderProfile = function (state) {
+  var h = this.html
   var elements = []
   var self = this
 
-  elements.push(h('a.external', {
-    href: 'http://flatsheet.io',
+  var options = {
+    href: state.user.profile.html_url,
     target: '_blank'
-  }, 'flatsheet'))
+  }
 
-  elements.push(h('a.external', {
-    href: 'http://github.com/flatsheet/editdata.org',
-    target: '_blank'
-  }, 'source on github'))
+  elements.push(h('div.profile', [
+    h('a', options, [
+      h('img', { src: state.user.profile.avatar_url }),
+      h('span', state.user.profile.name)
+    ])
+  ]))
+
+  elements.push(h('a.sign-out', {
+    href: '#',
+    onclick: function (e) {
+      e.preventDefault()
+      self.send('sign-out', e)
+    }
+  }, 'sign out'))
+
+  return elements
+}
+
+Auth.prototype.render = function (state) {
+  var h = this.html
+  var elements = []
+
+  elements.push(h('a', {
+    href: '#/about'
+  }, 'about'))
 
   if (!state.user) {
-    var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist&redirect_uri=' + config.redirect_uri
-
-    var button = h('a.button.small', { href: url }, [
-      h('i.fa.fa-github-square'),
-      ' Sign in with GitHub'
-    ])
-
-    elements.push(button)
+    elements.push(this.renderButton())
   } else if (state.user.profile) {
-    var options = {
-      href: state.user.profile.html_url,
-      target: '_blank'
-    }
-
-    elements.push(h('div.profile', [
-      h('a', options, [
-        h('img', { src: state.user.profile.avatar_url }),
-        h('span', state.user.profile.name)
-      ])
-    ]))
-    elements.push(h('a.sign-out', {
-      href: '#',
-      onclick: function (e) {
-        e.preventDefault()
-        self.send('sign-out', e)
-      }
-    }, 'sign out'))
+    elements = elements.concat(this.renderProfile(state))
   }
 
   var vtree = h('div.github-auth' + (state.user ? '.active' : ''), elements)

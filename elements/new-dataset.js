@@ -16,11 +16,11 @@ Dataset.prototype.render = function (state) {
 
   if (state.uploadCSV) {
     elements.push(h('h2', 'Upload a CSV file'))
-    elements.push(h('input#upload-csv', { 
+    elements.push(h('input#upload-csv', {
       type: 'file',
       onchange: function (e) {
         var file = e.target.files[0]
-        var reader = new FileReader()
+        var reader = new window.FileReader()
         reader.onload = function (e) {
           self.send('csv', e.target.result)
         }

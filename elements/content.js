@@ -10,7 +10,10 @@ function Content () {
   BaseElement.call(this, this.el)
 }
 
-Content.prototype.render = function (elements) {
-  var vtree = this.html('div.content-wrapper', elements)
+Content.prototype.render = function (elements, state) {
+  var h = this.html
+  var vtree = h('div.content-wrapper', [
+    h('div.content', elements)
+  ])
   return this.afterRender(vtree)
 }

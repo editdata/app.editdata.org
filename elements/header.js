@@ -11,12 +11,9 @@ function Header (appendTo) {
 
 Header.prototype.render = function (elements, state) {
   var h = this.html.bind(this)
-  var self = this
-
-  elements = [
-    h('h1.site-title', state.site.title)
-  ].concat(elements)
-
+  elements = [h('h1.site-title', [
+    h('a', { href: '#/' }, state.site.title)
+  ])].concat(elements)
   var vtree = h('div.container', elements)
   return this.afterRender(vtree)
 }

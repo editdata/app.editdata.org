@@ -1,6 +1,6 @@
 var BaseElement = require('base-element')
 var inherits = require('inherits')
-var config = require('../config')[process.env.NODE_ENV]
+var config = require('../config')
 
 module.exports = Landing
 inherits(Landing, BaseElement)
@@ -14,7 +14,7 @@ Landing.prototype.render = function (state) {
   var h = this.html.bind(this)
   var elements = []
 
-  var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist&redirect_uri=' + config.redirect_uri
+  var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist,user,repo,read:org&redirect_uri=' + config.redirect_uri
 
   var button = h('a.button.large.button-blue', { href: url }, [
     h('i.fa.fa-github-square'),

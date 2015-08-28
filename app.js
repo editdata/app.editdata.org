@@ -1,9 +1,13 @@
 var GitHub = require('github-api')
 var cookie = require('cookie-cutter')
 var fromString = require('from2-string')
-var csvParser = require('parser-csv')
+var csvParser = require('csv-parser')
 var union = require('lodash.union')
-var profile = require('./lib/get-profile')
+var h = require('virtual-dom/h')
+
+var orgs = require('./lib/github-organizations')
+var repos = require('./lib/github-user-repos')
+var profile = require('./lib/github-user-profile')
 var router = require('./lib/router')
 var state = require('./lib/state')
 var editor = require('./lib/editor')(state)
@@ -30,21 +34,21 @@ router.on('/', function (params) {
   else renderContent([landing.render(state)])
 })
 
+router.on('/about', function (params) {
+  var about = require('./elements/about')()
+  var html = about.render(state)
+  renderContent([html])
+})
+
 router.on('/edit/new', function (params) {
   if (!state.user) window.location.hash = '/'
   state.gist = null
   state.data = []
   state.properties = []
-  if (state.editing) {
-    renderEditor()
-  } else {
-    renderContent([
-      dataset.render(state)
-    ])
-  }
+  renderEditor()
 })
 
-router.on('/edit/:gist', function (params) {
+router.on('/edit/gist/:gist', function (params) {
   var gist = github.getGist(params.gist)
   gist.read(function (err, data) {
     if (err) console.error(err)
@@ -56,9 +60,17 @@ router.on('/edit/:gist', function (params) {
   })
 })
 
-router.on('/view/:gist', function (params) {
+router.on('/view/gist/:gist', function (params) {
   // TODO: make this a read-only version of the editor
-  window.location.hash = '/edit/' + params.gist
+  window.location.hash = '/gist/edit/' + params.gist
+})
+
+router.on('/edit/github/:user/:repo/:branch/:file', function (params) {
+  // TODO: use this route for editing data in github repos
+})
+
+router.on('/view/github/:user/:repo/:branch/:file', function (params) {
+  // TODO: use this route for viewing data in github repos
 })
 
 function renderContent (elements) {
@@ -125,6 +137,40 @@ dataset.addEventListener('csv', function (csv) {
     })
 })
 
+editor.openEmpty.addEventListener('click', function (e) {
+  editor.popup.open([
+    h('h1', 'Create a new dataset')
+  ])
+  renderEditor()
+})
+
+editor.openGithub.addEventListener('click', function (e) {
+  editor.popup.open([
+    h('h1', 'Open a file from GitHub')
+  ])
+  orgs(state.user, function (err, orgs) {
+    console.log(err, orgs)
+  })
+  // repos(state.user, function (err, repos) {
+  //   console.log(err, repos)
+  // })
+  renderEditor()
+})
+
+editor.openCSV.addEventListener('click', function (e) {
+  editor.popup.open([
+    h('h1', 'Upload a CSV file')
+  ])
+  renderEditor()
+})
+
+editor.openJSON.addEventListener('click', function (e) {
+  editor.popup.open([
+    h('h1', 'Upload a JSON file')
+  ])
+  renderEditor()
+})
+
 editor.list.addEventListener('click', function (e, row) {
   editor.item.render(row)
   editor.itemActive()
@@ -135,6 +181,7 @@ editor.item.addEventListener('close', function (e) {
   editor.listActive()
 })
 
+/*
 editor.filter.addEventListener('filter', function (results, length) {
   renderEditor()
 })
@@ -142,6 +189,7 @@ editor.filter.addEventListener('filter', function (results, length) {
 editor.filter.addEventListener('reset', function (results, length) {
   renderEditor()
 })
+*/
 
 editor.list.addEventListener('load', function () {
   renderEditor()
@@ -151,6 +199,7 @@ editor.item.addEventListener('input', function (property, row, e) {
   renderEditor()
 })
 
+/*
 editor.actions.addEventListener('save-gist', function (e) {
   if (state.gist) updateGist()
   else createGist()
@@ -204,8 +253,13 @@ function createGist () {
     })
   })
 }
+*/
+editor.newRowMenu.addEventListener('click', function (e) {
+  newRow()
+  renderEditor()
+})
 
-editor.actions.addEventListener('new-row', function (e) {
+function newRow () {
   var row = {
     key: state.data.length + 1,
     value: {}
@@ -216,15 +270,16 @@ editor.actions.addEventListener('new-row', function (e) {
   })
 
   editor.write(row)
-  renderEditor()
-})
+}
 
-editor.actions.addEventListener('new-column', function (e) {
+editor.newColumnMenu.addEventListener('click', function (e) {
   editor.newColumn()
+  if (!state.data.length) newRow()
   renderEditor()
   editor.checkListWidth()
 })
 
+/*
 editor.actions.addEventListener('new-dataset', function (e) {
   if (window.confirm('are you sure you want to start a new dataset? your current work will be saved to your gist.')) {
     updateGist(function () {
@@ -236,6 +291,7 @@ editor.actions.addEventListener('new-dataset', function (e) {
     })
   }
 })
+*/
 
 editor.item.addEventListener('destroy-row', function (row, e) {
   if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {

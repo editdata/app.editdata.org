@@ -43,6 +43,10 @@ header .site-title {
   display: inline-block;
 }
 
+header .site-title a {
+  font-size: 20px;
+}
+
 header .github-auth {
   float: right;
   margin-top: -2px;
@@ -55,7 +59,7 @@ header .github-auth.active {
 
 header .github-auth .profile {
   display: inline-block;
-  margin-right: 25px;
+  margin: 0px 25px;
 }
 
 header .github-auth img {
@@ -77,6 +81,7 @@ header a.external {
 
 header a:link.button {
   vertical-align: middle;
+  margin-left: 15px;
 }
 
 #content a {
@@ -98,16 +103,6 @@ header a:link.button {
   margin: 10px 10px;
 }
 
-#actions {
-  background-color: #666;
-  border-radius: 3px;
-  height: 40px;
-  position: fixed;
-  top: 60px;
-  left: 10px;
-  right: 10px;
-}
-
 .list-wrapper {
   overflow-x: scroll;
   overflow-y: hidden;
@@ -117,12 +112,15 @@ header a:link.button {
   top: 110px;
   left: 10px;
   bottom: 10px;
-  border: 1px solid #ccc;
   border-radius: 3px;
 }
 
 .list-wrapper.active {
   max-width: 100%;
+}
+
+.list-wrapper.has-data {
+  border: 1px solid #ccc;
 }
 
 #list {
@@ -181,6 +179,10 @@ header a:link.button {
 
 .list-property:last-child .list-property-value {
   border-right: 0px;
+}
+
+.active-cell {
+  background-color: #FFFFAA;
 }
 
 .headers-list {
@@ -303,17 +305,28 @@ header button.small,
   margin: 0px;
 }
 
-.menubar {
+#menu {
+  background-color: #666;
+  border-radius: 3px;
+  height: 40px;
+  position: fixed;
+  top: 60px;
+  left: 10px;
+  right: 10px;
+  z-index: 100;
+}
+
+.menu {
   float: left;
   margin: 0;
 }
 
-.menubar ul {
+.menu ul {
   margin: 0px;
   padding: 0px;
 }
 
-.menubar .menu-item {
+.menu .menu-item {
   display: inline-block;
   list-style-type: none;
 }
@@ -328,21 +341,58 @@ header button.small,
   margin-right: 5px;
   font-size: 11px;
   line-height: 1;
+  margin-bottom: 0px;
+  outline: none;
 }
 
-.menu-item button:hover {
+.menu-item button:hover,
+menu-item button:focus {
   background-color: #222;
   color: #fff;
 }
 
+.menu-dropdown {
+  position: absolute;
+}
+
+.menu-dropdown .menu-item {
+  display: block;
+}
+
+.menu-dropdown .menu-item button {
+  width: 100%;
+  margin: 0px;
+  text-align: left;
+}
+
+.menu-item.dropdown button {
+  background-color: #666;
+  outline: none;
+}
+
+.menu-item.dropdown button:hover,
+.menu-item.dropdown button:focus {
+  background-color: #222;
+  color: #fff;
+}
+
+.menu-item.dropdown.open > button {
+  border-bottom-left-radius: 0px;
+  background-color: #222;
+  color: #fff;
+}
+
+.menu-dropdown button {
+  border-radius: 0px;
+}
+
 .row-list li.bottom {}
 
-.welcome,
-.dataset {
+.content {
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   margin: 100px auto 0px auto;
-  max-width: 450px;
+  max-width: 550px;
   padding: 20px 20px 30px 20px;
   text-align: center;
 }
@@ -351,25 +401,56 @@ header button.small,
   margin: 0px 5px;
 }
 
+
 /*
-@media (min-width: 840px) {
-  .container {
-    width: 800px;
-    margin: 0px auto;
-  }
-}
-
-@media (min-width: 1020px) {
-  .container {
-    width: 980px;
-    margin: 0px auto;
-  }
-}
-
-@media (min-width: 1140px) {
-  .container {
-    width: 1100px;
-    margin: 0px auto;
-  }
-}
+* popups
 */
+
+.popup-overlay {
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 200;
+}
+
+.popup-overlay.visible {
+  
+}
+
+.popup-overlay.hidden {
+  display: none;
+}
+
+.popup-wrapper {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: fixed;
+}
+
+.popup {
+  padding: 0px 20px 10px 20px;
+}
+
+.popup h1 {
+  margin-top: 0px;
+  font-size: 20px;
+  border-bottom: 1px solid #efefef;
+  padding-bottom: 5px;
+}
+
+.popup-close {
+  border: 1px solid #fff;
+  padding: 8px 10px 10px 10px;
+  margin: 10px;
+  height: 32px;
+  line-height: 1;
+  color: #ccc;
+}
+
+.popup-close:hover {
+  border: 1px solid #f2f2f0;
+  background-color: #f2f2f0;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}

@@ -14,7 +14,7 @@
     "start": "budo app.js:assets/bundle.js --live -- -t [ envify --NODE_ENV development ]"
   },
   "dependencies": {
-    "base-element": "^3.0.1",
+    "base-element": "shama/base-element#208e665c3924498f81ab448f62e99dbddf0c8f86",
     "basscss-grid": "^1.0.3",
     "cookie-cutter": "^0.1.1",
     "csskit": "^1.1.1",
@@ -39,7 +39,7 @@
     "through2": "^2.0.0",
     "uglifyify": "^3.0.1",
     "view-list": "sethvincent/view-list#54b478af10d0148ecaa4d2594cd1468d3d1ecc61",
-    "virtual-dom": "^2.1.0",
+    "virtual-dom": "^2.1.1",
     "wayfarer": "^4.2.0",
     "xhr": "^2.0.3"
   },

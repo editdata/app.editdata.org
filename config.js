@@ -1,4 +1,4 @@
-module.exports = {
+var config = {
   production: {
     client_id: '65dda308caf01e56f912',
     redirect_uri: 'http://editdata.org',
@@ -10,3 +10,5 @@ module.exports = {
     gatekeeper: 'http://localhost:9999'
   }
 }
+
+module.exports = config[process.env.NODE_ENV]
