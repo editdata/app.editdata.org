@@ -480,13 +480,16 @@ menu-item button:focus {
 .popup li.item {
   list-style-type: none;
   padding: 5px 10px;
-  background-color: #fefefa;
+  background-color: #fefefc;
   margin-bottom: 3px;
   cursor: pointer;
+  border-left: 4px solid #fefefc;
 }
 
 .popup li.item:hover {
-  background-color: #efefea;
+  background-color: #fefee6;
+  border-left: 4px solid #999;
+  color: #000;
 }
 
 .popup .text-input {
@@ -527,6 +530,6 @@ menu-item button:focus {
 }
 
 .get-started .list-item:hover {
-  background-color: #efefea;
+  background-color: #fefee6;
   color: #000;
 }

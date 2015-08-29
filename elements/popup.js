@@ -17,7 +17,7 @@ Popup.prototype.render = function (elements) {
   var vtree
 
   var width = (window.innerWidth > 800 ? 500 : 320)
-  var height = (window.innerHeight > 800 ? 500 : 320)
+  var height = (window.innerWidth > 800 ? 500 : 320)
 
   if (this.visible) {
     vtree = this.html('div.popup-overlay.visible', [
