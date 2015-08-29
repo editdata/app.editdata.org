@@ -483,3 +483,17 @@ menu-item button:focus {
 .popup li.item:hover {
   background-color: #efefea;
 }
+
+.popup .text-input {
+  margin-right: 5px;
+}
+
+.popup .alternate h1 {
+  color: #666;
+  margin-top: 50px;
+}
+
+.popup .help {
+  font-size: 14px;
+  margin: 0px;
+}

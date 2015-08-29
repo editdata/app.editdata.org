@@ -210,26 +210,49 @@ editor.save.addEventListener('click', function (e) {
       editor.toCSV(function (err, data) {
         var message = ''
         editor.popup.open([
-          h('h1', 'Save to GitHub repo'),
+          h('h1', 'Update ' + state.save.location.path + ' in GitHub repository'),
           h('h2', 'Add a commit message:'),
-          h('input', {
+          h('input.text-input', {
             type: 'text',
             value: message,
             oninput: function (e) {
               message = e.target.value
             }
           }),
-          h('button', {
+          h('button.button-blue', {
             onclick: function (e) {
               e.preventDefault()
-              require('./lib/github-save-blob')(state.user, state.save, data, message, function (err, body) {
+              require('./lib/github-update-blob')(state.user, state.save, data, message, function (err, body) {
                 if (err) return console.error(err)
                 state.save.location.sha = body.content.sha
                 state.save.location.url = body.content.git_url
                 editor.popup.close()
               })
             }
-          }, 'Save to GitHub')
+          }, 'Save to GitHub'),
+          h('p.help', 'File ' + state.save.location.path + ' will be updated in ' + state.save.owner + '/' + state.save.repo),
+          h('div.alternate', [
+            h('h1', 'Alternate save options'),
+            h('h2', 'Choose an alternative, or see the Export menu'),
+            h('ul.item-list', [
+              h('li.item', {
+                onclick: function (e) {
+                  require('./lib/github-create-blob')({
+                    owner: state.save.owner,
+                    repo: state.save.repo,
+                    token: state.user.token,
+                    path: 'test.json',
+                    message: 'Create test.json',
+                    content: editor.toJSON(),
+                    branch: state.save.branch
+                  }, function (err, res) {
+                    console.log(err, res)
+                    editor.popup.close()
+                  })
+                }
+              }, 'Save new JSON file')
+            ])
+          ])
         ])
       })
     }
