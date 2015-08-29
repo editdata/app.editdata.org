@@ -55,9 +55,13 @@ Auth.prototype.render = function (state) {
   var h = this.html
   var elements = []
 
-  elements.push(h('a', {
+  elements.push(h('a.content-link', {
     href: '#/about'
   }, 'about'))
+
+  elements.push(h('a.content-link', {
+    href: '#/docs'
+  }, 'docs'))
 
   if (!state.user) {
     elements.push(this.renderButton())

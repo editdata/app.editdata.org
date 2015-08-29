@@ -1,4 +1,3 @@
-var GitHub = require('github-api')
 var cookie = require('cookie-cutter')
 var h = require('virtual-dom/h')
 
@@ -9,17 +8,16 @@ var profile = require('./lib/github-user-profile')
 var router = require('./lib/router')
 var state = require('./lib/state')
 var editor = require('./lib/editor')(state)
-var github
 
 var content = require('./elements/content')()
 var header = require('./elements/header')(document.querySelector('header'))
 var auth = require('./elements/github-auth')()
 var landing = require('./elements/landing')()
+var getStarted = require('./elements/get-started')()
 
 auth.addEventListener('sign-out', function () {
   cookie.set('editdata', '', { expires: new Date(0) })
   state.user = null
-  state.gist = null
   state.data = []
   state.properties = []
   window.location = window.location.origin
@@ -27,7 +25,7 @@ auth.addEventListener('sign-out', function () {
 
 router.on('/', function (params) {
   if (state.user && state.gist) window.location.hash = '/edit/' + state.gist.id
-  else if (state.user && !state.gist) window.location.hash = '/edit/new'
+  else if (state.user && !state.gist) window.location.hash = '/edit'
   else renderContent([landing.render(state)])
 })
 
@@ -37,11 +35,37 @@ router.on('/about', function (params) {
   renderContent([html])
 })
 
+router.on('/docs', function (params) {
+  var docs = require('./elements/docs')()
+  var html = docs.render(state)
+  renderContent([html])
+})
+
+router.on('/edit', function (params) {
+  if (!state.user) window.location.hash = '/'
+  var html = getStarted.render(state)
+  renderContent([html])
+})
+
 router.on('/edit/new', function (params) {
   if (!state.user) window.location.hash = '/'
   state.data = []
   state.properties = []
   renderEditor()
+})
+
+getStarted.addEventListener('click', function (source) {
+  if (source === 'empty') {
+    window.location.hash = '/edit/new'
+  } else if (source === 'github') {
+    openGithubFile()
+  } else if (source === 'dat') {
+
+  } else if (source === 'csv') {
+
+  } else if (source === 'json') {
+
+  }
 })
 
 function renderContent (elements) {
@@ -63,18 +87,10 @@ if (state.url.query.code) {
     if (err) console.error(err)
     state.user = user
     cookie.set('editdata', user.token)
-    github = new GitHub({
-      token: user.token,
-      auth: 'oauth'
-    })
     router.start()
-    if (!state.gist) window.location = window.location.origin + '/#/edit/new'
+    if (!state.gist) window.location = window.location.origin + '/#/edit'
   })
 } else if (state.user && state.user.token) {
-  github = new GitHub({
-    token: state.user.token,
-    auth: 'oauth'
-  })
   profile(state.user.token, function (err, profile) {
     if (err) console.error(err)
     state.user.profile = profile
@@ -116,88 +132,7 @@ editor.item.addEventListener('close', function (e) {
 })
 
 editor.openGithub.addEventListener('click', function (e) {
-  orgs(state.user, function (err, orgs) {
-    var list = []
-
-    list.push(h('li.org.item', {
-      onclick: function (e) {
-        repos(state.user, function (err, repos) {
-          console.log(repos)
-          renderRepos(repos, state.user.profile)
-        })
-      }
-    }, state.user.profile.login))
-
-    orgs.forEach(function (org) {
-      list.push(h('li.org.item', {
-        onclick: function (e) {
-          orgRepos(state.user, org.login, function (err, repos) {
-            console.log(repos)
-            renderRepos(repos, org)
-          })
-        }
-      }, org.login))
-    })
-
-    editor.popup.open([
-      h('h1', 'Open a file from GitHub'),
-      h('h2', 'Choose an organization:'),
-      h('ul.item-list', list)
-    ])
-  })
-
-  function renderRepos (repos, owner) {
-    var list = []
-    repos.forEach(function (repo) {
-      list.push(h('li.repo.item', {
-        onclick: function (e) {
-          console.log(repo.url, repo.default_branch)
-          require('./lib/github-repo-files')(state.user, owner, repo, function (err, res) {
-            renderFiles(res, repo, owner)
-          })
-        }
-      }, repo.name))
-    })
-
-    editor.popup.open([
-      h('h1', 'Open a file from GitHub'),
-      h('h2', 'Choose a repository:'),
-      h('ul.item-list', list)
-    ])
-  }
-
-  function renderFiles (files, repo, owner) {
-    var list = []
-
-    files.tree.forEach(function (file) {
-      list.push(h('li.file.item', {
-        onclick: function (e) {
-          require('./lib/github-get-blob')(state.user, owner, repo, file, function (err, data, properties, type) {
-            if (err) return console.error(err)
-            state.data = data
-            state.properties = properties
-            state.save.type = type
-            state.save.source = 'github'
-            state.save.location = file
-            state.save.branch = repo.default_branch
-            state.save.owner = owner.login
-            state.save.repo = repo.name
-            console.log(state.save)
-            editor.popup.close()
-            renderEditor()
-          })
-        }
-      }, file.path))
-    })
-
-    editor.popup.open([
-      h('h1', 'Open a file from GitHub'),
-      h('h2', 'Choose a JSON or CSV file:'),
-      h('ul.item-list', list)
-    ])
-  }
-
-  renderEditor()
+  openGithubFile()
 })
 
 editor.save.addEventListener('click', function (e) {
@@ -208,6 +143,7 @@ editor.save.addEventListener('click', function (e) {
   if (state.save.source === 'github') {
     if (state.save.type === 'csv') {
       editor.toCSV(function (err, data) {
+        if (err) console.error(err)
         var message = ''
         editor.popup.open([
           h('h1', 'Update ' + state.save.location.path + ' in GitHub repository'),
@@ -268,26 +204,13 @@ editor.item.addEventListener('input', function (property, row, e) {
 })
 
 editor.newRowMenu.addEventListener('click', function (e) {
-  newRow()
+  editor.newRow()
   renderEditor()
 })
 
-function newRow () {
-  var row = {
-    key: state.data.length + 1,
-    value: {}
-  }
-
-  state.properties.forEach(function (key) {
-    row.value[key] = null
-  })
-
-  editor.write(row)
-}
-
 editor.newColumnMenu.addEventListener('click', function (e) {
   editor.newColumn()
-  if (!state.data.length) newRow()
+  if (!state.data.length) editor.newRow()
   renderEditor()
   editor.checkListWidth()
 })
@@ -319,3 +242,84 @@ editor.list.addEventListener('active', function (active) {
     document.getElementById(active.itemPropertyId).focus()
   }, 0)
 })
+
+function openGithubFile () {
+  orgs(state.user, function (err, orgs) {
+    if (err) console.error(err)
+    var list = []
+
+    list.push(h('li.org.item', {
+      onclick: function (e) {
+        repos(state.user, function (err, repos) {
+          renderRepos(repos, state.user.profile)
+        })
+      }
+    }, state.user.profile.login))
+
+    orgs.forEach(function (org) {
+      list.push(h('li.org.item', {
+        onclick: function (e) {
+          orgRepos(state.user, org.login, function (err, repos) {
+            renderRepos(repos, org)
+          })
+        }
+      }, org.login))
+    })
+
+    editor.popup.open([
+      h('h1', 'Open a file from GitHub'),
+      h('h2', 'Choose an organization:'),
+      h('ul.item-list', list)
+    ])
+  })
+
+  function renderRepos (repos, owner) {
+    var list = []
+    repos.forEach(function (repo) {
+      list.push(h('li.repo.item', {
+        onclick: function (e) {
+          require('./lib/github-repo-files')(state.user, owner, repo, function (err, res) {
+            renderFiles(res, repo, owner)
+          })
+        }
+      }, repo.name))
+    })
+
+    editor.popup.open([
+      h('h1', 'Open a file from GitHub'),
+      h('h2', 'Choose a repository:'),
+      h('ul.item-list', list)
+    ])
+  }
+
+  function renderFiles (files, repo, owner) {
+    var list = []
+
+    files.tree.forEach(function (file) {
+      list.push(h('li.file.item', {
+        onclick: function (e) {
+          require('./lib/github-get-blob')(state.user, owner, repo, file, function (err, data, properties, type) {
+            if (err) return console.error(err)
+            state.data = data
+            state.properties = properties
+            state.save.type = type
+            state.save.source = 'github'
+            state.save.location = file
+            state.save.branch = repo.default_branch
+            state.save.owner = owner.login
+            state.save.repo = repo.name
+            editor.popup.close()
+            renderEditor()
+            editor.checkListWidth()
+          })
+        }
+      }, file.path))
+    })
+
+    editor.popup.open([
+      h('h1', 'Open a file from GitHub'),
+      h('h2', 'Choose a JSON or CSV file:'),
+      h('ul.item-list', list)
+    ])
+  }
+}

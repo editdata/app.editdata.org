@@ -11,10 +11,9 @@ function About (options) {
 
 About.prototype.render = function (state) {
   var h = this.html
-  var elements = []
-
-  elements.push(h('h2', 'About EditData.org'))
-
+  var elements = [
+    h('h1', 'About EditData.org')
+  ]
   var vtree = h('div.about', elements)
   return this.afterRender(vtree)
 }

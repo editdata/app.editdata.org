@@ -22,7 +22,7 @@ Landing.prototype.render = function (state) {
   ])
 
   elements.push(h('div.welcome', [
-    h('h2', 'Hello! Let\'s edit some data!'),
+    h('h1', 'Hello! Let\'s edit some data!'),
     h('p', 'editdata.org is a simple version of flatsheet, a tool for curating data as editorial content.'),
     button,
     h('p', h('a', { href: 'http://flatsheet.io', target: '_blank' }, 'learn more about flatsheet')),

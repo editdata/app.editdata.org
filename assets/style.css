@@ -59,7 +59,7 @@ header .github-auth.active {
 
 header .github-auth .profile {
   display: inline-block;
-  margin: 0px 25px;
+  margin: 0px 20px 0px 10px;
 }
 
 header .github-auth img {
@@ -75,7 +75,7 @@ header a {
   vertical-align: middle;
 }
 
-header a.external {
+header a.content-link {
   margin-right: 10px;
 }
 
@@ -90,6 +90,11 @@ header a:link.button {
 
 #content a.button {
   text-decoration: none;
+}
+
+#content h2 {
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .container {
@@ -496,4 +501,32 @@ menu-item button:focus {
 .popup .help {
   font-size: 14px;
   margin: 0px;
+}
+
+/*
+* Get Started screen
+*/
+
+.get-started {
+  
+}
+
+.get-started .list {
+  margin: 0px;
+  padding: 0px;
+}
+
+.get-started .list-item {
+  list-style-type: none;
+  padding: 5px 10px;
+  background-color: #fefefa;
+  margin: 5px 5px 5px 5px;
+  cursor: pointer;
+  display: inline-block;
+  width: 200px;
+}
+
+.get-started .list-item:hover {
+  background-color: #efefea;
+  color: #000;
 }
