@@ -4,12 +4,20 @@ var inherits = require('inherits')
 module.exports = Popup
 inherits(Popup, BaseElement)
 
-function Popup (options) {
-  if (!(this instanceof Popup)) return new Popup(options)
-  BaseElement.call(this, options)
+function Popup (options, onclose) {
+  if (!(this instanceof Popup)) return new Popup(options, onclose)
+  BaseElement.call(this)
+  options = options || {}
+
+  if (typeof options === 'function') {
+    onclose = options
+    options = {}
+  }
+
   this.visible = false
   this.width = options.width || 320
   this.height = options.height || 320
+  this.onclose = onclose
 }
 
 Popup.prototype.render = function (elements) {
@@ -50,19 +58,22 @@ Popup.prototype.render = function (elements) {
 
 Popup.prototype.close = function () {
   this.visible = false
-  this.render()
+  this.send('close')
+  if (this.onclose) this.onclose()
+  return this.render()
 }
 
 Popup.prototype.open = function (elements) {
   this.visible = true
-  this.render(elements)
+  this.send('open')
+  return this.render(elements)
 }
 
 Popup.prototype.toggle = function (elements) {
   this.visible = !this.visible
   if (!this.visible) {
-    this.render()
+    return this.open(elements)
   } else {
-    this.render(elements)
+    return this.close(elements)
   }
 }

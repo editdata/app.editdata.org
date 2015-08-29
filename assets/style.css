@@ -92,9 +92,14 @@ header a:link.button {
   text-decoration: none;
 }
 
+#content h1 {
+  text-align: center;
+}
+
 #content h2 {
   font-size: 20px;
   font-weight: 500;
+  text-align: center;
 }
 
 .container {
@@ -411,7 +416,6 @@ menu-item button:focus {
   margin: 100px auto 0px auto;
   max-width: 550px;
   padding: 20px 20px 30px 20px;
-  text-align: center;
 }
 
 .dataset .button {
@@ -429,6 +433,9 @@ menu-item button:focus {
   height: 100%;
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 200;
 }
 
@@ -452,6 +459,7 @@ menu-item button:focus {
 
 .popup {
   padding: 0px 20px 10px 20px;
+  text-align: left;
 }
 
 .popup h1 {
@@ -529,6 +537,7 @@ menu-item button:focus {
 .get-started .list {
   margin: 0px;
   padding: 0px;
+  text-align: center;
 }
 
 .get-started .list-item {
@@ -544,4 +553,49 @@ menu-item button:focus {
 .get-started .list-item:hover {
   background-color: #fefee6;
   color: #000;
+}
+
+
+/*
+* Notify
+*/
+
+.notify {
+  position: absolute;
+  top: 35px;
+  width: 320px;
+  cursor: pointer;
+  left: 50%;
+  margin-left: -160px;
+  padding: 5px 10px;
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+  z-index: 300;
+}
+
+.notify.hidden {
+  display: none;
+}
+
+.notify-alert {
+  background-color: #FFB7B1;
+}
+
+.notify-warning {
+  background-color: #FFFBD8;
+}
+
+.notify-info {
+  background-color: #fcfcff;
+}
+
+
+/*
+* Landing screen
+*/
+
+.landing {
+  text-align: center;
+  padding: 0px 15px;
 }
