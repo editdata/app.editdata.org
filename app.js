@@ -60,7 +60,7 @@ getStarted.addEventListener('click', function (source) {
   } else if (source === 'github') {
     openGithubFile()
   } else if (source === 'dat') {
-
+    openDat()
   } else if (source === 'csv') {
 
   } else if (source === 'json') {
@@ -322,4 +322,13 @@ function openGithubFile () {
       h('ul.item-list', list)
     ])
   }
+}
+
+var url = require('url')
+var qs = require('querystring')
+state.url = url.parse(window.location.href)
+state.url.query = qs.parse(state.url.query)
+
+function openDat () {
+  
 }
