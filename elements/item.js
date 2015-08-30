@@ -4,9 +4,9 @@ var inherits = require('inherits')
 module.exports = Item
 inherits(Item, BaseElement)
 
-function Item (appendTo) {
-  if (!(this instanceof Item)) return new Item(appendTo)
-  BaseElement.call(this, appendTo)
+function Item () {
+  if (!(this instanceof Item)) return new Item()
+  BaseElement.call(this)
 }
 
 Item.prototype.render = function (obj, options) {
@@ -35,20 +35,22 @@ Item.prototype.render = function (obj, options) {
     fields.push(fieldwrapper)
   })
 
-  var vtree = this.html('div.item', [
-    self.html('a.close-item', {
-      href: '#',
-      onclick: function (e) {
-        e.preventDefault()
-        self.send('close', e)
-      }
-    }, 'x'),
-    self.html('button#destroyRow.small.button-orange', {
-      onclick: function (e) {
-        self.send('destroy-row', obj, e)
-      }
-    }, 'destroy row'),
-    self.html('div.item-properties-wrapper', fields)
+  var vtree = this.html('div#item', [
+    this.html('div.item', [
+      self.html('a.close-item', {
+        href: '#',
+        onclick: function (e) {
+          e.preventDefault()
+          self.send('close', e)
+        }
+      }, 'x'),
+      self.html('button#destroyRow.small.button-orange', {
+        onclick: function (e) {
+          self.send('destroy-row', obj, e)
+        }
+      }, 'destroy row'),
+      self.html('div.item-properties-wrapper', fields)
+    ])
   ])
 
   return this.afterRender(vtree)

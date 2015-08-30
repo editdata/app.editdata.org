@@ -35,17 +35,30 @@ router.on('/edit', function (params) {
   var html = getStarted.render(state)
   app.renderContent(html, state)
 
-  getStarted.addEventListener('click', function (type) {
-    openGitHubFile(state, app, html, function (err, data, properties, save) {
-      if (err) return console.error(err)
-      state.data = data
-      state.properties = properties
-      state.save = save
-      state.save.source = 'github'
-      console.log(state.data)
-      app.renderEditor([], state)
-    })
+  getStarted.addEventListener('click', function (source) {
+    if (source === 'empty') {
+      window.location.hash = '/edit/new'
+    } else if (source === 'github') {
+      openGitHubFile(state, app, html, function (err, data, properties, save) {
+        if (err) return console.error(err)
+        state.data = data
+        state.properties = properties
+        state.saveData = save
+        state.saveData.source = 'github'
+        app.renderEditor([], state)
+      })
+    } else if (source === 'dat') {
+      openDat()
+    } else if (source === 'csv') {
+
+    } else if (source === 'json') {
+
+    }
   })
+})
+
+router.on('/edit/new', function (params) {
+  
 })
 
 router.start()
