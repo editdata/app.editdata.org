@@ -92,11 +92,11 @@ header a:link.button {
   text-decoration: none;
 }
 
-#content h1 {
+.content h1 {
   text-align: center;
 }
 
-#content h2 {
+.content h2 {
   font-size: 20px;
   font-weight: 500;
   text-align: center;
@@ -116,7 +116,6 @@ header a:link.button {
 .list-wrapper {
   overflow-x: scroll;
   overflow-y: hidden;
-  max-width: 55%;
   background-color: #fff;
   position: fixed;
   top: 110px;
@@ -467,7 +466,10 @@ menu-item button:focus {
   font-size: 20px;
   border-bottom: 1px solid #efefef;
   padding-bottom: 5px;
+  text-align: left;
 }
+
+
 
 .popup-close {
   border: 1px solid #fff;
@@ -495,6 +497,7 @@ menu-item button:focus {
 .popup h2 {
   font-size: 15px;
   font-weight: 500;
+  text-align: left;
 }
 
 .popup li.item {

@@ -4,16 +4,21 @@ var state = require('./lib/state')
 var router = require('./lib/router')
 var app = require('./lib')('app', state)
 var profile = require('./lib/github-user-profile')
-var openGitHubFile = require('./lib/open-github-file')
+
 
 router.on('/', function (params) {
   state.setUrl()
   if (state.user && state.user.token) {
     profile(state.user.token, function (err, profile) {
       if (err) console.error(err)
+      if (profile.message === 'Bad credentials') return console.error(profile)
       state.user.profile = profile
       state.save()
-      window.location = window.location.origin + '/#/edit'
+      if (state.activeDataset) {
+        router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch + '/' + state.saveData.location.path)
+      } else {
+        router.go('/edit')
+      }
     })
   } else if (state.url.query.code) {
     app.auth(state, function (err, user) {
@@ -31,34 +36,57 @@ router.on('/', function (params) {
 })
 
 router.on('/edit', function (params) {
+  if (state.activeDataset) {
+    return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch + '/' + state.saveData.location.path)
+  }
+
   var getStarted = require('./elements/get-started')()
   var html = getStarted.render(state)
   app.renderContent(html, state)
 
   getStarted.addEventListener('click', function (source) {
-    if (source === 'empty') {
-      window.location.hash = '/edit/new'
-    } else if (source === 'github') {
-      openGitHubFile(state, app, html, function (err, data, properties, save) {
-        if (err) return console.error(err)
-        state.data = data
-        state.properties = properties
-        state.saveData = save
-        state.saveData.source = 'github'
-        app.renderEditor([], state)
-      })
-    } else if (source === 'dat') {
-      openDat()
-    } else if (source === 'csv') {
+    var popup = app.openFile(source, state)
+    
+    popup.addEventListener('render', function (popupEl) {
+      app.renderContent([html, popupEl], state)
+    })
 
-    } else if (source === 'json') {
+    popup.addEventListener('close', function () {
+      app.renderContent(html, state)
+    })
 
-    }
+    popup.addEventListener('done', function (data, properties, save) {
+      state.data = data
+      state.properties = properties
+      state.saveData = save
+      state.saveData.source = 'github'
+      state.activeDataset = true
+      state.save()
+      app.renderEditor([], state)
+    })
   })
 })
 
 router.on('/edit/new', function (params) {
-  
+  app.renderEditor([], state)
 })
 
+router.on('/edit/github/:owner/:repo/:branch/:path', function (params) {
+  state.setUrl()
+  app.renderEditor([], state)
+})
+
+/*
+router.on('/edit/dat', function (params) {
+  state.setUrl()
+  var level = levelup('wat', { db: leveljs })
+  var db = dat(level)
+  db.put('hi', 'hey', function () {
+    db.createReadStream().on('data', console.log)
+  })
+})
+*/
+
 router.start()
+
+
