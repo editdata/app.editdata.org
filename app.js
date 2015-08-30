@@ -4,8 +4,7 @@ var state = require('./lib/state')
 var router = require('./lib/router')
 var app = require('./lib')('app', state)
 var profile = require('./lib/github-user-profile')
-var notify = require('./elements/notify')
-// var createPopup = require('./elements/popup')
+var openGitHubFile = require('./lib/open-github-file')
 
 router.on('/', function (params) {
   state.setUrl()
@@ -37,18 +36,15 @@ router.on('/edit', function (params) {
   app.renderContent(html, state)
 
   getStarted.addEventListener('click', function (type) {
-    var info = notify(function () {
-      app.renderContent([html], state)
+    openGitHubFile(state, app, html, function (err, data, properties, save) {
+      if (err) return console.error(err)
+      state.data = data
+      state.properties = properties
+      state.save = save
+      state.save.source = 'github'
+      console.log(state.data)
+      app.renderEditor([], state)
     })
-
-    setTimeout(function () {
-      app.renderContent([html], state)
-    }, 2000)
-
-    app.renderContent([
-      html,
-      info.show({ type: 'info', message: type })
-    ], state)
   })
 })
 
