@@ -9,7 +9,7 @@ function Item () {
   BaseElement.call(this)
 }
 
-Item.prototype.render = function (obj, options) {
+Item.prototype.render = function (obj, state) {
   obj = obj || { value: {} }
   var self = this
   var fields = []
@@ -21,14 +21,15 @@ Item.prototype.render = function (obj, options) {
       oninput: function (e) {
         obj.value[key] = e.target.value
         self.send('input', obj.value[key], obj, e)
-        self.render(obj)
+      },
+      onfocus: function (e) {
+        self.send('focus', e)
       }
     }
 
     var field = self.html('textarea.item-property-value', options)
-
     var fieldwrapper = self.html('div.item-property-wrapper', [
-      self.html('span.item-property-label', key),
+      self.html('span.item-property-label', state.properties[key].name),
       field
     ])
 

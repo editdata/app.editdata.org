@@ -1,4 +1,5 @@
 var cookie = require('cookie-cutter')
+var keycode = require('keycode')
 
 var state = require('./lib/state')
 var router = require('./lib/router')
@@ -76,17 +77,13 @@ router.on('/edit/github/:owner/:repo/:branch/:path', function (params) {
   app.renderEditor([], state)
 })
 
-/*
-router.on('/edit/dat', function (params) {
-  state.setUrl()
-  var level = levelup('wat', { db: leveljs })
-  var db = dat(level)
-  db.put('hi', 'hey', function () {
-    db.createReadStream().on('data', console.log)
-  })
-})
-*/
-
 router.start()
 
+document.addEventListener('keydown', function (e) {
+  var key = keycode(e)
 
+  if (key === 'tab') {
+    var el = document.activeElement
+    console.log(el.id)
+  }
+})

@@ -9,16 +9,17 @@ function Headers (appendTo) {
   element.call(this, appendTo)
 }
 
-Headers.prototype.render = function (headers) {
+Headers.prototype.render = function (properties) {
   var self = this
   var items = []
 
-  headers.forEach(function (header) {
-    items.push(self.html('li.list-header-item.data-list-property', [
-      header,
+  Object.keys(properties).forEach(function (key) {
+    var property = properties[key]
+    items.push(self.html('li#' + property.key + '.list-header-item.data-list-property', [
+      property.name,
       self.html('button#column-settings.small', {
         onclick: function (e) {
-          self.send('destroy-column', header, e)
+          self.send('destroy-column', property, e)
         }
       }, self.html('i.fa.fa-trash', ''))
     ]))
