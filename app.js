@@ -14,11 +14,7 @@ router.on('/', function (params) {
       if (profile.message === 'Bad credentials') return console.error(profile)
       state.user.profile = profile
       state.save()
-      if (state.activeDataset) {
-        router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch + '/' + state.saveData.location.path)
-      } else {
-        router.go('/edit')
-      }
+      router.go('/edit')
     })
   } else if (state.url.query.code) {
     app.auth(state, function (err, user) {
@@ -26,7 +22,7 @@ router.on('/', function (params) {
       state.user = user
       state.save()
       cookie.set('editdata', user.token)
-      window.location = window.location.origin + '/#/edit'
+      router.go('/edit', { query: false })
     })
   } else {
     var landing = require('./elements/landing')()
@@ -37,7 +33,11 @@ router.on('/', function (params) {
 
 router.on('/edit', function (params) {
   if (state.activeDataset) {
-    return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch + '/' + state.saveData.location.path)
+    if (state.saveData.owner && state.saveData.repo && state.saveData.branch && state.saveData.location) {
+      return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch + '/' + state.saveData.location.path)
+    } else {
+      return router.go('/edit/new')
+    }
   }
 
   var getStarted = require('./elements/get-started')()
@@ -60,7 +60,7 @@ router.on('/edit', function (params) {
     popup.addEventListener('done', function (data, properties, save) {
       state.data = data
       state.properties = properties
-      state.saveData = save
+      if (save) state.saveData = save
       state.activeDataset = true
       state.save()
       app.renderEditor([], state)
