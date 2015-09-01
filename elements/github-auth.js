@@ -63,7 +63,7 @@ Auth.prototype.render = function (state) {
     href: '#/docs'
   }, 'docs'))
 
-  if (!state.user) {
+  if (!state.user.profile) {
     elements.push(this.renderButton())
   } else if (state.user.profile) {
     elements = elements.concat(this.renderProfile(state))

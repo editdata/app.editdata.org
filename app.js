@@ -6,7 +6,6 @@ var router = require('./lib/router')
 var app = require('./lib')('app', state)
 var profile = require('./lib/github-user-profile')
 
-
 router.on('/', function (params) {
   state.setUrl()
   if (state.user && state.user.token) {
@@ -47,7 +46,9 @@ router.on('/edit', function (params) {
 
   getStarted.addEventListener('click', function (source) {
     var popup = app.openFile(source, state)
-    
+
+    console.log(popup)
+
     popup.addEventListener('render', function (popupEl) {
       app.renderContent([html, popupEl], state)
     })
@@ -60,7 +61,6 @@ router.on('/edit', function (params) {
       state.data = data
       state.properties = properties
       state.saveData = save
-      state.saveData.source = 'github'
       state.activeDataset = true
       state.save()
       app.renderEditor([], state)

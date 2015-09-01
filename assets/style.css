@@ -80,8 +80,8 @@ header a.content-link {
 }
 
 header a:link.button {
-  vertical-align: middle;
   margin-left: 15px;
+  margin-top: -6px;
 }
 
 #content a {
@@ -549,8 +549,6 @@ menu-item button:focus {
   background-color: #fefefa;
   margin: 5px 5px 5px 5px;
   cursor: pointer;
-  display: inline-block;
-  width: 200px;
 }
 
 .get-started .list-item:hover {

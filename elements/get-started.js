@@ -13,15 +13,28 @@ GetStarted.prototype.render = function (state) {
   var self = this
   var h = this.html
 
-  var slugs = ['empty', 'github', 'dat', 'csv', 'json']
+  var options = [
+    {
+      slug: 'empty',
+      text: 'Start new empty dataset'
+    },
+    {
+      slug: 'github',
+      text: 'Edit CSV or JSON file from GitHub'
+    },
+    {
+      slug: 'upload',
+      text: 'Upload CSV or JSON file'
+    }
+  ]
   var items = []
 
-  slugs.forEach(function (slug) {
+  options.forEach(function (item) {
     var el = h('li.list-item', {
       onclick: function (e) {
-        self.send('click', slug, e)
+        self.send('click', item.slug, e)
       }
-    }, slug)
+    }, item.text)
     items.push(el)
   })
 
