@@ -77,6 +77,18 @@ router.on('/edit/github/:owner/:repo/:branch/:path', function (params) {
   app.renderEditor([], state)
 })
 
+router.on('/about', function (params) {
+  var about = require('./elements/about')()
+  var html = about.render(state)
+  app.renderContent(html, state)
+})
+
+router.on('/docs', function (params) {
+  var docs = require('./elements/docs')()
+  var html = docs.render(state)
+  app.renderContent(html, state)
+})
+
 router.start()
 
 document.addEventListener('keydown', function (e) {
