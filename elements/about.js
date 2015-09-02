@@ -16,10 +16,10 @@ About.prototype.render = function (state) {
     h('h2', 'Hello. Let me tell you about everything.'),
     h('p', 'EditData.org is a tool for editing CSV & JSON files from your computer & from GitHub.'),
     h('p', [
-      h('a.button', 'Source on GitHub')
+      h('a.button', { href: 'https://github.com/flatsheet/editdata.org' }, 'Source on GitHub')
     ]),
     h('p', [
-      h('a.button', 'Report an issue')
+      h('a.button', { href: 'https://github.com/flatsheet/editdata.org/issues' }, 'Report an issue')
     ])
   ]
   var vtree = h('div.about', elements)
