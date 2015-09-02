@@ -1,323 +1,99 @@
-var GitHub = require('github-api')
 var cookie = require('cookie-cutter')
-var fromString = require('from2-string')
-var csvParser = require('csv-parser')
-var union = require('lodash.union')
-var h = require('virtual-dom/h')
+var keycode = require('keycode')
 
-var orgs = require('./lib/github-organizations')
-var repos = require('./lib/github-user-repos')
-var profile = require('./lib/github-user-profile')
-var router = require('./lib/router')
 var state = require('./lib/state')
-var editor = require('./lib/editor')(state)
-var github
-
-var content = require('./elements/content')()
-var header = require('./elements/header')(document.querySelector('header'))
-var auth = require('./elements/github-auth')()
-var landing = require('./elements/landing')()
-var dataset = require('./elements/new-dataset')()
-
-auth.addEventListener('sign-out', function () {
-  cookie.set('editdata', '', { expires: new Date(0) })
-  state.user = null
-  state.gist = null
-  state.data = []
-  state.properties = []
-  window.location = window.location.origin
-})
+var router = require('./lib/router')
+var app = require('./lib')('app', state)
+var profile = require('./lib/github-user-profile')
 
 router.on('/', function (params) {
-  if (state.user && state.gist) window.location.hash = '/edit/' + state.gist.id
-  else if (state.user && !state.gist) window.location.hash = '/edit/new'
-  else renderContent([landing.render(state)])
+  state.setUrl()
+  if (state.user && state.user.token) {
+    profile(state.user.token, function (err, profile) {
+      if (err) console.error(err)
+      if (profile.message === 'Bad credentials') return console.error(profile)
+      state.user.profile = profile
+      state.save()
+      router.go('/edit')
+    })
+  } else if (state.url.query.code) {
+    app.auth(state, function (err, user) {
+      if (err) console.error(err)
+      state.user = user
+      state.save()
+      cookie.set('editdata', user.token)
+      router.go('/edit', { query: false })
+    })
+  } else {
+    var landing = require('./elements/landing')()
+    var html = landing.render(state)
+    app.renderContent(html, state)
+  }
+})
+
+router.on('/edit', function (params) {
+  if (state.activeDataset) {
+    if (state.saveData.owner && state.saveData.repo && state.saveData.branch && state.saveData.location) {
+      return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch)
+    } else {
+      return router.go('/edit/new')
+    }
+  }
+
+  var getStarted = require('./elements/get-started')()
+  var html = getStarted.render(state)
+  app.renderContent(html, state)
+
+  getStarted.addEventListener('click', function (source) {
+    var popup = app.openFile(source, state)
+
+    popup.addEventListener('render', function (popupEl) {
+      app.renderContent([html, popupEl], state)
+    })
+
+    popup.addEventListener('close', function () {
+      app.renderContent(html, state)
+    })
+
+    popup.addEventListener('done', function (data, properties, save) {
+      state.data = data
+      state.properties = properties
+      if (save) state.saveData = save
+      state.activeDataset = true
+      state.save()
+      app.renderEditor([], state)
+    })
+  })
+})
+
+router.on('/edit/new', function (params) {
+  app.renderEditor([], state)
+})
+
+router.on('/edit/github/:owner/:repo/:branch', function (params) {
+  state.setUrl()
+  app.renderEditor([], state)
 })
 
 router.on('/about', function (params) {
   var about = require('./elements/about')()
   var html = about.render(state)
-  renderContent([html])
+  app.renderContent(html, state)
 })
 
-router.on('/edit/new', function (params) {
-  if (!state.user) window.location.hash = '/'
-  state.gist = null
-  state.data = []
-  state.properties = []
-  renderEditor()
+router.on('/docs', function (params) {
+  var docs = require('./elements/docs')()
+  var html = docs.render(state)
+  app.renderContent(html, state)
 })
 
-router.on('/edit/gist/:gist', function (params) {
-  var gist = github.getGist(params.gist)
-  gist.read(function (err, data) {
-    if (err) console.error(err)
-    state.gist = data
-    state.data = JSON.parse(data.files['data.json'].content)
-    state.properties = JSON.parse(data.files['metadata.json'].content).properties
-    renderEditor()
-    editor.listActive()
-  })
-})
+router.start()
 
-router.on('/view/gist/:gist', function (params) {
-  // TODO: make this a read-only version of the editor
-  window.location.hash = '/gist/edit/' + params.gist
-})
+document.addEventListener('keydown', function (e) {
+  var key = keycode(e)
 
-router.on('/edit/github/:user/:repo/:branch/:file', function (params) {
-  // TODO: use this route for editing data in github repos
-})
-
-router.on('/view/github/:user/:repo/:branch/:file', function (params) {
-  // TODO: use this route for viewing data in github repos
-})
-
-function renderContent (elements) {
-  document.getElementById('editor').style.display = 'none'
-  document.getElementById('content').style.display = 'initial'
-  header.render([auth.render(state)], state)
-  content.render(elements)
-}
-
-function renderEditor () {
-  document.getElementById('editor').style.display = 'initial'
-  document.getElementById('content').style.display = 'none'
-  header.render([auth.render(state)], state)
-  editor.render(state)
-}
-
-if (state.url.query.code) {
-  auth.verify(state.url.query.code, function (err, user) {
-    if (err) console.error(err)
-    state.user = user
-    cookie.set('editdata', user.token)
-    github = new GitHub({
-      token: user.token,
-      auth: 'oauth'
-    })
-    router.start()
-    if (!state.gist) window.location = window.location.origin + '/#/edit/new'
-  })
-} else if (state.user && state.user.token) {
-  github = new GitHub({
-    token: state.user.token,
-    auth: 'oauth'
-  })
-  profile(state.user.token, function (err, profile) {
-    if (err) console.error(err)
-    state.user.profile = profile
-    router.start()
-  })
-} else {
-  router.start()
-}
-
-dataset.addEventListener('empty', function (csv) {
-  state.editing = true
-  window.location.hash = '/edit/new'
-})
-
-dataset.addEventListener('csv', function (csv) {
-  var i = 0
-  var data = []
-  var properties = []
-  fromString(csv)
-    .pipe(csvParser())
-    .on('data', function (row) {
-      data.push({ key: i, value: row })
-      properties = union(properties, Object.keys(row))
-      i++
-    })
-    .on('end', function () {
-      state.data = data
-      state.properties = properties
-      renderEditor()
-      state.uploadCSV = false
-    })
-})
-
-editor.openEmpty.addEventListener('click', function (e) {
-  editor.popup.open([
-    h('h1', 'Create a new dataset')
-  ])
-  renderEditor()
-})
-
-editor.openGithub.addEventListener('click', function (e) {
-  editor.popup.open([
-    h('h1', 'Open a file from GitHub')
-  ])
-  orgs(state.user, function (err, orgs) {
-    console.log(err, orgs)
-  })
-  // repos(state.user, function (err, repos) {
-  //   console.log(err, repos)
-  // })
-  renderEditor()
-})
-
-editor.openCSV.addEventListener('click', function (e) {
-  editor.popup.open([
-    h('h1', 'Upload a CSV file')
-  ])
-  renderEditor()
-})
-
-editor.openJSON.addEventListener('click', function (e) {
-  editor.popup.open([
-    h('h1', 'Upload a JSON file')
-  ])
-  renderEditor()
-})
-
-editor.list.addEventListener('click', function (e, row) {
-  editor.item.render(row)
-  editor.itemActive()
-  renderEditor()
-})
-
-editor.item.addEventListener('close', function (e) {
-  editor.listActive()
-})
-
-/*
-editor.filter.addEventListener('filter', function (results, length) {
-  renderEditor()
-})
-
-editor.filter.addEventListener('reset', function (results, length) {
-  renderEditor()
-})
-*/
-
-editor.list.addEventListener('load', function () {
-  renderEditor()
-})
-
-editor.item.addEventListener('input', function (property, row, e) {
-  renderEditor()
-})
-
-/*
-editor.actions.addEventListener('save-gist', function (e) {
-  if (state.gist) updateGist()
-  else createGist()
-})
-
-function updateGist (callback) {
-  var gist = github.getGist(state.gist.id)
-  editor.toCSV(function (err, csv) {
-    if (err) console.error(err)
-    gist.update({
-      files: {
-        'data.json': { content: editor.toJSON() },
-        'data.csv': { content: csv },
-        'metadata.json': { content: JSON.stringify({ properties: state.properties }) },
-        'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + state.gist.id }
-      }
-    }, function (err, res) {
-      if (err) console.error(err)
-      state.gist = res
-      if (callback) callback()
-    })
-  })
-}
-
-function createGist () {
-  var gist = github.getGist()
-  editor.toCSV(function (err, csv) {
-    if (err) console.error(err)
-    gist.create({
-      description: 'data! from editdata.org!',
-      public: true,
-      files: {
-        'data.json': { content: editor.toJSON() },
-        'data.csv': { content: csv },
-        'metadata.json': { content: JSON.stringify({ properties: state.properties }) },
-        'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)' }
-      }
-    }, function (err, res) {
-      if (err) console.error(err)
-      state.gist = res
-      var gist = github.getGist(res.id)
-      gist.update({
-        files: {
-          'readme.md': { content: 'This gist was created using [editdata.org](http://editdata.org)\n\nSee this dataset here: http://editdata.org/#/edit/' + res.id }
-        }
-      }, function (err, res) {
-        state.gist = res
-        if (err) console.error(err)
-        window.location.hash = '/edit/' + res.id
-      })
-    })
-  })
-}
-*/
-editor.newRowMenu.addEventListener('click', function (e) {
-  newRow()
-  renderEditor()
-})
-
-function newRow () {
-  var row = {
-    key: state.data.length + 1,
-    value: {}
-  }
-
-  state.properties.forEach(function (key) {
-    row.value[key] = null
-  })
-
-  editor.write(row)
-}
-
-editor.newColumnMenu.addEventListener('click', function (e) {
-  editor.newColumn()
-  if (!state.data.length) newRow()
-  renderEditor()
-  editor.checkListWidth()
-})
-
-/*
-editor.actions.addEventListener('new-dataset', function (e) {
-  if (window.confirm('are you sure you want to start a new dataset? your current work will be saved to your gist.')) {
-    updateGist(function () {
-      state.gist = null
-      state.data = []
-      state.properties = []
-      state.editing = false
-      window.location.hash = '/edit/new'
-    })
+  if (key === 'tab') {
+    var el = document.activeElement
+    console.log(el.id)
   }
 })
-*/
-
-editor.item.addEventListener('destroy-row', function (row, e) {
-  if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
-    editor.destroyRow(row.key)
-    renderEditor()
-    editor.listActive()
-  }
-})
-
-editor.headers.addEventListener('destroy-column', function (header, e) {
-  if (window.confirm('wait. are you sure you want to destroy all the data in this column?')) {
-    editor.destroyColumn(header)
-    renderEditor()
-    editor.checkListWidth()
-  }
-})
-
-editor.headers.addEventListener('rename-column', function (header, e) {
-  var newName = window.prompt('New name for the column')
-  editor.renameColumn(header, newName)
-  renderEditor()
-})
-
-editor.list.addEventListener('active', function (active) {
-  setTimeout(function () {
-    document.getElementById(active.itemPropertyId).focus()
-  }, 0)
-})
-

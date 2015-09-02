@@ -55,11 +55,15 @@ Auth.prototype.render = function (state) {
   var h = this.html
   var elements = []
 
-  elements.push(h('a', {
+  elements.push(h('a.content-link', {
     href: '#/about'
   }, 'about'))
 
-  if (!state.user) {
+  // elements.push(h('a.content-link', {
+  //   href: '#/docs'
+  // }, 'docs'))
+
+  if (!state.user.profile) {
     elements.push(this.renderButton())
   } else if (state.user.profile) {
     elements = elements.concat(this.renderProfile(state))

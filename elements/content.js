@@ -6,14 +6,16 @@ inherits(Content, BaseElement)
 
 function Content () {
   if (!(this instanceof Content)) return new Content()
-  this.el = document.getElementById('content')
-  BaseElement.call(this, this.el)
+  BaseElement.call(this)
 }
 
 Content.prototype.render = function (elements, state) {
   var h = this.html
-  var vtree = h('div.content-wrapper', [
-    h('div.content', elements)
-  ])
-  return this.afterRender(vtree)
+  return this.afterRender(
+    h('div#content', [
+      h('div.content-wrapper', [
+        h('div.content', elements)
+      ])
+    ])
+  )
 }

@@ -59,7 +59,7 @@ header .github-auth.active {
 
 header .github-auth .profile {
   display: inline-block;
-  margin: 0px 25px;
+  margin: 0px 20px 0px 10px;
 }
 
 header .github-auth img {
@@ -75,13 +75,13 @@ header a {
   vertical-align: middle;
 }
 
-header a.external {
+header a.content-link {
   margin-right: 10px;
 }
 
 header a:link.button {
-  vertical-align: middle;
   margin-left: 15px;
+  margin-top: -6px;
 }
 
 #content a {
@@ -90,6 +90,16 @@ header a:link.button {
 
 #content a.button {
   text-decoration: none;
+}
+
+.content h1 {
+  text-align: center;
+}
+
+.content h2 {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
 }
 
 .container {
@@ -106,13 +116,13 @@ header a:link.button {
 .list-wrapper {
   overflow-x: scroll;
   overflow-y: hidden;
-  max-width: 55%;
   background-color: #fff;
   position: fixed;
   top: 110px;
   left: 10px;
   bottom: 10px;
   border-radius: 3px;
+  max-width: 55%;
 }
 
 .list-wrapper.active {
@@ -177,12 +187,16 @@ header a:link.button {
   border-bottom: 1px solid #ccc;
 }
 
+.list-property-value:hover {
+  background-color: #f1f1ff;
+}
+
 .list-property:last-child .list-property-value {
   border-right: 0px;
 }
 
 .active-cell {
-  background-color: #FFFFAA;
+  background-color: #f1f1ff;
 }
 
 .headers-list {
@@ -257,11 +271,19 @@ header a:link.button {
 
 .item-property-value {
   margin: 0px;
-  border: 1px solid #ccc;
+  border: 2px solid #efefef;
   padding: 10px;
   width: 100%;
   height: 100px;
   font-size: 14px;
+  resize: none;
+  outline: 0;
+  color: #aaa;
+}
+
+.item-property-value:focus {
+  border: 2px solid #c1c1cc;
+  color: #333;
 }
 
 .close-item {
@@ -394,7 +416,6 @@ menu-item button:focus {
   margin: 100px auto 0px auto;
   max-width: 550px;
   padding: 20px 20px 30px 20px;
-  text-align: center;
 }
 
 .dataset .button {
@@ -412,6 +433,9 @@ menu-item button:focus {
   height: 100%;
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 200;
 }
 
@@ -429,8 +453,13 @@ menu-item button:focus {
   position: fixed;
 }
 
+.popup-header {
+  height: 50px;
+}
+
 .popup {
   padding: 0px 20px 10px 20px;
+  text-align: left;
 }
 
 .popup h1 {
@@ -438,7 +467,10 @@ menu-item button:focus {
   font-size: 20px;
   border-bottom: 1px solid #efefef;
   padding-bottom: 5px;
+  text-align: left;
 }
+
+
 
 .popup-close {
   border: 1px solid #fff;
@@ -447,10 +479,125 @@ menu-item button:focus {
   height: 32px;
   line-height: 1;
   color: #ccc;
+  float: right;
 }
 
 .popup-close:hover {
   border: 1px solid #f2f2f0;
   background-color: #f2f2f0;
   box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+.popup ul.item-list {
+  margin: 0px;
+  padding: 0px;
+  overflow-y: auto;
+  height: 345px;
+}
+
+.popup h2 {
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.popup li.item {
+  list-style-type: none;
+  padding: 5px 10px;
+  background-color: #fefefc;
+  margin-bottom: 3px;
+  cursor: pointer;
+  border-left: 4px solid #fefefc;
+}
+
+.popup li.item:hover {
+  background-color: #fefee6;
+  border-left: 4px solid #999;
+  color: #000;
+}
+
+.popup .text-input {
+  margin-right: 5px;
+}
+
+.popup .alternate h1 {
+  color: #666;
+  margin-top: 50px;
+}
+
+.popup .help {
+  font-size: 14px;
+  margin: 0px;
+}
+
+/*
+* Get Started screen
+*/
+
+.get-started {
+  
+}
+
+.get-started .list {
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+}
+
+.get-started .list-item {
+  list-style-type: none;
+  padding: 5px 10px;
+  background-color: #fefefa;
+  margin: 5px 5px 5px 5px;
+  cursor: pointer;
+}
+
+.get-started .list-item:hover {
+  background-color: #fefee6;
+  color: #000;
+}
+
+
+/*
+* Notify
+*/
+
+.notify {
+  position: absolute;
+  top: 35px;
+  width: 320px;
+  cursor: pointer;
+  left: 50%;
+  margin-left: -160px;
+  padding: 5px 10px;
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+  z-index: 300;
+}
+
+.notify.hidden {
+  display: none;
+}
+
+.notify-alert {
+  background-color: #FFB7B1;
+}
+
+.notify-warning {
+  background-color: #FFFBD8;
+}
+
+.notify-info {
+  background-color: #fcfcff;
+}
+
+
+/*
+* Landing screen
+*/
+
+.landing {
+  text-align: center;
+  padding: 0px 15px;
 }
