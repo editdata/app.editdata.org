@@ -34,7 +34,7 @@ router.on('/', function (params) {
 router.on('/edit', function (params) {
   if (state.activeDataset) {
     if (state.saveData.owner && state.saveData.repo && state.saveData.branch && state.saveData.location) {
-      return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch + '/' + state.saveData.location.path)
+      return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch)
     } else {
       return router.go('/edit/new')
     }
@@ -46,8 +46,6 @@ router.on('/edit', function (params) {
 
   getStarted.addEventListener('click', function (source) {
     var popup = app.openFile(source, state)
-
-    console.log(popup)
 
     popup.addEventListener('render', function (popupEl) {
       app.renderContent([html, popupEl], state)
@@ -72,7 +70,7 @@ router.on('/edit/new', function (params) {
   app.renderEditor([], state)
 })
 
-router.on('/edit/github/:owner/:repo/:branch/:path', function (params) {
+router.on('/edit/github/:owner/:repo/:branch', function (params) {
   state.setUrl()
   app.renderEditor([], state)
 })

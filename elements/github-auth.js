@@ -59,9 +59,9 @@ Auth.prototype.render = function (state) {
     href: '#/about'
   }, 'about'))
 
-  elements.push(h('a.content-link', {
-    href: '#/docs'
-  }, 'docs'))
+  // elements.push(h('a.content-link', {
+  //   href: '#/docs'
+  // }, 'docs'))
 
   if (!state.user.profile) {
     elements.push(this.renderButton())

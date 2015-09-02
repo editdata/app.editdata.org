@@ -27,13 +27,15 @@ Item.prototype.render = function (obj, state) {
       }
     }
 
-    var field = self.html('textarea.item-property-value', options)
-    var fieldwrapper = self.html('div.item-property-wrapper', [
-      self.html('span.item-property-label', state.properties[key].name),
-      field
-    ])
+    if (state.properties[key]) {
+      var field = self.html('textarea.item-property-value', options)
+      var fieldwrapper = self.html('div.item-property-wrapper', [
+        self.html('span.item-property-label', state.properties[key].name),
+        field
+      ])
 
-    fields.push(fieldwrapper)
+      fields.push(fieldwrapper)
+    }
   })
 
   var vtree = this.html('div#item', [
