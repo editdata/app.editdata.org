@@ -15,7 +15,7 @@ Auth.prototype.verify = function (code, callback) {
 }
 
 Auth.prototype.renderButton = function () {
-  var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=gist,user,repo,read:org&redirect_uri=' + config.redirect_uri
+  var url = 'https://github.com/login/oauth/authorize?client_id=' + config.client_id + '&scope=repo&redirect_uri=' + config.redirect_uri
 
   return this.html('a.button.small', { href: url }, [
     this.html('i.fa.fa-github-square'),
