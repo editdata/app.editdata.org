@@ -11,7 +11,7 @@
     "bundle-css": "cssnext assets/deps.css assets/bundle.css",
     "bundle-js": "browserify app.js -t [ envify --NODE_ENV production ] -o  assets/bundle.js",
     "bundle": "npm run bundle-css && npm run bundle-js",
-    "start": "budo app.js:assets/bundle.js --live -- -t [ envify --NODE_ENV development ] -t brfs"
+    "start": "budo app.js:assets/bundle.js --live --pushstate -- -t [ envify --NODE_ENV development ] -t brfs"
   },
   "browserify": {
     "transform": [
@@ -43,6 +43,7 @@
     "from2-string": "^1.1.0",
     "github-api": "^0.10.6",
     "hash-match": "^1.0.1",
+    "history-state": "^1.0.0",
     "inherits": "^2.0.1",
     "keycode": "^2.1.0",
     "keymaster": "^1.6.2",

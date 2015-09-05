@@ -32,6 +32,7 @@ router.on('/', function (params) {
 })
 
 router.on('/edit', function (params) {
+  console.log(params)
   if (state.activeDataset) {
     if (state.saveData.owner && state.saveData.repo && state.saveData.branch && state.saveData.location) {
       return router.go('/edit/github/' + state.saveData.owner + '/' + state.saveData.repo + '/' + state.saveData.branch)
