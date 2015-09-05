@@ -13,7 +13,7 @@ Header.prototype.render = function (elements, state) {
   var h = this.html
 
   elements = [h('h1.site-title', [
-    h('a', { href: '#/' }, state.site.title)
+    h('a', { href: '/' }, state.site.title)
   ])].concat(elements)
 
   var vtree = h('header', [

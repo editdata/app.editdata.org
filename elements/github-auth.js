@@ -56,7 +56,7 @@ Auth.prototype.render = function (state) {
   var elements = []
 
   elements.push(h('a.content-link', {
-    href: '#/about'
+    href: '/about'
   }, 'about'))
 
   // elements.push(h('a.content-link', {

@@ -24,6 +24,7 @@
     "basscss-grid": "^1.0.3",
     "brfs": "^1.4.1",
     "browser-fs": "0.0.4",
+    "catch-links": "^2.0.0",
     "cookie-cutter": "^0.1.1",
     "csskit": "^1.1.1",
     "csv-parser": "^1.7.0",
@@ -68,7 +69,7 @@
   "devDependencies": {
     "brfs": "^1.4.1",
     "browserify": "^11.0.1",
-    "budo": "^4.1.0",
+    "budo": "^4.2.1",
     "cssnext": "^1.8.2",
     "dom-value": "0.0.0",
     "sheetify": "^2.0.0",
