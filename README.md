@@ -10,7 +10,7 @@
   * run gatekeeper.
 * Clone this repository
 * add your Github client_id to the `development` config in `config.js`
-* run `npm install && npm bundle` to get set up
+* run `npm install && npm run bundle` to get set up
 * run `npm start` for the server
 * visit <http://localhost:9966>
 
