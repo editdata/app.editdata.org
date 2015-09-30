@@ -24,7 +24,6 @@
     "base-element": "^3.0.1",
     "basscss-grid": "^1.0.3",
     "brfs": "^1.4.1",
-    "browser-fs": "0.0.4",
     "catch-links": "^2.0.0",
     "cookie-cutter": "^0.1.1",
     "csskit": "^1.1.1",
