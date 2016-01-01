@@ -1,6 +1,6 @@
 {
   "name": "editdata.org",
-  "description": "edit tabular data. save it on github.",
+  "description": "edit data. save it on github.",
   "version": "1.0.0",
   "repository": {
     "url": "git://github.com/flatsheet/editdata.org.git"
@@ -19,23 +19,23 @@
     ]
   },
   "dependencies": {
-    "JSONStream": "^1.0.4",
+    "JSONStream": "^1.0.7",
     "base-64": "^0.1.0",
     "base-element": "^3.0.1",
-    "basscss-grid": "^1.0.3",
+    "basscss-grid": "^1.0.4",
     "catch-links": "^2.0.0",
     "cookie-cutter": "^0.1.1",
     "csskit": "^1.1.1",
-    "csv-parser": "^1.7.0",
+    "csv-parser": "^1.9.1",
     "csv-write-stream": "^1.0.0",
     "cuid": "^1.3.8",
     "data-schema": "^1.4.3",
     "data-set": "^4.0.0",
     "dom-value": "0.0.0",
-    "element-class": "^0.2.1",
+    "element-class": "^0.2.2",
     "envify": "^3.4.0",
     "extend": "^3.0.0",
-    "file-extension": "^1.1.4",
+    "file-extension": "^2.0.1",
     "from2-array": "0.0.4",
     "from2-string": "^1.1.0",
     "history-state": "^1.0.0",
@@ -52,14 +52,14 @@
     "view-list": "shama/view-list",
     "virtual-dom": "^2.1.1",
     "wayfarer": "^4.2.0",
-    "xhr": "^2.0.3"
+    "xhr": "^2.2.0"
   },
   "devDependencies": {
-    "brfs": "^1.4.1",
-    "browserify": "^11.0.1",
-    "budo": "^4.2.1",
-    "cssnext": "^1.8.2",
-    "sheetify": "^2.0.0",
-    "surge": "^0.14.3"
+    "brfs": "^1.4.2",
+    "browserify": "^12.0.1",
+    "budo": "^7.1.0",
+    "cssnext": "^1.8.4",
+    "sheetify": "^3.3.3",
+    "surge": "^0.17.4"
   }
 }

@@ -48,26 +48,29 @@ router.on('/edit', function (params) {
   getStarted.addEventListener('click', function (source) {
     var popup = app.openFile(source, state)
 
-    popup.addEventListener('render', function (popupEl) {
-      app.renderContent([html, popupEl], state)
-    })
+    if (popup) {
+      popup.addEventListener('render', function (popupEl) {
+        app.renderContent([html, popupEl], state)
+      })
 
-    popup.addEventListener('close', function () {
-      app.renderContent(html, state)
-    })
+      popup.addEventListener('close', function () {
+        app.renderContent(html, state)
+      })
 
-    popup.addEventListener('done', function (data, properties, save) {
-      state.data = data
-      state.properties = properties
-      if (save) state.saveData = save
-      state.activeDataset = true
-      state.save()
-      app.renderEditor([], state)
-    })
+      popup.addEventListener('done', function (data, properties, save) {
+        state.data = data
+        state.properties = properties
+        if (save) state.saveData = save
+        state.activeDataset = true
+        state.save()
+        app.renderEditor([], state)
+      })
+    }
   })
 })
 
 router.on('/edit/new', function (params) {
+  console.log('why', state)
   app.renderEditor([], state)
 })
 
