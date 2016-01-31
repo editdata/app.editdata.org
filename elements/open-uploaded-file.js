@@ -1,12 +1,22 @@
 var h = require('virtual-dom/h')
-var createPopup = require('../elements/popup')
-var parseCSV = require('./parse-csv')
-var parseJSON = require('./parse-json')
+var parseCSV = require('../lib/parse-csv')
+var parseJSON = require('../lib/parse-json')
 
-module.exports = function openUploadedFile (state) {
-  var popup = createPopup()
+module.exports = OpenUploadedFile
 
-  var el = popup.open([
+function OpenUploadedFile (props) {
+  var onEnd = props.onEnd
+  var onError = props.onError
+
+  function end (err, data, properties) {
+    // TODO: Handle error
+    if (err) console.error(err)
+    var save = null
+
+    onEnd(data, properties, save)
+  }
+
+  return h('div', [
     h('h1', 'Upload a CSV or JSON file'),
     h('h2', 'Currently only CSV or JSON files are supported'),
     h('input#upload-file', {
@@ -16,8 +26,8 @@ module.exports = function openUploadedFile (state) {
         var reader = new window.FileReader()
 
         reader.onload = function (e) {
-          var type = require('./accept-file')(file.name)
-          if (type instanceof Error) return popup.send('error', type)
+          var type = require('../lib/accept-file')(file.name)
+          if (type instanceof Error) return onError(type)
           if (type === 'csv') {
             parseCSV(e.target.result, end)
           } else if (type === 'json') {
@@ -30,16 +40,4 @@ module.exports = function openUploadedFile (state) {
       }
     })
   ])
-
-  function end (err, data, properties) {
-    if (err) console.error(err)
-    var save = null
-    popup.send('done', data, properties, save)
-  }
-
-  setTimeout(function () {
-    popup.send('render', el)
-  })
-
-  return popup
 }

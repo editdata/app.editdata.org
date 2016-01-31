@@ -1,24 +1,18 @@
-var BaseElement = require('base-element')
-var inherits = require('inherits')
+// var h = require('virtual-dom').h
+var GithubAuth = require('./github-auth')
 
 module.exports = Header
-inherits(Header, BaseElement)
 
-function Header () {
-  if (!(this instanceof Header)) return new Header()
-  BaseElement.call(this)
-}
+function Header (props) {
+  var site = props.site
+  var h = props.app.h
 
-Header.prototype.render = function (elements, state) {
-  var h = this.html
-
-  elements = [h('h1.site-title', [
-    h('a', { href: '/' }, state.site.title)
-  ])].concat(elements)
-
-  var vtree = h('header', [
-    h('div.container', elements)
+  return h('header', [
+    h('div.container', [
+      h('h1.site-title', [
+        h('a', { href: '/' }, site.title)
+      ]),
+      GithubAuth(props)
+    ])
   ])
-
-  return this.afterRender(vtree)
 }

@@ -1,18 +1,12 @@
-var BaseElement = require('base-element')
-var inherits = require('inherits')
+var h = require('virtual-dom/h')
+var actions = require('../actions')
+var OpenGithubFile = require('./open-github-file')
+var OpenUploadedFile = require('./open-uploaded-file')
+var Popup = require('./popup')
 
 module.exports = GetStarted
-inherits(GetStarted, BaseElement)
 
-function GetStarted (options) {
-  if (!(this instanceof GetStarted)) return new GetStarted(options)
-  BaseElement.call(this)
-}
-
-GetStarted.prototype.render = function (state) {
-  var self = this
-  var h = this.html
-
+function GetStarted (props) {
   var options = [
     {
       slug: 'empty',
@@ -27,23 +21,43 @@ GetStarted.prototype.render = function (state) {
       text: 'Upload CSV or JSON file'
     }
   ]
+  var store = props.store
   var items = []
+  var popup
+
+  if (props.modals.openNewGithub) {
+    popup = Popup({ visible: true, onclose: function () {
+      actions.modal('openNewGithub', false, props.store)
+    }}, OpenGithubFile(props))
+  }
+
+  if (props.modals.openNewUpload) {
+    popup = Popup({ visible: true, onclose: function () {
+      actions.modal('openNewUpload', false, props.store)
+    }}, OpenUploadedFile({
+      onEnd: function (data, properties, save) {
+        actions.modal('openNewUpload', false, props.store)
+        actions.editor.selectUploadedFile(data, properties, save, store)
+      },
+      onError: function (type) {
+        actions.editor.uploadError(type)
+      }
+    }))
+  }
 
   options.forEach(function (item) {
     var el = h('li.list-item', {
       onclick: function (e) {
-        self.send('click', item.slug, e)
+        actions.editor.openNew(item.slug, props.store)
       }
     }, item.text)
     items.push(el)
   })
 
-  var elements = [
+  return h('div.get-started', [
     h('h1', 'Get Started!'),
     h('h2', 'Start a new dataset or open an existing one.'),
-    h('ul.list', items)
-  ]
-
-  var vtree = h('div.get-started', elements)
-  return this.afterRender(vtree)
+    h('ul.list', items),
+    popup
+  ])
 }

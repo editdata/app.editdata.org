@@ -3,7 +3,9 @@ var extend = require('extend')
 var value = require('dom-value')
 var dataset = require('data-set')
 
-module.exports = function (opts) {
+module.exports = List
+
+function List (props) {
   var options = extend({
     className: 'row-list',
     rowHeight: 40,
@@ -11,7 +13,7 @@ module.exports = function (opts) {
     editable: true,
     properties: {},
     height: 643
-  }, opts)
+  }, props)
 
   var list = ViewList(options)
 
@@ -55,7 +57,7 @@ module.exports = function (opts) {
     var rowOptions = {
       attributes: { 'data-key': row.key },
       onclick: function (e) {
-        list.send('click', e, row)
+        props.handleClick(e, row)
       }
     }
 
@@ -69,5 +71,8 @@ module.exports = function (opts) {
     ])
   }
 
+  // HACK: Prevents infinite loop caused by using `view-list` with `virtual-app`
+  list = list.render(props.data)
+  list.properties = props
   return list
 }

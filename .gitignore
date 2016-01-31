@@ -4,3 +4,4 @@ npm-debug.log
 tmp
 assets/bundle.*
 gatekeeper
+.env

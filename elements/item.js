@@ -1,36 +1,42 @@
-var BaseElement = require('base-element')
-var inherits = require('inherits')
+/*global requestAnimationFrame*/
+var h = require('virtual-dom/h')
 
 module.exports = Item
-inherits(Item, BaseElement)
 
-function Item () {
-  if (!(this instanceof Item)) return new Item()
-  BaseElement.call(this)
-}
-
-Item.prototype.render = function (obj, state) {
-  obj = obj || { value: {} }
-  var self = this
+function Item (props) {
+  var item = props.item || { value: {} }
+  var onInput = props.onInput
+  var onFocus = props.onFocus
+  var onClose = props.onClose
+  var onDestroy = props.onDestroy
+  var activePropertyId = props.activePropertyId
   var fields = []
 
-  Object.keys(obj.value).forEach(function (key) {
+  Object.keys(item.value).forEach(function (key) {
+    var id = 'item-property-' + item.key + '-' + key
     var options = {
-      id: 'item-property-' + obj.key + '-' + key,
-      value: obj.value[key],
+      itemHook: FocusHook(id === activePropertyId),
+      id: 'item-property-' + item.key + '-' + key,
+      value: item.value[key],
       oninput: function (e) {
-        obj.value[key] = e.target.value
-        self.send('input', obj.value[key], obj, e)
+        onInput(key, e.target.value, item.key, e)
       },
       onfocus: function (e) {
-        self.send('focus', e)
+        if (onFocus) onFocus(e, item)
       }
     }
 
-    if (state.properties[key]) {
-      var field = self.html('textarea.item-property-value', options)
-      var fieldwrapper = self.html('div.item-property-wrapper', [
-        self.html('span.item-property-label', state.properties[key].name),
+    if (props.properties[key]) {
+      var field
+      if (props.properties[key].type === 'number') {
+        options.type = 'number'
+        field = h('input.item-property-value', options)
+      } else {
+        field = h('textarea.item-property-value', options)
+      }
+
+      var fieldwrapper = h('div.item-property-wrapper', [
+        h('span.item-property-label', props.properties[key].name),
         field
       ])
 
@@ -38,23 +44,30 @@ Item.prototype.render = function (obj, state) {
     }
   })
 
-  var vtree = this.html('div#item', [
-    this.html('div.item', [
-      self.html('a.close-item', {
+  return h('div#item.active', [
+    h('div.item', [
+      h('a.close-item', {
         href: '#',
         onclick: function (e) {
           e.preventDefault()
-          self.send('close', e)
+          onClose(e)
         }
       }, 'x'),
-      self.html('button#destroyRow.small.button-orange', {
+      h('button#destroyRow.small.button-orange', {
         onclick: function (e) {
-          self.send('destroy-row', obj, e)
+          onDestroy(item, e)
         }
       }, 'destroy row'),
-      self.html('div.item-properties-wrapper', fields)
+      h('div.item-properties-wrapper', fields)
     ])
   ])
+}
 
-  return this.afterRender(vtree)
+function FocusHook (value) {
+  if (!(this instanceof FocusHook)) return new FocusHook(value)
+  this.value = value
+}
+
+FocusHook.prototype.hook = function (elem, propName) {
+  if (this.value) requestAnimationFrame(function () { elem.focus() })
 }

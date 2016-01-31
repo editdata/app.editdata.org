@@ -1,0 +1,10 @@
+name: editdata
+ui: tape
+browsers:
+  - name: firefox
+    platform: linux
+    version: latest
+  - name: chrome
+    version: latest
+  - name: safari
+    version: latest
