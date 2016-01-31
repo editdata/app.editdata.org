@@ -37,18 +37,3 @@ function Popup (props, children) {
 function close (e, onclose) {
   if (onclose) onclose(e)
 }
-
-// function open (elements) {
-//   this.visible = true
-//   this.send('open')
-//   return this.render(elements)
-// }
-//
-// function toggle (elements) {
-//   this.visible = !this.visible
-//   if (!this.visible) {
-//     return this.open(elements)
-//   } else {
-//     return this.close(elements)
-//   }
-// }

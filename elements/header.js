@@ -1,11 +1,10 @@
-// var h = require('virtual-dom').h
+var h = require('virtual-dom/h')
 var GithubAuth = require('./github-auth')
 
 module.exports = Header
 
 function Header (props) {
   var site = props.site
-  var h = props.app.h
 
   return h('header', [
     h('div.container', [

@@ -53,8 +53,8 @@ function Editor (props) {
       store: props.store,
       saveData: props.saveData,
       onFilename: function (name) { actions.editor.setFilename(name, store) },
-      onJSON: function () { actions.editor.saveJSON(store) },
-      onCSV: function () { actions.editor.saveCSV(store) },
+      onJSON: function () { actions.save.json(store) },
+      onCSV: function () { actions.save.csv(store) },
       onJSONToGithub: function () {
         actions.editor.setFileType('json', store)
         actions.modal('saveNewFile', false, store)
