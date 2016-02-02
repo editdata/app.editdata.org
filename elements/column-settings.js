@@ -5,7 +5,6 @@ module.exports = ColumnSettings
 function ColumnSettings (props) {
   var actions = property.actions
   var property = props.property
-  var store = props.store
 
   var destroyColumn = actions.destroyColumn
   var propertyType = actions.propertyType
@@ -43,7 +42,7 @@ function ColumnSettings (props) {
     h('h3', 'Destroy column'),
     h('button.small.button-red', {
       onclick: function (e) {
-        destroyColumn(property.key, store)
+        destroyColumn(property.key)
       }
     }, 'Destroy ' + property.name + ' column')
   ])
