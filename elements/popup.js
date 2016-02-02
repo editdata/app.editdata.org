@@ -3,13 +3,9 @@ var h = require('virtual-dom/h')
 module.exports = Popup
 
 function Popup (props, children) {
-  var visible = props.visible
   var onclose = props.onclose
-
   var width = (window.innerWidth > 800 ? 500 : 320)
   var height = (window.innerWidth > 800 ? 500 : 320)
-
-  if (!visible) return h('div.popup-overlay.hidden')
 
   return h('div.popup-overlay.visible', [
     h('div.popup-wrapper', {
