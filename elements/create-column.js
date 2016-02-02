@@ -3,6 +3,7 @@ var h = require('virtual-dom/h')
 module.exports = CreateColumn
 
 function CreateColumn (props) {
+  var actions = props.actions
   var name, type
 
   return h('div', [
@@ -31,7 +32,7 @@ function CreateColumn (props) {
     h('div', [
       h('button.button-blue', {
         onclick: function () {
-          props.onsubmit(name, type)
+          actions.newColumn(name, type)
         }
       }, 'Create column')
     ])
