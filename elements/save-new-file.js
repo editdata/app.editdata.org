@@ -1,11 +1,12 @@
 var h = require('virtual-dom/h')
 
 module.exports = function (props) {
-  var onFilename = props.onFilename
-  var onJSON = props.onJSON
-  var onCSV = props.onCSV
-  var onCSVToGithub = props.onCSVToGithub
-  var onJSONToGithub = props.onJSONToGithub
+  var actions = props.actions
+  var setFilename = actions.setFilename
+  var setFileType = actions.setFileType
+  var downloadJSON = actions.downloadJSON
+  var downloadCSV = actions.downloadCSV
+  var modal = actions.modal
 
   return h('div', [
     h('h1', 'Save'),
@@ -14,28 +15,30 @@ module.exports = function (props) {
     h('input.small', {
       type: 'text',
       oninput: function (e) {
-        onFilename(e.target.value)
+        if (setFilename) setFilename(e.target.value)
       }
     }),
     h('ul.item-list', [
       h('li.item', {
         onclick: function (e) {
-          onJSON()
+          if (downloadJSON) downloadJSON()
         }
       }, 'Download JSON file'),
       h('li.item', {
         onclick: function (e) {
-          onCSV()
+          if (downloadCSV) downloadCSV()
         }
       }, 'Download CSV file'),
       h('li.item', {
         onclick: function (e) {
-          onJSONToGithub()
+          if (setFileType) setFileType('json')
+          if (modal) modal('saveNewFileToGithub', true)
         }
       }, 'Save JSON file to GitHub'),
       h('li.item', {
         onclick: function (e) {
-          onCSVToGithub()
+          if (setFileType) setFileType('CSV')
+          if (modal) modal('saveNewFileToGithub', true)
         }
       }, 'Save CSV file to GitHub')
     ])

@@ -1,8 +1,15 @@
-var actions = require('../actions')
 var h = require('virtual-dom/h')
 
-module.exports = function saveGitHubFile (props) {
-  var type = require('../lib/accept-file')(props.saveData.location.path)
+module.exports = SaveGitHubFile
+
+function SaveGitHubFile (props) {
+  var actions = props.actions
+  var saveData = saveData
+
+  var saveUpdatedGithubFile = actions.saveUpdatedGithubFile
+  var modal = actions.modal
+
+  var type = require('../lib/accept-file')(saveData.location.path)
   if (type instanceof Error) {
     return h('div', type.message)
   }
@@ -10,7 +17,7 @@ module.exports = function saveGitHubFile (props) {
   var message = ''
 
   return ('div', [
-    h('h1', 'Update ' + props.saveData.location.path + ' in GitHub repository'),
+    h('h1', 'Update ' + saveData.location.path + ' in GitHub repository'),
     h('h2', 'Add a commit message:'),
     h('input.text-input', {
       type: 'text',
@@ -22,10 +29,10 @@ module.exports = function saveGitHubFile (props) {
     h('button.button-blue', {
       onclick: function (e) {
         e.preventDefault()
-        actions.save.updatedGithubFile(message, props.store)
-        actions.modal('saveToGithub', false, props.store)
+        saveUpdatedGithubFile(message)
+        modal('saveToGithub', false)
       }
     }, 'Save to GitHub'),
-    h('p.help', 'File ' + props.saveData.location.path + ' will be updated in ' + props.saveData.owner + '/' + props.saveData.repo)
+    h('p.help', 'File ' + saveData.location.path + ' will be updated in ' + saveData.owner + '/' + saveData.repo)
   ])
 }

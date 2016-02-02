@@ -1,73 +1,69 @@
 var h = require('virtual-dom/h')
-var actions = require('../actions')
-var PopupList = require('./popup-list')
 
-module.exports = SaveToGitHub
+var PopupList = require('../elements/popup-list')
 
-function SaveToGitHub (props) {
-  if (!props.activeOrg) {
-    if (!props.githubOrgs.length) actions.editor.getGithubOrgs(props.user, props.store)
+module.exports = SaveToGithub
+
+function SaveToGithub (props) {
+  var githubBranches = props.githubBranches || []
+  var githubRepos = props.githubRepos || []
+  var githubOrgs = props.githubOrgs || []
+  var activeRepo = props.activeRepo
+  var activeOrg = props.activeOrg
+  var actions = props.actions
+
+  var saveNewFileToGithub = actions.saveNewFileToGithub
+  var getGithubOrgs = actions.getGithubOrgs
+  var setActiveRepo = actions.setActiveRepo
+  var setActiveOrg = actions.setActiveOrg
+
+  if (!githubOrgs.length) {
+    getGithubOrgs()
+    return h('div')
+  }
+
+  if (!activeOrg) {
     return h('div', [
       h('h1', 'Save a file to GitHub'),
       h('h2', 'Choose an organization:'),
       h('button', { onclick: function () {
-        actions.editor.getGithubOrgs(props.user, props.store)
+        getGithubOrgs(props)
       }}, 'refresh'),
-      h('ul.item-list', GithubOrgList(props))
+      h('ul.item-list', PopupList({
+        githubOrgs: githubOrgs,
+        key: 'login',
+        onclick: function (org) {
+          setActiveOrg(org)
+        }
+      }))
     ])
   }
 
-  if (!props.activeRepo) {
+  if (!activeRepo) {
     return h('div', [
       h('h1', 'Save a file to GitHub'),
       h('h2', 'Choose a repository:'),
-      h('button', { onclick: function () {
-        actions.editor.getUserRepos(props.user, props.store)
-      }}, 'refresh'),
-      h('button', { onclick: function () {
-        actions.editor.clearOrgs(props.store)
-      }}, 'back'),
-      h('ul.item-list', GithubRepoList(props))
+      h('ul.item-list', PopupList({
+        githubRepos: githubRepos,
+        key: 'name',
+        onclick: function (repo) {
+          setActiveRepo(repo)
+        }
+      }))
     ])
   }
 
   return h('div', [
     h('h1', 'Save a file to GitHub'),
     h('h2', 'Choose a branch:'),
-    h('button', { onclick: function () {
-      actions.editor.getBranches(props.user.profile.login, props.store)
-    }}, 'refresh'),
-    h('button', { onclick: function () {
-      actions.editor.clearRepos(props.store)
-    }}, 'back'),
-    h('ul.item-list', GithubBranchList(props))
+    h('ul.item-list', PopupList({
+      githubBranches: githubBranches,
+      key: 'name',
+      onclick: function (branch) {
+        if (saveNewFileToGithub) {
+          saveNewFileToGithub(branch)
+        }
+      }
+    }))
   ])
-}
-
-function GithubOrgList (props) {
-  return PopupList(props.githubOrgs, {
-    key: 'login',
-    onclick: function (org) {
-      actions.editor.selectGithubOrg(props.user, org.login, props.store)
-    }
-  })
-}
-
-function GithubRepoList (props) {
-  return PopupList(props.githubRepos, {
-    key: 'name',
-    onclick: function (repo) {
-      actions.editor.selectGithubRepo(props.user, repo, props.store)
-    }
-  })
-}
-
-function GithubBranchList (props) {
-  return PopupList(props.githubBranches, {
-    key: 'name',
-    onclick: function (branch) {
-      actions.save.newGithubFile(branch, props.store)
-      actions.modal('saveNewFileToGithub', false, props.store)
-    }
-  })
 }
