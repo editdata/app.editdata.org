@@ -1,85 +1,83 @@
 var h = require('virtual-dom/h')
-var actions = require('../actions')
 
 var PopupList = require('../elements/popup-list')
 
-function GithubOrgList (props) {
-  return PopupList(props.githubOrgs, {
-    key: 'login',
-    onclick: function (org) {
-      actions.editor.selectGithubOrg(props.user, org.login, props.store)
-    }
-  })
-}
+module.exports = OpenGithubFile
 
-function GithubRepoList (props) {
-  return PopupList(props.githubRepos, {
-    key: 'name',
-    onclick: function (repo) {
-      actions.editor.selectGithubRepo(props.user, repo, props.store)
-    }
-  })
-}
+function OpenGithubFile (props) {
+  var githubBranches = props.githubBranches || []
+  var githubRepos = props.githubRepos || []
+  var githubFiles = props.githubFiles || []
+  var githubOrgs = props.githubOrgs || []
+  var activeBranch = props.activeBranch
+  var activeRepo = props.activeRepo
+  var activeOrg = props.activeOrg
+  var actions = props.actions
 
-function GithubBranchList (props) {
-  return PopupList(props.githubBranches, {
-    key: 'name',
-    onclick: function (branch) {
-      actions.editor.selectGithubBranch(branch, props.store)
-    }
-  })
-}
+  var setActiveBranch = actions.setActiveBranch
+  var setActiveFile = actions.setActiveFile
+  var setActiveRepo = actions.setActiveRepo
+  var setActiveOrg = actions.setActiveOrg
+  var getGithubOrgs = actions.getGithubOrgs
 
-function GithubFileList (props) {
-  return PopupList(props.githubFiles, {
-    key: 'path',
-    onclick: function (file) {
-      actions.editor.selectGithubFile(file, props.store)
-    }
-
-  })
-}
-
-module.exports = function openGithubFile (props) {
-  // var popup = Popup()
-
-  if (!props.githubOrgs) {
-    actions.editor.getGithubOrgs(props.user, props.store)
+  if (!githubOrgs.length) {
+    getGithubOrgs()
     return h('div')
   }
 
-  if (!props.githubRepos) {
+  if (!activeOrg) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose an organization:'),
       h('button', { onclick: function () {
-        actions.editor.getGithubOrgs(props.user, props.store)
+        getGithubOrgs(props)
       }}, 'refresh'),
-      h('ul.item-list', GithubOrgList(props))
+      h('ul.item-list', PopupList({
+        githubOrgs: githubOrgs,
+        key: 'login',
+        onclick: function (org) {
+          setActiveOrg(org)
+        }
+      }))
     ])
   }
 
-  if (!props.activeRepo) {
+  if (!activeRepo) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose a repository:'),
-      h('ul.item-list', GithubRepoList(props))
+      h('ul.item-list', PopupList({
+        githubRepos: githubRepos,
+        key: 'name',
+        onclick: function (repo) {
+          setActiveRepo(repo)
+        }
+      }))
     ])
   }
 
-  if (!props.activeBranch) {
+  if (!activeBranch) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose a branch:'),
-      h('ul.item-list', GithubBranchList(props))
+      h('ul.item-list', PopupList({
+        githubBranches: githubBranches,
+        key: 'name',
+        onclick: function (branch) {
+          setActiveBranch(branch)
+        }
+      }))
     ])
   }
 
-  if (!props.selectedGithubFile) {
-    return h('div', [
-      h('h1', 'Open a file from GitHub'),
-      h('h2', 'Choose a file:'),
-      h('ul.item-list', GithubFileList(props))
-    ])
-  }
+  return h('div', [
+    h('h1', 'Open a file from GitHub'),
+    h('h2', 'Choose a file:'),
+    h('ul.item-list', PopupList(githubFiles, {
+      key: 'path',
+      onclick: function (file) {
+        setActiveFile(file)
+      }
+    }))
+  ])
 }
