@@ -1,5 +1,5 @@
 var h = require('virtual-dom/h')
-var actions = require('../actions')
+
 var Popup = require('./popup')
 var ColumnSettings = require('./column-settings')
 
@@ -8,40 +8,48 @@ module.exports = Headers
 function Headers (props) {
   var activeProperty = props.activeProperty
   var properties = props.properties
-  var store = props.store
+  var actions = props.actions
   var items = []
   var popup
 
+  var setActiveProperty = actions.setActiveProperty
+  var propertyType = actions.propertyType
+  var renameColumn = actions.renameColumn
+  var modal = actions.modal
+
+  function onclose () {
+    setActiveProperty(null)
+    modal('columnSettings', false)
+  }
+
   Object.keys(properties).forEach(function (key) {
     var property = properties[key]
-    if (activeProperty === key) {
-      popup = Popup({
-        visible: true,
-        onclose: function () {
-          actions.editor.setActiveProperty(null, store)
-          actions.modal('columnSettings', false, store)
-        }
-      }, ColumnSettings({
-        property: property,
-        store: store,
-        onTypeChange: function (value) {
-          actions.editor.propertyType(key, value, store)
-        },
-        onNameSubmit: function (name) {
-          actions.editor.renameColumn(key, name, store)
-        }
-      }))
+
+    var columnSettingsProps = {
+      property: property,
+      actions: {
+        propertyType: propertyType,
+        renameColumn: renameColumn
+      }
     }
 
-    items.push(h('li#' + property.key + '.list-header-item.data-list-property', [
-      property.name,
-      h('button#column-settings.small', {
-        onclick: function (e) {
-          actions.editor.setActiveProperty(property.key, store)
-          actions.modal('columnSettings', true, store)
-        }
-      }, h('i.fa.fa-gear', ''))
-    ]))
+    if (activeProperty === key) {
+      popup = Popup({ onclose: onclose }, [
+        ColumnSettings(columnSettingsProps)
+      ])
+    }
+
+    items.push(
+      h('li#' + property.key + '.list-header-item.data-list-property', [
+        property.name,
+        h('button#column-settings.small', {
+          onclick: function (e) {
+            setActiveProperty(property.key)
+            modal('columnSettings', true)
+          }
+        }, h('i.fa.fa-gear', ''))
+      ])
+    )
   })
 
   return h('div', [
