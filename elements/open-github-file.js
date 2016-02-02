@@ -4,6 +4,10 @@ var PopupList = require('../elements/popup-list')
 
 module.exports = OpenGithubFile
 
+/**
+ * Open an existing Github file
+ * @param {Object} props
+ */
 function OpenGithubFile (props) {
   var githubBranches = props.githubBranches || []
   var githubRepos = props.githubRepos || []
