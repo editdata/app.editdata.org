@@ -1,15 +1,14 @@
 var h = require('virtual-dom/h')
-var actions = require('../actions')
 var About = require('../elements/about')
 var Landing = require('../elements/landing')
-var Editor = require('../elements/editor')
-var GetStarted = require('../elements/get-started')
+var Editor = require('./editor')
 var Docs = require('../elements/docs')
 
 module.exports = Router
 
 function Router (props) {
-  var store = props.store
+  var actions = props.actions
+  var editor = props.editor
   var user = props.user
   var url = props.url
   var view
@@ -17,15 +16,25 @@ function Router (props) {
   if (!url) url = { pathname: '/' }
   var query = url.query
 
+  // User is working on an active dataset
+  if (editor.saveData &&
+    editor.saveData.owner &&
+    editor.saveData.repo &&
+    editor.saveData.branch &&
+    editor.saveData.location) {
+    // The dataset came from Github, redirect to proper url
+    actions.setRoute('/edit/github/' + editor.saveData.owner + '/' + editor.saveData.repo + '/' + editor.saveData.branch)
+  }
+
   // User has a token but no profile, grab it from Github
-  if (!user.profile && user.token) actions.getGithubProfile(user.token, store)
+  if (!user.profile && user.token) actions.github.auth(user.token)
 
   // User is authenticating with Github OAuth
-  if (!user.profile && query && query.code) actions.githubAuth(query.code, store)
+  if (!user.profile && query && query.code) actions.github.auth(query.code)
 
   if (url.pathname === '/') {
     // User is already logged in, redirect to `Getting Started` page
-    if (user.profile) actions.setRoute('/edit', store)
+    if (user.profile) actions.setRoute('/edit')
   }
 
   // `About` page
@@ -33,35 +42,11 @@ function Router (props) {
     view = About(props)
   }
 
-  if (url.pathname === '/edit') {
-    if (!props.data.length) {
-      // User does not have an active dataset
-      view = GetStarted(props)
-    } else {
-      // User is working on an active dataset
-      if (props.saveData &&
-        props.saveData.owner &&
-        props.saveData.repo &&
-        props.saveData.branch &&
-        props.saveData.location) {
-        // The dataset came from Github, redirect to proper url
-        actions.setRoute('/edit/github/' + props.saveData.owner + '/' + props.saveData.repo + '/' + props.saveData.branch, store)
-        return h('div')
-      } else {
-        // The dataset was an uploaded file or a new dataset
-        return Editor(props)
-      }
-    }
-  }
-
-  // New file
-  if (url.pathname === '/edit/new') view = Editor(props)
-
   // Docs
   if (url.pathname === '/docs') view = Docs(props)
 
-  // Editing a file from Github
-  if (url.pathname.substring(0, 12) === '/edit/github') view = Editor(props)
+  // Editor
+  if (url.pathname.substring(0, 5) === '/edit') view = Editor(props)
 
   // Default view
   if (!view) view = Landing(props)
