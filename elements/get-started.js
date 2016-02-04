@@ -1,17 +1,9 @@
-var BaseElement = require('base-element')
-var inherits = require('inherits')
+var h = require('virtual-dom/h')
 
 module.exports = GetStarted
-inherits(GetStarted, BaseElement)
 
-function GetStarted (options) {
-  if (!(this instanceof GetStarted)) return new GetStarted(options)
-  BaseElement.call(this)
-}
-
-GetStarted.prototype.render = function (state) {
-  var self = this
-  var h = this.html
+function GetStarted (props) {
+  var actions = props.actions
 
   var options = [
     {
@@ -32,18 +24,15 @@ GetStarted.prototype.render = function (state) {
   options.forEach(function (item) {
     var el = h('li.list-item', {
       onclick: function (e) {
-        self.send('click', item.slug, e)
+        actions.openNew(item.slug)
       }
     }, item.text)
     items.push(el)
   })
 
-  var elements = [
+  return h('div.get-started.content-box', [
     h('h1', 'Get Started!'),
     h('h2', 'Start a new dataset or open an existing one.'),
     h('ul.list', items)
-  ]
-
-  var vtree = h('div.get-started', elements)
-  return this.afterRender(vtree)
+  ])
 }

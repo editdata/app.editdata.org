@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "standard"
+  ],
+  "rules": {
+    "valid-jsdoc": [ 1, {
+      "prefer": { "returns": "return" },
+      "requireParamDescription": false,
+      "requireReturn": false,
+      "requireReturnDescription": false
+    } ],
+  }
+}

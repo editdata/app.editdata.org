@@ -1,36 +1,53 @@
-var BaseElement = require('base-element')
-var inherits = require('inherits')
+/*global requestAnimationFrame*/
+var h = require('virtual-dom/h')
+var dataset = require('data-set')
 
 module.exports = Item
-inherits(Item, BaseElement)
 
-function Item () {
-  if (!(this instanceof Item)) return new Item()
-  BaseElement.call(this)
-}
+function Item (props) {
+  var activeColumnKey = props.activeColumnKey
+  var properties = props.properties
+  var item = props.activeRowData
+  var actions = props.actions
 
-Item.prototype.render = function (obj, state) {
-  obj = obj || { value: {} }
-  var self = this
+  var updateCellContent = actions.updateCellContent
+  var setActiveRow = actions.setActiveRow
+  var destroyRow = actions.destroyRow
   var fields = []
 
-  Object.keys(obj.value).forEach(function (key) {
+  Object.keys(item.value).forEach(function (key) {
     var options = {
-      id: 'item-property-' + obj.key + '-' + key,
-      value: obj.value[key],
+      itemHook: FocusHook(key === activeColumnKey),
+      id: 'item-property-' + item.key + '-' + key,
+      attributes: { 'data-key': key },
+      value: item.value[key],
       oninput: function (e) {
-        obj.value[key] = e.target.value
-        self.send('input', obj.value[key], obj, e)
+        updateCellContent(key, e.target.value, item.key, e)
       },
-      onfocus: function (e) {
-        self.send('focus', e)
+      onclick: function (e) {
+        var el = e.target
+        var rowEl = el.parentNode.parentNode
+        var propertyKey = dataset(el).key
+        var rowKey = dataset(rowEl).key
+        var active = {
+          column: propertyKey,
+          row: rowKey
+        }
+        setActiveRow(active)
       }
     }
 
-    if (state.properties[key]) {
-      var field = self.html('textarea.item-property-value', options)
-      var fieldwrapper = self.html('div.item-property-wrapper', [
-        self.html('span.item-property-label', state.properties[key].name),
+    if (properties[key]) {
+      var field
+      if (properties[key].type === 'number') {
+        options.type = 'number'
+        field = h('input.item-property-value', options)
+      } else {
+        field = h('textarea.item-property-value', options)
+      }
+
+      var fieldwrapper = h('div.item-property-wrapper', [
+        h('span.item-property-label', properties[key].name),
         field
       ])
 
@@ -38,23 +55,36 @@ Item.prototype.render = function (obj, state) {
     }
   })
 
-  var vtree = this.html('div#item', [
-    this.html('div.item', [
-      self.html('a.close-item', {
+  return h('div#item.active', [
+    h('div.item', [
+      h('a.close-item', {
         href: '#',
         onclick: function (e) {
           e.preventDefault()
-          self.send('close', e)
+          setActiveRow(null)
         }
       }, 'x'),
-      self.html('button#destroyRow.small.button-orange', {
+      h('button#destroyRow.small.button-orange', {
         onclick: function (e) {
-          self.send('destroy-row', obj, e)
+          if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
+            destroyRow(item.key)
+          }
         }
       }, 'destroy row'),
-      self.html('div.item-properties-wrapper', fields)
+      h('div.item-properties-wrapper', {
+        attributes: {
+          'data-key': item.key
+        }
+      }, fields)
     ])
   ])
+}
 
-  return this.afterRender(vtree)
+function FocusHook (value) {
+  if (!(this instanceof FocusHook)) return new FocusHook(value)
+  this.value = value
+}
+
+FocusHook.prototype.hook = function (elem, propName) {
+  if (this.value) requestAnimationFrame(function () { elem.focus() })
 }

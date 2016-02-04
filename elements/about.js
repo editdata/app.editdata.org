@@ -1,17 +1,9 @@
-var BaseElement = require('base-element')
-var inherits = require('inherits')
+var h = require('virtual-dom').h
 
 module.exports = About
-inherits(About, BaseElement)
 
-function About (options) {
-  if (!(this instanceof About)) return new About(options)
-  BaseElement.call(this)
-}
-
-About.prototype.render = function (state) {
-  var h = this.html
-  var elements = [
+function About () {
+  return h('div.about.content-box', [
     h('h1', 'About EditData.org'),
     h('h2', 'Hello. Let me tell you about everything.'),
     h('p', 'EditData.org is a tool for editing CSV & JSON files from your computer & from GitHub.'),
@@ -21,7 +13,5 @@ About.prototype.render = function (state) {
     h('p', [
       h('a.button', { href: 'https://github.com/flatsheet/editdata.org/issues' }, 'Report an issue')
     ])
-  ]
-  var vtree = h('div.about', elements)
-  return this.afterRender(vtree)
+  ])
 }

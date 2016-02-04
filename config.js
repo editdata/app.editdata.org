@@ -5,8 +5,8 @@ var config = {
     gatekeeper: 'http://192.241.225.150:9999'
   },
   development: {
-    client_id: 'c8ad659e602436645622',
-    redirect_uri: 'http://127.0.0.1:9966',
+    client_id: 'e6fa0762c3c6db05d59e',
+    redirect_uri: 'http://localhost:9966',
     gatekeeper: 'http://localhost:9999'
   }
 }
