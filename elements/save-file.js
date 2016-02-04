@@ -2,9 +2,9 @@ var saveNewFile = require('./save-new-file')
 var saveUpdatedGitHubFile = require('./save-updated-github-file')
 
 module.exports = function saveFile (props) {
-  if (!props.saveData.source || !props.saveData.location) {
+  if (!props.file.saveData.source || !props.file.saveData.location) {
     return saveNewFile(props)
-  } else if (props.saveData.source === 'github') {
+  } else if (props.file.saveData.source === 'github') {
     return saveUpdatedGitHubFile(props)
   }
 }

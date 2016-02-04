@@ -14,6 +14,7 @@ function SignInButton (h) {
 }
 
 function Profile (props) {
+  var actions = props.actions
   var elements = []
 
   var options = {

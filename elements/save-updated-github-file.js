@@ -4,7 +4,7 @@ module.exports = SaveGitHubFile
 
 function SaveGitHubFile (props) {
   var actions = props.actions
-  var saveData = saveData
+  var saveData = props.file.saveData
 
   var saveUpdatedGithubFile = actions.saveUpdatedGithubFile
   var modal = actions.modal

@@ -3,7 +3,7 @@ var h = require('virtual-dom/h')
 module.exports = ColumnSettings
 
 function ColumnSettings (props) {
-  var actions = property.actions
+  var actions = props.actions
   var property = props.property
 
   var destroyColumn = actions.destroyColumn
@@ -19,7 +19,7 @@ function ColumnSettings (props) {
     h('select.small', {
       onchange: function (e) {
         var selectedValue = e.target.options[e.target.selectedIndex].text
-        propertyType(selectedValue)
+        propertyType(property.key, selectedValue)
       }
     }, [
       h('option', { selected: property.type === 'string' }, 'string'),
@@ -35,7 +35,7 @@ function ColumnSettings (props) {
     }),
     h('button.small.button-blue', {
       onclick: function () {
-        renameColumn(newName)
+        renameColumn(property.key, newName)
       }
     }, 'Rename'),
     h('hr'),

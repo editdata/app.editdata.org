@@ -1,8 +1,5 @@
 var h = require('virtual-dom/h')
 
-var Popup = require('./popup')
-var ColumnSettings = require('./column-settings')
-
 module.exports = Headers
 
 function Headers (props) {
@@ -10,7 +7,6 @@ function Headers (props) {
   var properties = props.properties
   var actions = props.actions
   var items = []
-  var popup
 
   var setActiveProperty = actions.setActiveProperty
   var propertyType = actions.propertyType
@@ -24,20 +20,6 @@ function Headers (props) {
 
   Object.keys(properties).forEach(function (key) {
     var property = properties[key]
-
-    var columnSettingsProps = {
-      property: property,
-      actions: {
-        propertyType: propertyType,
-        renameColumn: renameColumn
-      }
-    }
-
-    if (activeProperty === key) {
-      popup = Popup({ onclose: onclose }, [
-        ColumnSettings(columnSettingsProps)
-      ])
-    }
 
     items.push(
       h('li#' + property.key + '.list-header-item.data-list-property', [
@@ -53,7 +35,6 @@ function Headers (props) {
   })
 
   return h('div', [
-    h('ul.headers-list.data-list-properties', items),
-    popup
+    h('ul.headers-list.data-list-properties', items)
   ])
 }

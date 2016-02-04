@@ -6,6 +6,8 @@ var dataset = require('data-set')
 module.exports = List
 
 function List (props) {
+  var activeCellKey = props.activePropertyKey
+  var activeRowKey = props.activeRowKey
   var options = extend({
     className: 'row-list',
     rowHeight: 40,
@@ -39,8 +41,11 @@ function List (props) {
         list.send('blur', e, property, row)
       }
 
+      var active = (activeCellKey === key && row.key === parseInt(activeRowKey, 10))
+
       var propertyOptions = {
         id: 'cell-' + row.key + '-' + key,
+        className: active ? 'list-property-value active-cell' : 'list-property-value',
         attributes: {
           'data-type': 'string', // todo: use property type from options.properties
           'data-key': key
@@ -50,14 +55,22 @@ function List (props) {
       }
 
       return list.html('li.list-property', [
-        list.html('span.list-property-value', propertyOptions, row.value[key])
+        list.html('span', propertyOptions, row.value[key])
       ])
     }
 
     var rowOptions = {
       attributes: { 'data-key': row.key },
       onclick: function (e) {
-        props.handleClick(e, row)
+        var el = e.target
+        var rowEl = el.parentNode.parentNode.parentNode
+        var propertyKey = dataset(el).key
+        var rowKey = dataset(rowEl).key
+        var active = {
+          column: propertyKey,
+          row: rowKey
+        }
+        props.handleClick(active)
       }
     }
 

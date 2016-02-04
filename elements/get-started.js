@@ -1,12 +1,10 @@
 var h = require('virtual-dom/h')
-var actions = require('../actions')
-var OpenGithubFile = require('./open-github-file')
-var OpenUploadedFile = require('./open-uploaded-file')
-var Popup = require('./popup')
 
 module.exports = GetStarted
 
 function GetStarted (props) {
+  var actions = props.actions
+
   var options = [
     {
       slug: 'empty',
@@ -21,43 +19,20 @@ function GetStarted (props) {
       text: 'Upload CSV or JSON file'
     }
   ]
-  var store = props.store
   var items = []
-  var popup
-
-  if (props.modals.openNewGithub) {
-    popup = Popup({ visible: true, onclose: function () {
-      actions.modal('openNewGithub', false, props.store)
-    }}, OpenGithubFile(props))
-  }
-
-  if (props.modals.openNewUpload) {
-    popup = Popup({ visible: true, onclose: function () {
-      actions.modal('openNewUpload', false, props.store)
-    }}, OpenUploadedFile({
-      onEnd: function (data, properties, save) {
-        actions.modal('openNewUpload', false, props.store)
-        actions.editor.selectUploadedFile(data, properties, save, store)
-      },
-      onError: function (type) {
-        actions.editor.uploadError(type)
-      }
-    }))
-  }
 
   options.forEach(function (item) {
     var el = h('li.list-item', {
       onclick: function (e) {
-        actions.editor.openNew(item.slug, props.store)
+        actions.openNew(item.slug)
       }
     }, item.text)
     items.push(el)
   })
 
-  return h('div.get-started', [
+  return h('div.get-started.content-box', [
     h('h1', 'Get Started!'),
     h('h2', 'Start a new dataset or open an existing one.'),
-    h('ul.list', items),
-    popup
+    h('ul.list', items)
   ])
 }

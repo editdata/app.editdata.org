@@ -22,10 +22,13 @@ function OpenGithubFile (props) {
   var setActiveFile = actions.setActiveFile
   var setActiveRepo = actions.setActiveRepo
   var setActiveOrg = actions.setActiveOrg
-  var getGithubOrgs = actions.getGithubOrgs
+  var getBranches = actions.getBranches
+  var getRepos = actions.getRepos
+  var getFiles = actions.getFiles
+  var getOrgs = actions.getOrgs
 
   if (!githubOrgs.length) {
-    getGithubOrgs()
+    getOrgs()
     return h('div')
   }
 
@@ -34,10 +37,9 @@ function OpenGithubFile (props) {
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose an organization:'),
       h('button', { onclick: function () {
-        getGithubOrgs(props)
+        getOrgs()
       }}, 'refresh'),
-      h('ul.item-list', PopupList({
-        githubOrgs: githubOrgs,
+      h('ul.item-list', PopupList(githubOrgs, {
         key: 'login',
         onclick: function (org) {
           setActiveOrg(org)
@@ -50,8 +52,13 @@ function OpenGithubFile (props) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose a repository:'),
-      h('ul.item-list', PopupList({
-        githubRepos: githubRepos,
+      h('button.small', { onclick: function () {
+        getRepos()
+      }}, 'refresh'),
+      h('button.small', { onclick: function () {
+        setActiveOrg(null)
+      }}, 'back'),
+      h('ul.item-list', PopupList(githubRepos, {
         key: 'name',
         onclick: function (repo) {
           setActiveRepo(repo)
@@ -64,8 +71,13 @@ function OpenGithubFile (props) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose a branch:'),
-      h('ul.item-list', PopupList({
-        githubBranches: githubBranches,
+      h('button.small', { onclick: function () {
+        getBranches()
+      }}, 'refresh'),
+      h('button.small', { onclick: function () {
+        setActiveRepo(null)
+      }}, 'back'),
+      h('ul.item-list', PopupList(githubBranches, {
         key: 'name',
         onclick: function (branch) {
           setActiveBranch(branch)
@@ -73,10 +85,15 @@ function OpenGithubFile (props) {
       }))
     ])
   }
-
   return h('div', [
     h('h1', 'Open a file from GitHub'),
     h('h2', 'Choose a file:'),
+    h('button.small', { onclick: function () {
+      getFiles()
+    }}, 'refresh'),
+    h('button.small', { onclick: function () {
+      setActiveBranch(null)
+    }}, 'back'),
     h('ul.item-list', PopupList(githubFiles, {
       key: 'path',
       onclick: function (file) {
