@@ -12,7 +12,7 @@ function Landing (props) {
     ' Sign in with GitHub'
   ])
 
-  return h('div.landing', [
+  return h('div.landing.content-box', [
     h('div.welcome', [
       h('h1', 'Hello! Let\'s edit some data!'),
       h('p', 'editdata.org is a simple version of flatsheet, a tool for curating data as editorial content.'),
