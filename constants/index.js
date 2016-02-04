@@ -7,6 +7,7 @@ exports.SIGN_OUT = 'SIGN_OUT'
 exports.SAVE = 'SAVE'
 exports.MENU = 'MENU'
 exports.MODAL = 'MODAL'
+exports.CLOSE_MODALS = 'CLOSE_MODALS'
 exports.RESET = 'RESET'
 
 // Editor
@@ -47,3 +48,4 @@ exports.SAVE_TO_GITHUB_SUCCESS = 'SAVE_TO_GITHUB_SUCCESS'
 // File Ops
 exports.SET_FILENAME = 'SET_FILENAME'
 exports.SET_FILE_TYPE = 'SET_FILE_TYPE'
+exports.SET_FILE = 'SET_FILE'
