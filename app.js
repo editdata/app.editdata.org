@@ -3,27 +3,35 @@ var createApp = require('virtual-app')
 var vdom = require('virtual-dom')
 var xtend = require('xtend')
 
+var ActionCreators = require('./actions')
 var initialState = require('./lib/initial-state')
 var RootContainer = require('./containers/root')
 var modifier = require('./modifiers')
 var store = new Storage()
 
 var app = createApp(document.getElementById('app'), vdom)
-var render = app.start(modifier, store.get('editdata') || initialState)
+var state = store.get('editdata') || initialState
+
+var render = app.start(modifier, state)
+var actions = ActionCreators(app.store)
 
 app.on('*', function (action, state, oldState) {
   console.log('oldState ->', oldState)
   console.log('action ->', action)
   console.log('state ->', state)
+  delete state.ui
   store.set('editdata', state)
 })
 
 render(function (state) {
-  var props = xtend(state, { store: app.store })
+  if (!state.ui) state.ui = initialState.ui
+  var props = xtend(state, {
+    store: app.store,
+    actions: actions
+  })
   return RootContainer(props)
 })
 
-var actions = require('./actions')
 var router = require('./lib/router')
 
 router.on('/', function (params) {
@@ -47,7 +55,5 @@ router.on('/docs', function (params) {
 })
 
 router.start()
-
-app.store(actions.setUrl())
 
 module.exports = app
