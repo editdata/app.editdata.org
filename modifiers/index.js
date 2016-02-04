@@ -11,7 +11,7 @@ var constants = require('../constants')
 module.exports = modifyState
 
 function modifyState (action, state) {
-  var data
+  var editor
   state = xtend(initialState, state)
   switch (action.type) {
     case constants.SET_URL:
@@ -26,78 +26,79 @@ function modifyState (action, state) {
       cookie.set('editdata', action.user.token)
       return xtend(state, { user: action.user })
     case constants.SET_USER_PROFILE:
-      return xtend(state, {
-        user: {
-          profile: action.profile,
-          token: state.token
-        }
-      })
+      var user = xtend(state.user)
+      user.profile = action.profile
+      return xtend(state, { user: user })
     case constants.NEW_ROW:
-      data = state.data
+      editor = xtend(state.editor)
       var row = {
-        key: state.data.length + 1,
+        key: editor.data.length + 1,
         value: {}
       }
-      Object.keys(state.properties).forEach(function (key) {
+      Object.keys(editor.properties).forEach(function (key) {
         row.value[key] = null
       })
-      data.push(row)
-      return xtend(state, { data: data })
+      editor.data.push(row)
+      return xtend(state, { editor: editor })
     case constants.NEW_COLUMN:
       var property = action.property
-      var properties = state.properties
-      data = state.data
+      editor = xtend(state.editor)
       if (!property.key) property.key = cuid()
       if (!property.type) property.type = 'string'
       if (!property.default) property.default = null
 
       var prop = schema.addProperty(property)
-      properties[prop.key] = prop
+      editor.properties[prop.key] = prop
 
-      data.forEach(function (item) {
+      editor.data.forEach(function (item) {
         item.value[property.key] = null
       })
 
-      return xtend(state, {
-        data: state.data,
-        properties: state.properties
-      })
+      return xtend(state, { editor: editor })
     case constants.DESTROY:
-      return xtend(state, {
-        data: [],
-        properties: {}
-      })
+      editor = xtend(state.editor)
+      editor.data = []
+      editor.properties = {}
+      return xtend(state, { editor: editor })
     case constants.DESTROY_ROW:
-      data = state.data
-      var newData = data.filter(function (row) {
+      editor = xtend(state.editor)
+      var newData = editor.data.filter(function (row) {
         return row.key !== action.key
       })
-      return xtend(state, { data: newData })
+      editor.data = newData
+      return xtend(state, { editor: editor })
     case constants.DESTROY_COLUMN:
-      data = state.data
-      properties = state.properties
-      data.forEach(function (item) { delete item.value[action.key] })
-      delete properties[action.key]
-      return xtend(state, { data: data, properties: properties })
+      editor = xtend(state.editor)
+      editor.data.forEach(function (item) {
+        delete item.value[action.key]
+      })
+      delete editor.properties[action.key]
+      return xtend(state, { editor: editor })
     case constants.RENAME_COLUMN:
-      properties = state.properties
-      properties[action.key].name = action.newName
-      return xtend(state, { properties: properties })
+      editor = xtend(state.editor)
+      editor.properties[action.key].name = action.newName
+      return xtend(state, { editor: editor })
     case constants.PROPERTY_TYPE:
-      state.properties[action.propertyKey].type = action.propertyType
-      return xtend(state, { properties: state.properties })
+      editor = xtend(state.editor)
+      editor.properties[action.propertyKey].type = action.propertyType
+      return xtend(state, { editor: editor })
     case constants.SET_ACTIVE_ROW:
-      return xtend(state, { activeRow: action.activeRow })
+      editor = xtend(state.editor)
+      editor.activeRow = action.activeRow
+      return xtend(state, { editor: editor })
     case constants.SET_ACTIVE_PROPERTY:
-      return xtend(state, { activeProperty: action.propertyKey })
+      editor = xtend(state.editor)
+      editor.activeProperty = action.propertyKey
+      return xtend(state, { editor: editor })
     case constants.UPDATE_CELL_CONTENT:
-      state.data.some(function (row) {
+      editor = xtend(state.editor)
+      editor.data.some(function (row) {
         if (row.key === action.rowKey) {
           row.value[action.propertyKey] = action.value
           return true
         }
       })
-      return xtend(state, { rows: state.rows })
+      return xtend(state, { editor: editor })
     case constants.SET_GITHUB_ORGS:
       action.orgs.unshift({ login: state.user.profile.login })
       return xtend(state, { githubOrgs: action.orgs })
@@ -114,56 +115,70 @@ function modifyState (action, state) {
     case constants.SELECTED_BRANCH:
       return xtend(state, { activeBranch: action.branch })
     case constants.SELECTED_FILE:
-      return xtend(state, {
-        data: action.data,
-        properties: action.properties,
-        saveData: action.save || initialState.saveData
-      })
+      editor = xtend(editor)
+      editor.data = action.data
+      editor.properties = action.properties
+      editor.saveData = action.saveData || initialState.saveData
+      return xtend(state, { editor: editor })
     case constants.SET_GITHUB_BRANCHES:
       return xtend(state, { githubBranches: action.branches })
     case constants.SET_GITHUB_FILES:
       return xtend(state, { githubFiles: action.files })
     case constants.MODAL:
+      var ui = xtend(state.ui)
       if (action.value) {
-        Object.keys(state.modals).forEach(function (key) {
+        Object.keys(ui.modals).forEach(function (key) {
           if (key === action.modal) {
-            state.modals[key] = true
+            ui.modals[key] = true
             return
           }
-          state.modals[key] = false
+          ui.modals[key] = false
         })
       } else {
-        state.modals[action.modal] = false
+        ui.modals[action.modal] = false
       }
-      return xtend(state, { modals: state.modals })
+
+      return xtend(state, { ui: ui })
     case constants.MENU:
+      ui = xtend(state.ui)
       if (action.value) {
-        Object.keys(state.menus).forEach(function (key) {
+        Object.keys(ui.menus).forEach(function (key) {
           if (key === action.menu) {
-            state.menus[key] = true
+            ui.menus[key] = true
             return
           }
-          state.menus[key] = false
+          ui.menus[key] = false
         })
       } else {
-        state.menus[action.menu] = false
+        ui.menus[action.menu] = false
       }
-      return xtend(state, { menus: state.menus })
+      state = xtend(state, { ui: ui })
+      return state
     case constants.SAVE_TO_GITHUB_SUCCESS:
-      return xtend(state, { saveData: action.saveData })
+      var file = xtend(state.file)
+      file.saveData = action.saveData
+      return xtend(state, { file: file })
     case constants.RESET:
-      return xtend(state, {
-        data: initialState.data,
-        properties: initialState.properties
-      })
+      return xtend(state, { editor: initialState.editor })
     case constants.SET_FILENAME:
-      return xtend(state, {
-        filename: action.filename
-      })
+      file = xtend(state.file)
+      file.name = action.filename
+      return xtend(state, { file: file })
     case constants.SET_FILE_TYPE:
-      return xtend(state, {
-        fileType: action.fileType
+      file = xtend(state.file)
+      file.type = action.fileType
+      return xtend(state, { file: file })
+    case constants.SET_FILE:
+      editor = xtend(state.editor)
+      editor.data = action.data
+      editor.properties = action.properties
+      return xtend(state, { editor: editor })
+    case constants.CLOSE_MODALS:
+      ui = xtend(state.ui)
+      Object.keys(ui.modals).forEach(function (key) {
+        ui.modals[key] = false
       })
+      return xtend(state, { ui: ui })
     default:
       return state
   }
