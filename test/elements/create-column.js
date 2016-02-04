@@ -12,15 +12,18 @@ test('CreateColumn returns a div element', function (t) {
   t.equal(element.tagName, 'DIV')
 })
 
-test('CreateColumn executes `onsubmit` when button is clicked', function (t) {
+test('CreateColumn execs `actions.newColumn(name, type)` when button is clicked', function (t) {
   t.plan(2)
 
   var vnode = CreateColumn({
-    onsubmit: function (name, type) {
-      t.equal(name, 'foo')
-      t.equal(type, 'number')
+    actions: {
+      newColumn: function (name, type) {
+        t.equal(name, 'foo')
+        t.equal(type, 'number')
+      }
     }
   })
+
   var element = createElement(vnode)
   var nameInput = element.getElementsByTagName('input')[0]
   var typeSelect = element.getElementsByTagName('select')[0]
