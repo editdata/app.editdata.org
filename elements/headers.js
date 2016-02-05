@@ -3,20 +3,12 @@ var h = require('virtual-dom/h')
 module.exports = Headers
 
 function Headers (props) {
-  var activeProperty = props.activeProperty
   var properties = props.properties
   var actions = props.actions
   var items = []
 
   var setActiveProperty = actions.setActiveProperty
-  var propertyType = actions.propertyType
-  var renameColumn = actions.renameColumn
   var modal = actions.modal
-
-  function onclose () {
-    setActiveProperty(null)
-    modal('columnSettings', false)
-  }
 
   Object.keys(properties).forEach(function (key) {
     var property = properties[key]

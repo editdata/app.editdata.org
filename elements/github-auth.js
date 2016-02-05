@@ -1,4 +1,3 @@
-var actions = require('../actions')
 var h = require('virtual-dom').h
 var config = require('../config')
 

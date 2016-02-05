@@ -187,8 +187,6 @@ module.exports = function GithubActionCreators (store, commonActions) {
    * @param  {Store} store
    */
   function setActiveRepo (repo) {
-    var state = store.getState()
-
     store({
       type: constants.SELECTED_REPO,
       repo: repo
@@ -221,8 +219,6 @@ module.exports = function GithubActionCreators (store, commonActions) {
    * @param  {Store} store
    */
   function setActiveBranch (branch) {
-    var state = store.getState()
-
     store({
       type: constants.SELECTED_BRANCH,
       branch: branch
