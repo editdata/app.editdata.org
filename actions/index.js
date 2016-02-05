@@ -2,6 +2,7 @@
 var constants = require('../constants')
 var router = require('../lib/router')
 
+var notification = require('./notification')
 var editor = require('./editor')
 var github = require('./github')
 var file = require('./file')
@@ -128,6 +129,7 @@ module.exports = function ActionCreators (store) {
     github: github(store, commonActions),
     save: save(store, commonActions),
     file: file(store, commonActions),
+    notification: notification(store, commonActions),
     modal: modal,
     menu: menu,
     reset: reset,
