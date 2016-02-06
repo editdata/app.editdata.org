@@ -65,6 +65,17 @@ module.exports = function SaveActionCreators (store, commonActions) {
       }, function (err, res, save) {
         // TODO: Handle Error
         if (err) console.error(err)
+        store({
+          type: constants.MODAL,
+          modal: 'saveNewFileToGithub',
+          value: false
+        })
+
+        store({
+          type: constants.SET_NOTIFICATION,
+          level: 'success',
+          message: 'File successfully saved to Github!'
+        })
         return store({
           type: constants.SAVE_TO_GITHUB_SUCCESS,
           saveData: save
@@ -105,6 +116,18 @@ module.exports = function SaveActionCreators (store, commonActions) {
         if (err) return console.error(err)
         state.file.saveData.location.sha = body.content.sha
         state.file.saveData.location.url = body.content.git_url
+        store({
+          type: constants.MODAL,
+          modal: 'saveNewFile',
+          value: false
+        })
+
+        store({
+          type: constants.SET_NOTIFICATION,
+          level: 'success',
+          message: 'File successfully saved to Github!'
+        })
+
         return store({
           type: constants.SAVE_TO_GITHUB_SUCCESS,
           saveData: state.file.saveData

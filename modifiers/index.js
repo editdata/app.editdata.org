@@ -29,6 +29,11 @@ function modifyState (action, state) {
       var user = xtend(state.user)
       user.profile = action.profile
       return xtend(state, { user: user })
+    case constants.SET_NOTIFICATION:
+      var notification = xtend(state.notification)
+      notification.level = action.level
+      notification.message = action.message
+      return xtend(state, { notification: notification })
     case constants.NEW_ROW:
       editor = xtend(state.editor)
       var row = {

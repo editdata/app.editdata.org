@@ -1,6 +1,6 @@
 var test = require('tape')
-var ActionCreators = require('../actions')
-var constants = require('../constants')
+var ActionCreators = require('../../actions')
+var constants = require('../../constants')
 
 function createStore () {
   return function (state) {

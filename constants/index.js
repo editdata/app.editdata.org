@@ -9,6 +9,7 @@ exports.MENU = 'MENU'
 exports.MODAL = 'MODAL'
 exports.CLOSE_MODALS = 'CLOSE_MODALS'
 exports.RESET = 'RESET'
+exports.SET_NOTIFICATION = 'SET_NOTIFICATION'
 
 // Editor
 exports.OPEN_NEW = 'OPEN_NEW'
