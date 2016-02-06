@@ -596,6 +596,12 @@ menu-item button:focus {
   background-color: #fcfcff;
 }
 
+.notify-success {
+  border: 1px solid rgb(200, 200, 200);
+  color: rgb(10, 50, 10);
+  background-color: #dff0d8;
+}
+
 
 /*
 * Landing screen

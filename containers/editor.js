@@ -8,6 +8,7 @@ var SaveToGithub = require('../elements/save-to-github')
 var GetStarted = require('../elements/get-started')
 var SaveFile = require('../elements/save-file')
 var MenuBar = require('../elements/menu-bar')
+var Notify = require('../elements/notify')
 var Editor = require('../elements/editor')
 var Popup = require('../elements/popup')
 var Sheet = require('../elements/sheet')
@@ -16,11 +17,13 @@ var Item = require('../elements/item')
 module.exports = EditorContainer
 
 function EditorContainer (props) {
+  var notification = props.notification
   var modals = props.ui.modals
   var actions = props.actions
   var newFile = props.newFile
   var url = props.url
   var editorProps = {}
+  var Notification
   var CurrentModal
   var CurrentView
   var CurrentRow
@@ -39,6 +42,15 @@ function EditorContainer (props) {
   if (editorProps.activeModal) {
     var Modal = getModal(editorProps.activeModal)
     CurrentModal = Popup({ onclose: closeModal }, [ Modal ])
+  }
+
+  if (props.notification.message) {
+    notification.actions = {
+      close: function () {
+        actions.notification.set(null, null)
+      }
+    }
+    Notification = Notify(notification)
   }
 
   var menuBarProps = {
@@ -108,6 +120,7 @@ function EditorContainer (props) {
   }
 
   return h('div#editor-container', [
+    Notification,
     CurrentView,
     CurrentModal,
     CurrentRow

@@ -30,7 +30,7 @@ function SaveGitHubFile (props) {
       onclick: function (e) {
         e.preventDefault()
         saveUpdatedGithubFile(message)
-        modal('saveToGithub', false)
+        modal('saveNewFileToGithub', false)
       }
     }, 'Save to GitHub'),
     h('p.help', 'File ' + saveData.location.path + ' will be updated in ' + saveData.owner + '/' + saveData.repo)
