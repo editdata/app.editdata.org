@@ -9,7 +9,7 @@ var RootContainer = require('./containers/root')
 var modifier = require('./modifiers')
 var store = new Storage()
 
-var app = createApp(document.getElementById('app'), vdom)
+var app = createApp(vdom)
 var state = store.get('editdata') || initialState
 
 var render = app.start(modifier, state)
@@ -21,16 +21,23 @@ app.on('*', function (action, state, oldState) {
   console.log('state ->', state)
   delete state.ui
   store.set('editdata', state)
+  var tree = domTree()
+  var appEl = document.querySelector('.app-container')
+  appEl.parentNode.replaceChild(tree, appEl)
 })
 
-render(function (state) {
-  if (!state.ui) state.ui = initialState.ui
-  var props = xtend(state, {
-    store: app.store,
-    actions: actions
+function domTree () {
+  return render(function (state) {
+    if (!state.ui) state.ui = initialState.ui
+    var props = xtend(state, {
+      store: app.store,
+      actions: actions
+    })
+    return RootContainer(props)
   })
-  return RootContainer(props)
-})
+}
+
+document.body.appendChild(domTree())
 
 var router = require('./lib/router')
 

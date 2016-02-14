@@ -54,7 +54,7 @@
     "uglifyify": "^3.0.1",
     "utf8": "^2.1.1",
     "view-list": "shama/view-list",
-    "virtual-app": "^2.2.0",
+    "virtual-app": "^3.0.0",
     "virtual-dom": "^2.1.1",
     "wayfarer": "^4.2.0",
     "xhr": "^2.2.0"
