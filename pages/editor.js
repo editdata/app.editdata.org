@@ -1,13 +1,11 @@
 var h = require('virtual-dom/h')
 
-var OpenUploadedFile = require('../elements/open-uploaded-file')
-var OpenGithubFile = require('../elements/open-github-file')
 var ColumnSettings = require('../elements/column-settings')
 var CreateNewColumn = require('../elements/create-column')
 var SaveToGithub = require('../elements/save-to-github')
-var GetStarted = require('../elements/get-started')
 var SaveFile = require('../elements/save-file')
 var MenuBar = require('../elements/menu-bar')
+var Header = require('../elements/header')
 var Notify = require('../elements/notify')
 var Editor = require('../elements/editor')
 var Popup = require('../elements/popup')
@@ -20,17 +18,12 @@ function EditorContainer (props) {
   var notification = props.notification
   var modals = props.ui.modals
   var actions = props.actions
-  var newFile = props.newFile
-  var url = props.url
   var editorProps = {}
   var Notification
   var CurrentModal
-  var CurrentView
   var CurrentRow
 
   editorProps.actions = actions.editor
-
-  if (url.pathname.substring(0, 12) === '/edit/new') newFile = true
 
   // Detect active modal
   Object.keys(modals).some(function (key) {
@@ -80,19 +73,6 @@ function EditorContainer (props) {
     }
   }
 
-  var getStartedProps = {
-    actions: { openNew: actions.editor.openNew }
-  }
-
-  if (!props.editor.data.length && !newFile) {
-    CurrentView = GetStarted(getStartedProps)
-  } else {
-    CurrentView = Editor(editorProps, [
-      MenuBar(menuBarProps),
-      Sheet(sheetProps)
-    ])
-  }
-
   // Display Row Editor if `activeRow`
   if (props.editor.activeRow) {
     var activeRow = props.editor.activeRow
@@ -120,8 +100,12 @@ function EditorContainer (props) {
   }
 
   return h('div#editor-container', [
+    Header(props),
     Notification,
-    CurrentView,
+    Editor(editorProps, [
+      MenuBar(menuBarProps),
+      Sheet(sheetProps)
+    ]),
     CurrentModal,
     CurrentRow
   ])
@@ -131,36 +115,6 @@ function EditorContainer (props) {
   }
 
   function getModal (type) {
-    if (type === 'openNewGithub') {
-      return OpenGithubFile({
-        githubBranches: props.githubBranches,
-        githubRepos: props.githubRepos,
-        githubFiles: props.githubFiles,
-        githubOrgs: props.githubOrgs,
-        activeBranch: props.activeBranch,
-        activeRepo: props.activeRepo,
-        activeOrg: props.activeOrg,
-        actions: {
-          getOrgs: actions.github.getOrgs,
-          getRepos: actions.github.getRepos,
-          getFiles: actions.github.getFiles,
-          getBranches: actions.github.getBranches,
-          setActiveOrg: actions.github.setActiveOrg,
-          setActiveRepo: actions.github.setActiveRepo,
-          setActiveBranch: actions.github.setActiveBranch,
-          setActiveFile: actions.github.setActiveFile
-        }
-      })
-    }
-
-    if (type === 'openNewUpload') {
-      return OpenUploadedFile({
-        actions: {
-          read: actions.file.read
-        }
-      })
-    }
-
     if (type === 'saveNewFile') {
       return SaveFile({
         file: props.file,

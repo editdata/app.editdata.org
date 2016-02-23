@@ -1,21 +1,18 @@
-/*global requestAnimationFrame*/
 var constants = require('../constants')
-var router = require('../lib/router')
-
 var notification = require('./notification')
 var editor = require('./editor')
 var github = require('./github')
 var file = require('./file')
 var save = require('./save')
 
-module.exports = function ActionCreators (store) {
+module.exports = function ActionCreators (app) {
   /**
    * Sign out of the app
    * @param  {Store} store App store
    * @return {Function}
    */
   function signOut () {
-    return store({
+    return app.store({
       type: constants.SIGN_OUT
     })
   }
@@ -25,7 +22,7 @@ module.exports = function ActionCreators (store) {
    * @param {Store} store
    */
   function reset () {
-    store({
+    app.store({
       type: constants.RESET
     })
   }
@@ -72,11 +69,9 @@ module.exports = function ActionCreators (store) {
    * @param {Object} options Router options
    * @param {Store} store   App store
    */
-  function setRoute (url, options) {
-    requestAnimationFrame(function () {
-      router.go(url, options || {})
-      setUrl(store)
-    })
+  function setRoute (path, options) {
+    window.location = path
+    return
   }
 
   /**
@@ -87,7 +82,7 @@ module.exports = function ActionCreators (store) {
    * @return {Function}
    */
   function modal (modal, value) {
-    return store({
+    return app.store({
       type: constants.MODAL,
       modal: modal,
       value: value
@@ -95,7 +90,7 @@ module.exports = function ActionCreators (store) {
   }
 
   function closeModals () {
-    return store({
+    return app.store({
       type: constants.CLOSE_MODALS
     })
   }
@@ -109,7 +104,7 @@ module.exports = function ActionCreators (store) {
    * @return {Function}
    */
   function menu (menu, value) {
-    return store({
+    return app.store({
       type: constants.MENU,
       menu: menu,
       value: value
@@ -125,11 +120,11 @@ module.exports = function ActionCreators (store) {
   }
 
   return {
-    editor: editor(store, commonActions),
-    github: github(store, commonActions),
-    save: save(store, commonActions),
-    file: file(store, commonActions),
-    notification: notification(store, commonActions),
+    editor: editor(app.store, commonActions),
+    github: github(app.store, commonActions),
+    save: save(app.store, commonActions),
+    file: file(app.store, commonActions),
+    notification: notification(app.store, commonActions),
     modal: modal,
     menu: menu,
     reset: reset,

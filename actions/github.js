@@ -24,7 +24,7 @@ module.exports = function GithubActionCreators (store, commonActions) {
       if (err) console.error(err)
       if (profile.message === 'Bad credentials') return console.error(profile)
       store(setUserProfile(profile))
-      return store(setRoute('/edit/new'))
+      return store(setRoute('/'))
     })
   }
 
@@ -36,9 +36,9 @@ module.exports = function GithubActionCreators (store, commonActions) {
   function auth (code) {
     githubAuth(code, function (err, user) {
       // TODO: Handle error
-      if (err) console.error(err)
+      if (err) return console.error(err)
       store(setUser(user))
-      return setRoute('/edit/new', {query: false})
+      return setRoute('/')
     })
   }
 

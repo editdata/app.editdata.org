@@ -1,66 +1,58 @@
 var Storage = require('simple-local-storage')
+var history = require('sheet-router/history')
 var createApp = require('virtual-app')
 var vdom = require('virtual-dom')
 var xtend = require('xtend')
+var url = require('url')
 
 var ActionCreators = require('./actions')
 var initialState = require('./lib/initial-state')
-var RootContainer = require('./containers/root')
 var modifier = require('./modifiers')
 var store = new Storage()
 
 var app = createApp(vdom)
 var state = store.get('editdata') || initialState
-
 var render = app.start(modifier, state)
-var actions = ActionCreators(app.store)
+var router = require('./lib/router')(app)
+app.router = router
+var actions = ActionCreators(app)
+
+var appEl = document.querySelector('#app')
 
 app.on('*', function (action, state, oldState) {
   console.log('oldState ->', oldState)
   console.log('action ->', action)
   console.log('state ->', state)
-  delete state.ui
-  store.set('editdata', state)
-  var tree = domTree()
-  var appEl = document.querySelector('.app-container')
-  appEl.parentNode.replaceChild(tree, appEl)
+  rendr()
+  var storedState = xtend({}, state)
+  delete storedState.ui
+  store.set('editdata', storedState)
 })
 
-function domTree () {
-  return render(function (state) {
+history(function (href) {
+  return rendr(href)
+})
+
+function rendr (href) {
+  href = href || url.parse(window.location.href).pathname
+  var tree = render(function (state) {
+    // TODO: Weird behavior where `app.store.getState` has more recent
+    // state than `state`
+    state = app.store.getState()
     if (!state.ui) state.ui = initialState.ui
     var props = xtend(state, {
       store: app.store,
       actions: actions
     })
-    return RootContainer(props)
+    return router(href, props)
   })
+
+  while (appEl.firstChild) {
+    appEl.removeChild(appEl.firstChild)
+  }
+  appEl.appendChild(tree)
 }
 
-document.body.appendChild(domTree())
-
-var router = require('./lib/router')
-
-router.on('/', function (params) {
-  app.store(actions.setUrl())
-})
-
-router.on('/about', function (params) {
-  app.store(actions.setUrl())
-})
-
-router.on('/edit', function (params) {
-  app.store(actions.setUrl())
-})
-
-router.on('/edit/github/:owner/:repo/:branch', function () {
-  app.store(actions.setUrl())
-})
-
-router.on('/docs', function (params) {
-  app.store(actions.setUrl())
-})
-
-router.start()
+rendr()
 
 module.exports = app
