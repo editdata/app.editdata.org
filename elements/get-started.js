@@ -24,7 +24,7 @@ function GetStarted (props) {
   options.forEach(function (item) {
     var el = h('li.list-item', {
       onclick: function (e) {
-        actions.openNew(item.slug)
+        actions.editor.openNew(item.slug)
       }
     }, item.text)
     items.push(el)
