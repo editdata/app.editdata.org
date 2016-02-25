@@ -49,8 +49,9 @@ function modifyState (action, state) {
       var property = action.property
       editor = xtend(state.editor)
       if (!property.key) property.key = cuid()
-      if (!property.type) property.type = 'string'
       if (!property.default) property.default = null
+      if (!property.type) property.type = ['string']
+      if (typeof property.type === 'string') property.type = [property.type]
 
       var prop = schema.addProperty(property)
       editor.properties[prop.key] = prop
@@ -85,7 +86,7 @@ function modifyState (action, state) {
       return xtend(state, { editor: editor })
     case constants.PROPERTY_TYPE:
       editor = xtend(state.editor)
-      editor.properties[action.propertyKey].type = action.propertyType
+      editor.properties[action.propertyKey].type = [action.propertyType]
       return xtend(state, { editor: editor })
     case constants.SET_ACTIVE_ROW:
       editor = xtend(state.editor)

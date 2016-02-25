@@ -1,0 +1,95 @@
+{
+  "_args": [
+    [
+      "data-field-url@^2.0.0",
+      "/Users/river/Code/editdata.org/node_modules/data-fields"
+    ]
+  ],
+  "_from": "data-field-url@>=2.0.0 <3.0.0",
+  "_id": "data-field-url@2.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/data-field-url",
+  "_nodeVersion": "4.2.1",
+  "_npmUser": {
+    "email": "sethvincent@gmail.com",
+    "name": "sethvincent"
+  },
+  "_npmVersion": "3.3.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "data-field-url",
+    "raw": "data-field-url@^2.0.0",
+    "rawSpec": "^2.0.0",
+    "scope": null,
+    "spec": ">=2.0.0 <3.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/data-fields"
+  ],
+  "_resolved": "https://registry.npmjs.org/data-field-url/-/data-field-url-2.0.0.tgz",
+  "_shasum": "54953bd5869291dac4c2d2515362817705ca24dd",
+  "_shrinkwrap": null,
+  "_spec": "data-field-url@^2.0.0",
+  "_where": "/Users/river/Code/editdata.org/node_modules/data-fields",
+  "author": {
+    "name": "sethvincent"
+  },
+  "bugs": {
+    "url": "https://github.com/editdata/data-field-url/issues"
+  },
+  "dependencies": {
+    "addhttp": "^1.0.0",
+    "component-emitter": "^1.2.0",
+    "data-field-classname": "^1.0.0",
+    "xtend": "^4.0.0"
+  },
+  "description": "## API",
+  "devDependencies": {
+    "budo": "^5.1.5",
+    "documentation-readme": "^2.0.0",
+    "standard": "^5.3.1",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.2",
+    "virtual-dom": "^2.1.1",
+    "virtual-raf": "^2.0.3"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "54953bd5869291dac4c2d2515362817705ca24dd",
+    "tarball": "http://registry.npmjs.org/data-field-url/-/data-field-url-2.0.0.tgz"
+  },
+  "gitHead": "b9690a01081e9b3433273d1aa03ac80e3d2eb515",
+  "homepage": "https://github.com/editdata/data-field-url",
+  "keywords": [
+    "data",
+    "dom",
+    "editdata",
+    "element",
+    "html",
+    "virtual-dom"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "sethvincent",
+      "email": "sethvincent@gmail.com"
+    }
+  ],
+  "name": "data-field-url",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editdata/data-field-url.git"
+  },
+  "scripts": {
+    "docs": "documentation-readme README.md -s \"API\" -- index.js",
+    "example-basic": "budo examples/basic.js --live",
+    "test": "standard && tape tests/*.js | tap-spec"
+  },
+  "style": "style.css",
+  "version": "2.0.0"
+}

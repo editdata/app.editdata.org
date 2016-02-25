@@ -1,0 +1,79 @@
+{
+  "_args": [
+    [
+      "data-field-classname@^1.0.0",
+      "/Users/river/Code/editdata.org/node_modules/data-field-geojson"
+    ]
+  ],
+  "_from": "data-field-classname@>=1.0.0 <2.0.0",
+  "_id": "data-field-classname@1.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/data-field-classname",
+  "_nodeVersion": "4.2.1",
+  "_npmUser": {
+    "email": "sethvincent@gmail.com",
+    "name": "sethvincent"
+  },
+  "_npmVersion": "3.3.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "data-field-classname",
+    "raw": "data-field-classname@^1.0.0",
+    "rawSpec": "^1.0.0",
+    "scope": null,
+    "spec": ">=1.0.0 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/data-field-geojson",
+    "/data-field-image",
+    "/data-field-list",
+    "/data-field-string",
+    "/data-field-url"
+  ],
+  "_resolved": "https://registry.npmjs.org/data-field-classname/-/data-field-classname-1.0.0.tgz",
+  "_shasum": "aab7db892071c0827c0d85a49215c07d996ed1a6",
+  "_shrinkwrap": null,
+  "_spec": "data-field-classname@^1.0.0",
+  "_where": "/Users/river/Code/editdata.org/node_modules/data-field-geojson",
+  "author": {
+    "name": "sethvincent"
+  },
+  "bugs": {
+    "url": "https://github.com/editdawta/data-field-classname/issues"
+  },
+  "dependencies": {},
+  "description": "create classname for data-fields",
+  "devDependencies": {
+    "standard": "^5.3.1",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.2"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "aab7db892071c0827c0d85a49215c07d996ed1a6",
+    "tarball": "http://registry.npmjs.org/data-field-classname/-/data-field-classname-1.0.0.tgz"
+  },
+  "gitHead": "1a79a66dffbaef02771c97e1eee0d7e341ccad9b",
+  "homepage": "https://github.com/editdawta/data-field-classname#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "sethvincent",
+      "email": "sethvincent@gmail.com"
+    }
+  ],
+  "name": "data-field-classname",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editdawta/data-field-classname.git"
+  },
+  "scripts": {
+    "test": "standard && node test.js | tap-spec"
+  },
+  "version": "1.0.0"
+}

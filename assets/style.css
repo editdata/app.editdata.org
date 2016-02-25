@@ -113,7 +113,7 @@ header a:link.button {
   margin: 10px 10px;
 }
 
-.list-wrapper {
+.grid-wrapper {
   overflow-x: scroll;
   overflow-y: hidden;
   background-color: #fff;
@@ -122,14 +122,15 @@ header a:link.button {
   left: 10px;
   bottom: 10px;
   border-radius: 3px;
+  max-width: 100%;
+  border: 1px solid #ccc;
+}
+
+.grid-wrapper.active {
   max-width: 55%;
 }
 
-.list-wrapper.active {
-  max-width: 100%;
-}
-
-.list-wrapper.has-data {
+.grid-wrapper.has-data {
   border: 1px solid #ccc;
 }
 
@@ -609,4 +610,132 @@ menu-item button:focus {
 
 .landing {
   text-align: center;
+}
+
+#data-grid {
+  height: 100%;
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.data-grid-properties {
+
+}
+
+.data-grid-rows {
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  white-space: nowrap;
+  height: 100%;
+  margin-bottom: 40px;
+}
+
+.data-grid-rows li.top,
+.data-grid-rows li.bottom {
+  list-style-type: none;
+}
+
+.data-grid-row {
+  list-style-type: none;
+  height: 30px;
+}
+
+.data-grid-row:last-child {
+  border-bottom: 0px;
+}
+
+.data-grid-row-items {
+  margin: 0px;
+  padding: 0px;
+  height: 30px;
+}
+
+.data-grid-row-items:hover {
+  cursor: pointer;
+}
+
+.data-grid-rows .data-field {
+  font-size: 12px;
+  border: 0px;
+  padding: 0px 8px;
+  margin: 0px;
+  width: 150px;
+  height: 30px;
+  max-height: 30px;
+  min-height: 30px;
+  line-height: 30px;
+  background: none;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.data-grid-rows .data-field.readonly {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.data-grid-rows .data-field:focus {}
+
+.data-grid-rows .data-field:hover {}
+
+.active-cell {}
+
+.data-grid-properties {
+  white-space: nowrap;
+  margin: 0px;
+  padding: 0px;
+  height: 40px;
+}
+
+.data-grid-property {
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 8px;
+  display: inline-block;
+  font-size: 15px;
+  list-style-type: none;
+  overflow-x: hidden;
+  font-weight: 700;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #888;
+  cursor: pointer;
+}
+
+.data-grid-property:hover {
+
+}
+
+.data-grid-property-name {
+  color: #444;
+}
+
+.data-grid-property:hover .data-grid-property-name {
+  color: #222;
+}
+
+.data-grid-property-configure {
+  float: right;
+  margin: 0px;
+  font-size: 14px;
+  display: none;
+  border: 0px;
+  background: none;
+  padding: 0px;
+  cursor: pointer;
+}
+
+.data-grid-property:hover .data-grid-property-configure {
+  display: inherit;
+}
+
+.data-grid-property-configure:hover {
+  color: #222;
 }

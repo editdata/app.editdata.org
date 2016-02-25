@@ -1,0 +1,97 @@
+{
+  "_args": [
+    [
+      "data-field-list@^2.0.0",
+      "/Users/river/Code/editdata.org/node_modules/data-fields"
+    ]
+  ],
+  "_from": "data-field-list@>=2.0.0 <3.0.0",
+  "_id": "data-field-list@2.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/data-field-list",
+  "_nodeVersion": "4.2.1",
+  "_npmUser": {
+    "email": "sethvincent@gmail.com",
+    "name": "sethvincent"
+  },
+  "_npmVersion": "3.3.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "data-field-list",
+    "raw": "data-field-list@^2.0.0",
+    "rawSpec": "^2.0.0",
+    "scope": null,
+    "spec": ">=2.0.0 <3.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/data-fields"
+  ],
+  "_resolved": "https://registry.npmjs.org/data-field-list/-/data-field-list-2.0.0.tgz",
+  "_shasum": "00c3894975c6a56999d5db50811fbeefb9467157",
+  "_shrinkwrap": null,
+  "_spec": "data-field-list@^2.0.0",
+  "_where": "/Users/river/Code/editdata.org/node_modules/data-fields",
+  "author": {
+    "name": "sethvincent"
+  },
+  "bugs": {
+    "url": "https://github.com/editdata/data-field-list/issues"
+  },
+  "dependencies": {
+    "component-emitter": "^1.2.0",
+    "data-field-classname": "^1.0.0",
+    "isarray": "0.0.1",
+    "list-editor": "^1.0.1",
+    "object-array-converter": "^1.0.0",
+    "xtend": "^4.0.0"
+  },
+  "description": "## API",
+  "devDependencies": {
+    "budo": "^5.1.5",
+    "documentation-readme": "^2.0.0",
+    "standard": "^5.3.1",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.2",
+    "virtual-dom": "^2.1.1",
+    "virtual-raf": "^2.0.3"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "00c3894975c6a56999d5db50811fbeefb9467157",
+    "tarball": "http://registry.npmjs.org/data-field-list/-/data-field-list-2.0.0.tgz"
+  },
+  "gitHead": "f6d6412724565d03c967a5552dbebe7cec126e18",
+  "homepage": "https://github.com/editdata/data-field-list",
+  "keywords": [
+    "data",
+    "dom",
+    "editdata",
+    "element",
+    "html",
+    "virtual-dom"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "sethvincent",
+      "email": "sethvincent@gmail.com"
+    }
+  ],
+  "name": "data-field-list",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editdata/data-field-list.git"
+  },
+  "scripts": {
+    "docs": "documentation-readme README.md -s \"API\" -- index.js",
+    "example-basic": "budo examples/basic.js --live",
+    "test": "standard && tape tests/*.js | tap-spec"
+  },
+  "style": "style.css",
+  "version": "2.0.0"
+}

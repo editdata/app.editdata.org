@@ -22,6 +22,7 @@
     ]
   },
   "dependencies": {
+    "@f/serialize-form": "^1.0.0",
     "JSONStream": "^1.0.7",
     "base-64": "^0.1.0",
     "base-element": "^3.0.1",
@@ -32,6 +33,7 @@
     "csv-parser": "^1.9.1",
     "csv-write-stream": "^1.0.0",
     "cuid": "^1.3.8",
+    "data-form": "github:editdata/data-form",
     "data-schema": "^1.4.3",
     "data-set": "^4.0.0",
     "deep-merge": "^1.0.0",
@@ -55,9 +57,12 @@
     "through2": "^2.0.0",
     "uglifyify": "^3.0.1",
     "utf8": "^2.1.1",
+    "vdom-thunk": "^3.0.0",
     "view-list": "shama/view-list",
     "virtual-app": "^3.0.0",
     "virtual-dom": "^2.1.1",
+    "virtual-hook": "^1.0.1",
+    "virtual-widget": "github:kvnneff/virtual-widget",
     "wayfarer": "^4.2.0",
     "xhr": "^2.2.0"
   },

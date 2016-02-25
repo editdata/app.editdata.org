@@ -1,5 +1,7 @@
 var h = require('virtual-dom/h')
 
+var OpenUploadedFile = require('../elements/open-uploaded-file')
+var OpenGithubFile = require('../elements/open-github-file')
 var ColumnSettings = require('../elements/column-settings')
 var CreateNewColumn = require('../elements/create-column')
 var SaveToGithub = require('../elements/save-to-github')
@@ -7,10 +9,11 @@ var SaveFile = require('../elements/save-file')
 var MenuBar = require('../elements/menu-bar')
 var Header = require('../elements/header')
 var Notify = require('../elements/notify')
-var Editor = require('../elements/editor')
+var DataEditor = require('../elements/data-editor')
 var Popup = require('../elements/popup')
-var Sheet = require('../elements/sheet')
-var Item = require('../elements/item')
+var DataGrid = require('../elements/data-grid')
+// var Sheet = require('../elements/sheet')
+var DataForm = require('../elements/data-form')
 
 module.exports = EditorContainer
 
@@ -21,7 +24,7 @@ function EditorContainer (props) {
   var editorProps = {}
   var Notification
   var CurrentModal
-  var CurrentRow
+  var FormComponent
 
   editorProps.actions = actions.editor
 
@@ -46,7 +49,7 @@ function EditorContainer (props) {
     Notification = Notify(notification)
   }
 
-  var menuBarProps = {
+  var MenuComponent = MenuBar({
     menus: props.ui.menus,
     actions: {
       openNew: actions.editor.openNew,
@@ -54,60 +57,69 @@ function EditorContainer (props) {
       modal: actions.modal,
       menu: actions.menu
     }
-  }
+  })
 
-  var sheetProps = {
-    activeProperty: props.activeProperty,
-    activePropertyKey: props.editor.activeRow ? props.editor.activeRow.column : null,
-    activeRowKey: props.editor.activeRow ? props.editor.activeRow.row : null,
-    activeItem: props.activeItem,
+  var GridComponent = DataGrid({
+    h: h,
     properties: props.editor.properties,
     data: props.editor.data,
-    actions: {
-      destroyColumn: actions.editor.destroyColumn,
-      renameColumn: actions.editor.renameColumn,
-      propertyType: actions.editor.propertyType,
-      setActiveProperty: actions.editor.setActiveProperty,
-      setActiveRow: actions.editor.setActiveRow,
-      modal: actions.modal
+    onconfigure: function (event, propertyKey) {
+      actions.editor.setActiveProperty(propertyKey)
+      actions.modal('columnSettings', true)
+    },
+    onclick: function (event, rowKey, propertyKey) {
+      console.log('hey')
+      actions.editor.setActiveProperty(propertyKey)
+      actions.editor.setActiveRow(rowKey)
     }
-  }
+  })
 
   // Display Row Editor if `activeRow`
   if (props.editor.activeRow) {
-    var activeRow = props.editor.activeRow
-    var activeRowData
+    var activeRowKey = props.editor.activeRow
+    var activeRow
     props.editor.data.some(function (row) {
-      if (row.key === parseInt(activeRow.row, 10)) {
-        activeRowData = row
+      if (row.key === activeRowKey) {
+        activeRow = row
         return true
       }
     })
 
-    if (activeRowData) {
-      CurrentRow = Item({
-        activeColumnKey: activeRow.column,
-        activeRowKey: activeRow.row,
-        activeRowData: activeRowData,
-        properties: props.editor.properties,
-        actions: {
-          updateCellContent: actions.editor.updateCellContent,
-          setActiveRow: actions.editor.setActiveRow,
-          destroyRow: actions.editor.destroyRow
+    FormComponent = DataForm({
+      row: activeRow,
+      activeColumnKey: props.editor.activeProperty,
+      properties: props.editor.properties,
+      onclose: function () {
+        actions.editor.setActiveRow(null)
+      },
+      ondestroy: function (event, rowKey) {
+        if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
+          actions.editor.destroyRow(rowKey)
         }
-      })
-    }
+      },
+      oninput: function (event, rowKey, propertyKey, value) {
+        actions.editor.updateCellContent(propertyKey, rowKey, value)
+      },
+      onclick: function (event, rowKey, propertyKey) {
+        if (propertyKey === props.editor.activeProperty) return
+        actions.editor.setActiveProperty(propertyKey)
+      }
+    })
   }
 
   return h('div#editor-container', [
     Header(props),
     Notification,
-    Editor(editorProps, [
-      MenuBar(menuBarProps),
-      Sheet(sheetProps)
+    MenuComponent,
+    DataEditor(editorProps, [
+      h('div', {
+        className: FormComponent ? 'grid-wrapper active' : 'grid-wrapper'
+      }, [
+        GridComponent
+      ])
     ]),
     CurrentModal,
-    CurrentRow
+    FormComponent
   ])
 
   function closeModal () {
@@ -115,6 +127,36 @@ function EditorContainer (props) {
   }
 
   function getModal (type) {
+    if (type === 'openNewGithub') {
+      return OpenGithubFile({
+        githubBranches: props.githubBranches,
+        githubRepos: props.githubRepos,
+        githubFiles: props.githubFiles,
+        githubOrgs: props.githubOrgs,
+        activeBranch: props.activeBranch,
+        activeRepo: props.activeRepo,
+        activeOrg: props.activeOrg,
+        actions: {
+          getOrgs: actions.github.getOrgs,
+          getRepos: actions.github.getRepos,
+          getFiles: actions.github.getFiles,
+          getBranches: actions.github.getBranches,
+          setActiveOrg: actions.github.setActiveOrg,
+          setActiveRepo: actions.github.setActiveRepo,
+          setActiveBranch: actions.github.setActiveBranch,
+          setActiveFile: actions.github.setActiveFile
+        }
+      })
+    }
+
+    if (type === 'openNewUpload') {
+      return OpenUploadedFile({
+        actions: {
+          read: actions.file.read
+        }
+      })
+    }
+
     if (type === 'saveNewFile') {
       return SaveFile({
         file: props.file,
@@ -154,7 +196,9 @@ function EditorContainer (props) {
 
     if (type === 'createNewColumn') {
       return CreateNewColumn({
-        actions: { newColumn: actions.editor.newColumn }
+        onsubmit: function (event, column) {
+          actions.editor.newColumn(column.name, column.type)
+        }
       })
     }
 
@@ -167,8 +211,8 @@ function EditorContainer (props) {
           propertyType: actions.editor.propertyType,
           renameColumn: actions.editor.renameColumn,
           destroyColumn: function (key) {
-            actions.editor.destroyColumn(key)
             actions.closeModals()
+            actions.editor.destroyColumn(key)
           }
         }
       }
