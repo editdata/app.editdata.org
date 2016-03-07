@@ -11,10 +11,23 @@ function About (props) {
       h('h2', 'Hello. Let me tell you about everything.'),
       h('p', 'EditData.org is a tool for editing CSV & JSON files from your computer & from GitHub.'),
       h('p', [
-        h('a.button', { href: 'https://github.com/flatsheet/editdata.org' }, 'Source on GitHub')
+        'Learn more at ',
+        h('a', {
+          href: 'http://about.editdata.org',
+          target: '_blank'
+        }, 'about.editdata.org')
       ]),
       h('p', [
-        h('a.button', { href: 'https://github.com/flatsheet/editdata.org/issues' }, 'Report an issue')
+        h('a.button', {
+          href: 'https://github.com/editdata/editdata.org',
+          target: '_blank'
+        }, 'Source on GitHub')
+      ]),
+      h('p', [
+        h('a.button', {
+          href: 'https://github.com/editdata/editdata.org/issues',
+          target: '_blank'
+        }, 'Report an issue')
       ])
     ])
   ])

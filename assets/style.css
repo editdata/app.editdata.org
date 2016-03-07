@@ -19,11 +19,12 @@ body {
 
 a {
   text-decoration: none;
-  color: #555;
+  color: #225378;
 }
 
 a:hover, a:focus {
-  color: #000;
+  color: #183C57;
+  text-decoration: underline;
 }
 
 header {
@@ -45,6 +46,11 @@ header .site-title {
 
 header .site-title a {
   font-size: 20px;
+  color: #555;
+}
+
+header .site-title a:hover {
+  color: #000;
 }
 
 header .github-auth {
