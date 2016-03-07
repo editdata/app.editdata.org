@@ -5,7 +5,7 @@ var config = {
     gatekeeper: 'http://192.241.225.150:9999'
   },
   development: {
-    client_id: 'e6fa0762c3c6db05d59e',
+    client_id: process.env.EDITDATA_GITHUB_CLIENT_ID || 'e6fa0762c3c6db05d59e',
     redirect_uri: 'http://localhost:9966',
     gatekeeper: 'http://localhost:9999'
   }
