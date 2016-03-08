@@ -11,7 +11,7 @@ function createStore () {
 test('ActionCreators(store) returns action creators', function (t) {
   t.plan(12)
   var store = createStore()
-  var actions = ActionCreators(store)
+  var actions = ActionCreators({store: store})
   t.ok(actions.editor)
   t.ok(actions.github)
   t.ok(actions.save)
@@ -29,7 +29,8 @@ test('ActionCreators(store) returns action creators', function (t) {
 test('signOut', function (t) {
   t.plan(1)
   var store = createStore()
-  var actions = ActionCreators(store)
+  var actions = ActionCreators({ store: store })
   var action = actions.signOut()
+  console.log(action)
   t.equal(action.type, constants.SIGN_OUT)
 })
