@@ -7,7 +7,8 @@
   },
   "main": "app.js",
   "scripts": {
-    "deploy": "npm run bundle && surge . editdata.org",
+    "deploy:production": "npm run bundle && surge . editdata.org",
+    "deploy:staging": "npm run bundle && surge . editdata.surge.sh",
     "bundle-css": "cssnext assets/deps.css assets/bundle.css",
     "bundle-js": "browserify app.js -t [ envify --NODE_ENV production ] -o  assets/bundle.js",
     "bundle": "npm run bundle-css && npm run bundle-js",
