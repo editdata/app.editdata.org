@@ -70,7 +70,6 @@ router.on('/edit', function (params) {
 })
 
 router.on('/edit/new', function (params) {
-  console.log('why', state)
   app.renderEditor([], state)
 })
 
