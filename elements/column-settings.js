@@ -1,5 +1,5 @@
 var h = require('virtual-dom/h')
-var dataFields = require('./data-fields')
+var dataFields = require('data-fields')
 
 module.exports = ColumnSettings
 

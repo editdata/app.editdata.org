@@ -1,5 +1,5 @@
 var serialize = require('@f/serialize-form')
-var dataFields = require('./data-fields')
+var dataFields = require('data-fields')
 var h = require('virtual-dom/h')
 
 module.exports = CreateColumn
