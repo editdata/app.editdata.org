@@ -11,7 +11,7 @@ var Header = require('../elements/header')
 var Notify = require('../elements/notify')
 var DataEditor = require('../elements/data-editor')
 var Popup = require('../elements/popup')
-var DataGrid = require('../elements/data-grid')
+var DataGrid = require('data-grid')
 // var Sheet = require('../elements/sheet')
 var DataForm = require('../elements/data-form')
 
@@ -59,8 +59,7 @@ function EditorContainer (props) {
     }
   })
 
-  var GridComponent = DataGrid({
-    h: h,
+  var GridComponent = DataGrid(h, {
     properties: props.editor.properties,
     data: props.editor.data,
     onconfigure: function (event, propertyKey) {
@@ -151,8 +150,9 @@ function EditorContainer (props) {
 
     if (type === 'openNewUpload') {
       return OpenUploadedFile({
-        actions: {
-          read: actions.file.read
+        onfile: function onfile (event, file) {
+          actions.file.read(file)
+          actions.closeModals()
         }
       })
     }
