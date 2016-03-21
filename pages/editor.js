@@ -12,7 +12,6 @@ var Notify = require('../elements/notify')
 var DataEditor = require('../elements/data-editor')
 var Popup = require('../elements/popup')
 var DataGrid = require('data-grid')
-// var Sheet = require('../elements/sheet')
 var DataForm = require('../elements/data-form')
 
 module.exports = EditorContainer
