@@ -1,4 +1,5 @@
 var h = require('virtual-dom/h')
+var Thunk = require('vdom-thunk')
 
 var OpenUploadedFile = require('../elements/open-uploaded-file')
 var OpenGithubFile = require('../elements/open-github-file')
@@ -9,10 +10,9 @@ var SaveFile = require('../elements/save-file')
 var MenuBar = require('../elements/menu-bar')
 var Header = require('../elements/header')
 var Notify = require('../elements/notify')
-var DataEditor = require('../elements/data-editor')
 var Popup = require('../elements/popup')
 var DataGrid = require('data-grid')
-var DataForm = require('../elements/data-form')
+var DataForm = require('data-form')
 
 module.exports = EditorContainer
 
@@ -45,10 +45,10 @@ function EditorContainer (props) {
         actions.notification.set(null, null)
       }
     }
-    Notification = Notify(notification)
+    Notification = Thunk(Notify, notification)
   }
 
-  var MenuComponent = MenuBar({
+  var MenuComponent = Thunk(MenuBar, {
     menus: props.ui.menus,
     actions: {
       openNew: actions.editor.openNew,
@@ -58,7 +58,7 @@ function EditorContainer (props) {
     }
   })
 
-  var GridComponent = DataGrid(h, {
+  var gridState = {
     properties: props.editor.properties,
     data: props.editor.data,
     onconfigure: function (event, propertyKey) {
@@ -70,7 +70,9 @@ function EditorContainer (props) {
       actions.editor.setActiveProperty(propertyKey)
       actions.editor.setActiveRow(rowKey)
     }
-  })
+  }
+
+  var GridComponent = Thunk(DataGrid, h, gridState)
 
   // Display Row Editor if `activeRow`
   if (props.editor.activeRow) {
@@ -83,7 +85,7 @@ function EditorContainer (props) {
       }
     })
 
-    FormComponent = DataForm({
+    var formState = {
       row: activeRow,
       activeColumnKey: props.editor.activeProperty,
       properties: props.editor.properties,
@@ -102,19 +104,18 @@ function EditorContainer (props) {
         if (propertyKey === props.editor.activeProperty) return
         actions.editor.setActiveProperty(propertyKey)
       }
-    })
+    }
+    FormComponent = Thunk(DataForm, h, formState)
   }
 
   return h('div#editor-container', [
-    Header(props),
+    Thunk(Header, props),
     Notification,
     MenuComponent,
-    DataEditor(editorProps, [
-      h('div', {
-        className: FormComponent ? 'grid-wrapper active' : 'grid-wrapper'
-      }, [
-        GridComponent
-      ])
+    h('div', {
+      className: FormComponent ? 'grid-wrapper active' : 'grid-wrapper'
+    }, [
+      GridComponent
     ]),
     CurrentModal,
     FormComponent
