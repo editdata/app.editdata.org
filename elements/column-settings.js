@@ -1,4 +1,5 @@
 var h = require('virtual-dom/h')
+var dataFields = require('data-fields')
 
 module.exports = ColumnSettings
 
@@ -12,6 +13,10 @@ function ColumnSettings (props) {
 
   var newName = ''
 
+  var types = Object.keys(dataFields).map(function (key) {
+    return h('option', { selected: property.type[0] === key }, key)
+  })
+
   return h('div', [
     h('h1', property.name + ' settings'),
     h('h2', 'Manage the settings of this column'),
@@ -21,10 +26,7 @@ function ColumnSettings (props) {
         var selectedValue = e.target.options[e.target.selectedIndex].text
         propertyType(property.key, selectedValue)
       }
-    }, [
-      h('option', { selected: property.type === 'string' }, 'string'),
-      h('option', { selected: property.type === 'number' }, 'number')
-    ]),
+    }, types),
     h('hr'),
     h('h3', 'Rename column'),
     h('input.small.rename-column', {

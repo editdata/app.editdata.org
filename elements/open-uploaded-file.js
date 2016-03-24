@@ -7,9 +7,6 @@ module.exports = OpenUploadedFile
  * @param {Object} props
  */
 function OpenUploadedFile (props) {
-  var actions = props.actions
-  var read = actions.read
-
   return h('div', [
     h('h1', 'Upload a CSV or JSON file'),
     h('h2', 'Currently only CSV or JSON files are supported'),
@@ -17,7 +14,7 @@ function OpenUploadedFile (props) {
       type: 'file',
       onchange: function (e) {
         var file = e.target.files[0]
-        read(file)
+        if (props.onfile) props.onfile(e, file)
       }
     })
   ])

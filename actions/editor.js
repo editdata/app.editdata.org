@@ -76,7 +76,7 @@ module.exports = function EditorActionCreators (store, commonActions) {
    * @param  {Object} row
    * @return {Function}
    */
-  function updateCellContent (propertyKey, value, rowKey) {
+  function updateCellContent (propertyKey, rowKey, value) {
     return store({
       type: constants.UPDATE_CELL_CONTENT,
       propertyKey: propertyKey,
