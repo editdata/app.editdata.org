@@ -40,7 +40,6 @@
     "dom-value": "0.0.0",
     "element-class": "^0.2.2",
     "envify": "^3.4.0",
-    "extend": "^3.0.0",
     "file-extension": "^2.0.1",
     "from2-array": "0.0.4",
     "from2-string": "^1.1.0",
@@ -62,7 +61,6 @@
     "virtual-app": "^3.0.0",
     "virtual-dom": "^2.1.1",
     "virtual-hook": "^1.0.1",
-    "virtual-widget": "github:kvnneff/virtual-widget",
     "wayfarer": "^4.2.0",
     "xhr": "^2.2.0"
   },

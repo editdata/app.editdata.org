@@ -1,5 +1,8 @@
 var h = require('virtual-dom/h')
 var Thunk = require('vdom-thunk')
+var partial = require('vdom-thunk/partial')
+
+var diff = require('deep-diff').diff
 
 var OpenUploadedFile = require('../elements/open-uploaded-file')
 var OpenGithubFile = require('../elements/open-github-file')
@@ -27,7 +30,9 @@ function EditorContainer (props) {
 
   editorProps.actions = actions.editor
 
-  // Detect active modal
+  /**
+   * Active Modal
+   */
   Object.keys(modals).some(function (key) {
     if (!modals[key]) return false
     editorProps.activeModal = key
@@ -39,6 +44,10 @@ function EditorContainer (props) {
     CurrentModal = Popup({ onclose: closeModal }, [ Modal ])
   }
 
+  /**
+   * Flash Notifications Component
+   */
+
   if (props.notification.message) {
     notification.actions = {
       close: function () {
@@ -47,6 +56,10 @@ function EditorContainer (props) {
     }
     Notification = Thunk(Notify, notification)
   }
+
+  /**
+   * Menu Component
+   */
 
   var MenuComponent = Thunk(MenuBar, {
     menus: props.ui.menus,
@@ -58,23 +71,43 @@ function EditorContainer (props) {
     }
   })
 
+  /**
+   * Data-grid Component
+   */
+
   var gridState = {
     properties: props.editor.properties,
     data: props.editor.data,
-    onconfigure: function (event, propertyKey) {
+    onconfigure: function onconfigure (event, propertyKey) {
       actions.editor.setActiveProperty(propertyKey)
       actions.modal('columnSettings', true)
     },
     onclick: function (event, rowKey, propertyKey) {
-      console.log('hey')
       actions.editor.setActiveProperty(propertyKey)
       actions.editor.setActiveRow(rowKey)
     }
   }
 
-  var GridComponent = Thunk(DataGrid, h, gridState)
+  var GridThunk = partial(function (currentArgs, previousArgs) {
+    var current = {
+      properties: currentArgs[1].properties,
+      data: currentArgs[1].data
+    }
 
-  // Display Row Editor if `activeRow`
+    var previous = {
+      properties: previousArgs[1].properties,
+      data: previousArgs[1].data
+    }
+
+    var differences = diff(current, previous)
+    if (differences) return false
+    return true
+  })
+
+  /**
+   * Data-form Component
+   */
+
   if (props.editor.activeRow) {
     var activeRowKey = props.editor.activeRow
     var activeRow
@@ -115,7 +148,7 @@ function EditorContainer (props) {
     h('div', {
       className: FormComponent ? 'grid-wrapper active' : 'grid-wrapper'
     }, [
-      GridComponent
+      GridThunk(DataGrid, h, gridState)
     ]),
     CurrentModal,
     FormComponent
@@ -160,8 +193,10 @@ function EditorContainer (props) {
     if (type === 'saveNewFile') {
       return SaveFile({
         file: props.file,
+        onfilename: function (e, value) {
+          actions.file.setFilename(value)
+        },
         actions: {
-          setFilename: actions.file.setFilename,
           setFileType: actions.file.setFileType,
           saveUpdatedGithubFile: actions.save.updatedGithubFile,
           downloadJSON: actions.save.downloadJSON,

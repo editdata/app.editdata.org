@@ -10,9 +10,9 @@ var constants = require('../constants')
 
 module.exports = modifyState
 
-function modifyState (action, state) {
+function modifyState (action, oldState) {
   var editor
-  state = xtend(initialState, state)
+  var state = xtend(initialState, oldState)
   switch (action.type) {
     case constants.SET_URL:
       var newURL = url.parse(window.location.href)
@@ -147,6 +147,7 @@ function modifyState (action, state) {
       return xtend(state, { ui: ui })
     case constants.MENU:
       ui = xtend(state.ui)
+      console.log(ui)
       if (action.value) {
         Object.keys(ui.menus).forEach(function (key) {
           if (key === action.menu) {
@@ -178,6 +179,8 @@ function modifyState (action, state) {
       editor = xtend(state.editor)
       editor.data = action.data
       editor.properties = action.properties
+      editor.activeProperty = null
+      editor.activeRow = null
       return xtend(state, { editor: editor })
     case constants.CLOSE_MODALS:
       ui = xtend(state.ui)
@@ -186,6 +189,6 @@ function modifyState (action, state) {
       })
       return xtend(state, { ui: ui })
     default:
-      return state
+      return xtend(state)
   }
 }

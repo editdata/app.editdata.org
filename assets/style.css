@@ -540,7 +540,7 @@ menu-item button:focus {
 */
 
 .get-started {
-
+  text-align: center;
 }
 
 .get-started .list {

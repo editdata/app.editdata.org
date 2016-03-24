@@ -2,9 +2,9 @@ var h = require('virtual-dom/h')
 
 module.exports = function (props) {
   var filename = props.file.name
+  var onfilename = props.onfilename
   var actions = props.actions
 
-  var setFilename = actions.setFilename
   var setFileType = actions.setFileType
   var downloadJSON = actions.downloadJSON
   var downloadCSV = actions.downloadCSV
@@ -42,9 +42,10 @@ module.exports = function (props) {
     h('h2', 'Save a new file to GitHub or your computer'),
     h('h3', 'File name:'),
     h('input.small', {
+      value: filename,
       type: 'text',
       oninput: function (e) {
-        setFilename(e.target.value)
+        if (onfilename) onfilename(e, e.target.value)
       }
     }),
     h('h4', ' Note that the appropriate extension will be appended to the file name'),
