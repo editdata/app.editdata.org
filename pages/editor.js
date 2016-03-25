@@ -1,8 +1,8 @@
 var h = require('virtual-dom/h')
 var Thunk = require('vdom-thunk')
 var partial = require('vdom-thunk/partial')
-
 var diff = require('deep-diff').diff
+var xtend = require('deep-extend')
 
 var OpenUploadedFile = require('../elements/open-uploaded-file')
 var OpenGithubFile = require('../elements/open-github-file')
@@ -61,7 +61,7 @@ function EditorContainer (props) {
    * Menu Component
    */
 
-  var MenuComponent = Thunk(MenuBar, {
+  var menuState = {
     menus: props.ui.menus,
     actions: {
       openNew: actions.editor.openNew,
@@ -69,12 +69,13 @@ function EditorContainer (props) {
       modal: actions.modal,
       menu: actions.menu
     }
-  })
+  }
+
+  var MenuComponent = Thunk(MenuBar, menuState)
 
   /**
    * Data-grid Component
    */
-
   var gridState = {
     properties: props.editor.properties,
     data: props.editor.data,
@@ -124,14 +125,15 @@ function EditorContainer (props) {
       properties: props.editor.properties,
       onclose: function () {
         actions.editor.setActiveRow(null)
+        actions.editor.setActiveProperty(null)
       },
       ondestroy: function (event, rowKey) {
         if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
           actions.editor.destroyRow(rowKey)
         }
       },
-      oninput: function (event, rowKey, propertyKey, value) {
-        actions.editor.updateCellContent(propertyKey, rowKey, value)
+      onupdate: function (e, row) {
+        actions.editor.updateDataRow(row)
       },
       onclick: function (event, rowKey, propertyKey) {
         if (propertyKey === props.editor.activeProperty) return
@@ -148,7 +150,7 @@ function EditorContainer (props) {
     h('div', {
       className: FormComponent ? 'grid-wrapper active' : 'grid-wrapper'
     }, [
-      GridThunk(DataGrid, h, gridState)
+      GridThunk(DataGrid, h, xtend({}, gridState))
     ]),
     CurrentModal,
     FormComponent

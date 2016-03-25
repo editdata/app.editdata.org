@@ -176,6 +176,13 @@ module.exports = function EditorActionCreators (store, commonActions) {
     })
   }
 
+  function updateDataRow (row) {
+    return store({
+      type: constants.UPDATE_ROW,
+      row: row
+    })
+  }
+
   return {
     newRow: newRow,
     newColumn: newColumn,
@@ -188,6 +195,7 @@ module.exports = function EditorActionCreators (store, commonActions) {
     setActiveProperty: setActiveProperty,
     setActiveRow: setActiveRow,
     selectUploadedFile: selectUploadedFile,
-    updateCellContent: updateCellContent
+    updateCellContent: updateCellContent,
+    updateDataRow: updateDataRow
   }
 }
