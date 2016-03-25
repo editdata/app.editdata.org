@@ -63,8 +63,10 @@ function Index (props) {
 
     if (type === 'openNewUpload') {
       return OpenUploadedFile({
-        actions: {
-          read: actions.file.read
+        onfile: function onfile (event, file) {
+          actions.file.read(file)
+          actions.closeModals()
+          actions.setRoute('/edit')
         }
       })
     }
@@ -72,7 +74,11 @@ function Index (props) {
 
   return h('div.app-container', [
     Header(props),
-    loggedIn ? GetStarted(props) : Landing(props),
+    h('div#content', [
+      h('div.content-wrapper', [
+        h('div.content', loggedIn ? GetStarted(props) : Landing(props))
+      ])
+    ]),
     CurrentModal
   ])
 }

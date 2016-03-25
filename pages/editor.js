@@ -1,5 +1,11 @@
 var h = require('virtual-dom/h')
+var Thunk = require('vdom-thunk')
+var partial = require('vdom-thunk/partial')
+var diff = require('deep-diff').diff
+var xtend = require('deep-extend')
 
+var OpenUploadedFile = require('../elements/open-uploaded-file')
+var OpenGithubFile = require('../elements/open-github-file')
 var ColumnSettings = require('../elements/column-settings')
 var CreateNewColumn = require('../elements/create-column')
 var SaveToGithub = require('../elements/save-to-github')
@@ -7,10 +13,9 @@ var SaveFile = require('../elements/save-file')
 var MenuBar = require('../elements/menu-bar')
 var Header = require('../elements/header')
 var Notify = require('../elements/notify')
-var Editor = require('../elements/editor')
 var Popup = require('../elements/popup')
-var Sheet = require('../elements/sheet')
-var Item = require('../elements/item')
+var DataGrid = require('data-grid')
+var DataForm = require('data-form')
 
 module.exports = EditorContainer
 
@@ -21,11 +26,13 @@ function EditorContainer (props) {
   var editorProps = {}
   var Notification
   var CurrentModal
-  var CurrentRow
+  var FormComponent
 
   editorProps.actions = actions.editor
 
-  // Detect active modal
+  /**
+   * Active Modal
+   */
   Object.keys(modals).some(function (key) {
     if (!modals[key]) return false
     editorProps.activeModal = key
@@ -37,16 +44,24 @@ function EditorContainer (props) {
     CurrentModal = Popup({ onclose: closeModal }, [ Modal ])
   }
 
+  /**
+   * Flash Notifications Component
+   */
+
   if (props.notification.message) {
     notification.actions = {
       close: function () {
         actions.notification.set(null, null)
       }
     }
-    Notification = Notify(notification)
+    Notification = Thunk(Notify, notification)
   }
 
-  var menuBarProps = {
+  /**
+   * Menu Component
+   */
+
+  var menuState = {
     menus: props.ui.menus,
     actions: {
       openNew: actions.editor.openNew,
@@ -56,58 +71,89 @@ function EditorContainer (props) {
     }
   }
 
-  var sheetProps = {
-    activeProperty: props.activeProperty,
-    activePropertyKey: props.editor.activeRow ? props.editor.activeRow.column : null,
-    activeRowKey: props.editor.activeRow ? props.editor.activeRow.row : null,
-    activeItem: props.activeItem,
+  var MenuComponent = Thunk(MenuBar, menuState)
+
+  /**
+   * Data-grid Component
+   */
+  var gridState = {
     properties: props.editor.properties,
     data: props.editor.data,
-    actions: {
-      destroyColumn: actions.editor.destroyColumn,
-      renameColumn: actions.editor.renameColumn,
-      propertyType: actions.editor.propertyType,
-      setActiveProperty: actions.editor.setActiveProperty,
-      setActiveRow: actions.editor.setActiveRow,
-      modal: actions.modal
+    onconfigure: function onconfigure (event, propertyKey) {
+      actions.editor.setActiveProperty(propertyKey)
+      actions.modal('columnSettings', true)
+    },
+    onclick: function (event, rowKey, propertyKey) {
+      actions.editor.setActiveProperty(propertyKey)
+      actions.editor.setActiveRow(rowKey)
     }
   }
 
-  // Display Row Editor if `activeRow`
+  var GridThunk = partial(function (currentArgs, previousArgs) {
+    var current = {
+      properties: currentArgs[1].properties,
+      data: currentArgs[1].data
+    }
+
+    var previous = {
+      properties: previousArgs[1].properties,
+      data: previousArgs[1].data
+    }
+
+    var differences = diff(current, previous)
+    if (differences) return false
+    return true
+  })
+
+  /**
+   * Data-form Component
+   */
+
   if (props.editor.activeRow) {
-    var activeRow = props.editor.activeRow
-    var activeRowData
+    var activeRowKey = props.editor.activeRow
+    var activeRow
     props.editor.data.some(function (row) {
-      if (row.key === parseInt(activeRow.row, 10)) {
-        activeRowData = row
+      if (row.key === activeRowKey) {
+        activeRow = row
         return true
       }
     })
 
-    if (activeRowData) {
-      CurrentRow = Item({
-        activeColumnKey: activeRow.column,
-        activeRowKey: activeRow.row,
-        activeRowData: activeRowData,
-        properties: props.editor.properties,
-        actions: {
-          updateCellContent: actions.editor.updateCellContent,
-          setActiveRow: actions.editor.setActiveRow,
-          destroyRow: actions.editor.destroyRow
+    var formState = {
+      row: activeRow,
+      activeColumnKey: props.editor.activeProperty,
+      properties: props.editor.properties,
+      onclose: function () {
+        actions.editor.setActiveRow(null)
+        actions.editor.setActiveProperty(null)
+      },
+      ondestroy: function (event, rowKey) {
+        if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
+          actions.editor.destroyRow(rowKey)
         }
-      })
+      },
+      onupdate: function (e, row) {
+        actions.editor.updateDataRow(row)
+      },
+      onclick: function (event, rowKey, propertyKey) {
+        if (propertyKey === props.editor.activeProperty) return
+        actions.editor.setActiveProperty(propertyKey)
+      }
     }
+    FormComponent = Thunk(DataForm, h, formState)
   }
 
   return h('div#editor-container', [
-    Header(props),
+    Thunk(Header, props),
     Notification,
-    Editor(editorProps, [
-      MenuBar(menuBarProps),
-      Sheet(sheetProps)
+    MenuComponent,
+    h('div', {
+      className: FormComponent ? 'grid-wrapper active' : 'grid-wrapper'
+    }, [
+      GridThunk(DataGrid, h, xtend({}, gridState))
     ]),
     CurrentModal,
-    CurrentRow
+    FormComponent
   ])
 
   function closeModal () {
@@ -115,11 +161,44 @@ function EditorContainer (props) {
   }
 
   function getModal (type) {
+    if (type === 'openNewGithub') {
+      return OpenGithubFile({
+        githubBranches: props.githubBranches,
+        githubRepos: props.githubRepos,
+        githubFiles: props.githubFiles,
+        githubOrgs: props.githubOrgs,
+        activeBranch: props.activeBranch,
+        activeRepo: props.activeRepo,
+        activeOrg: props.activeOrg,
+        actions: {
+          getOrgs: actions.github.getOrgs,
+          getRepos: actions.github.getRepos,
+          getFiles: actions.github.getFiles,
+          getBranches: actions.github.getBranches,
+          setActiveOrg: actions.github.setActiveOrg,
+          setActiveRepo: actions.github.setActiveRepo,
+          setActiveBranch: actions.github.setActiveBranch,
+          setActiveFile: actions.github.setActiveFile
+        }
+      })
+    }
+
+    if (type === 'openNewUpload') {
+      return OpenUploadedFile({
+        onfile: function onfile (event, file) {
+          actions.file.read(file)
+          actions.closeModals()
+        }
+      })
+    }
+
     if (type === 'saveNewFile') {
       return SaveFile({
         file: props.file,
+        onfilename: function (e, value) {
+          actions.file.setFilename(value)
+        },
         actions: {
-          setFilename: actions.file.setFilename,
           setFileType: actions.file.setFileType,
           saveUpdatedGithubFile: actions.save.updatedGithubFile,
           downloadJSON: actions.save.downloadJSON,
@@ -154,7 +233,9 @@ function EditorContainer (props) {
 
     if (type === 'createNewColumn') {
       return CreateNewColumn({
-        actions: { newColumn: actions.editor.newColumn }
+        onsubmit: function (event, column) {
+          actions.editor.newColumn(column.name, column.type)
+        }
       })
     }
 
@@ -167,8 +248,8 @@ function EditorContainer (props) {
           propertyType: actions.editor.propertyType,
           renameColumn: actions.editor.renameColumn,
           destroyColumn: function (key) {
-            actions.editor.destroyColumn(key)
             actions.closeModals()
+            actions.editor.destroyColumn(key)
           }
         }
       }
