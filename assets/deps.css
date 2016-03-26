@@ -1,7 +1,6 @@
 @import "normalize.css";
 @import "basscss-grid";
 @import "csskit";
-@import "../elements/grid/style";
 
 :root {
   --blue: #536DFE;
