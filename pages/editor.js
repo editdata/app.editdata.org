@@ -93,7 +93,6 @@ function EditorContainer (props) {
   if (props.editor.activeProperty) gridState.activePropertyKey = props.editor.activeProperty
 
   var GridThunk = partial(function (currentArgs, previousArgs) {
-    console.log(currentArgs[1].activePropertyKey, previousArgs[1].activePropertyKey)
     var current = {
       properties: currentArgs[1].properties,
       data: currentArgs[1].data,
@@ -144,6 +143,10 @@ function EditorContainer (props) {
         actions.editor.updateDataRow(row)
       },
       onclick: function (event, rowKey, propertyKey) {
+        if (propertyKey === props.editor.activeProperty) return
+        actions.editor.setActiveProperty(propertyKey)
+      },
+      onfocus: function (event, rowKey, propertyKey) {
         if (propertyKey === props.editor.activeProperty) return
         actions.editor.setActiveProperty(propertyKey)
       }
