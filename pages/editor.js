@@ -34,7 +34,6 @@ function EditorContainer (props) {
    * Active Modal
    */
   Object.keys(modals).some(function (key) {
-    console.log(key, modals[key])
     if (!modals[key]) return false
     editorProps.activeModal = key
     return true
