@@ -64,7 +64,6 @@
     "budo": "^7.1.0",
     "cssnext": "^1.8.4",
     "dom-events": "^0.1.1",
-    "sheetify": "^3.3.3",
     "standard": "^5.4.1",
     "surge": "^0.17.4",
     "tape": "^4.4.0",
