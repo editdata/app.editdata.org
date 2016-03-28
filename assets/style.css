@@ -637,7 +637,7 @@ menu-item button:focus {
   position: absolute;
   white-space: nowrap;
   height: 100%;
-  margin-bottom: 40px;
+  padding-bottom: 40px;
 }
 
 .data-grid-rows li.top,
@@ -647,7 +647,6 @@ menu-item button:focus {
 
 .data-grid-row {
   list-style-type: none;
-  height: 30px;
 }
 
 .data-grid-row:last-child {
@@ -657,7 +656,6 @@ menu-item button:focus {
 .data-grid-row-items {
   margin: 0px;
   padding: 0px;
-  height: 30px;
 }
 
 .data-grid-row-items:hover {
@@ -744,4 +742,34 @@ menu-item button:focus {
 
 .data-grid-property-configure:hover {
   color: #222;
+}
+
+.data-grid-row .data-field:hover,
+.data-grid-row .data-field.active {
+  background-color: #f1f1ff;
+}
+
+.data-grid-row .data-field-editable:hover {
+  cursor: pointer;
+}
+
+.data-grid-row:hover,
+.data-grid-row.active {
+  background-color: #fcfcfc;
+  cursor: pointer;
+}
+
+.data-grid-row .data-field {
+  height: 40px;
+  width: 150px;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  overflow: hidden !important;
+  resize: none;
+  padding: 0px 8px;
+  font-size: 13px;
+  line-height: 40px;
+  display: inline-block;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }

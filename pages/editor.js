@@ -89,15 +89,23 @@ function EditorContainer (props) {
     }
   }
 
+  if (props.editor.activeRow) gridState.activeRowKey = props.editor.activeRow
+  if (props.editor.activeProperty) gridState.activePropertyKey = props.editor.activeProperty
+
   var GridThunk = partial(function (currentArgs, previousArgs) {
+    console.log(currentArgs[1].activePropertyKey, previousArgs[1].activePropertyKey)
     var current = {
       properties: currentArgs[1].properties,
-      data: currentArgs[1].data
+      data: currentArgs[1].data,
+      activeRowKey: currentArgs[1].activeRowKey,
+      activePropertyKey: currentArgs[1].activePropertyKey
     }
 
     var previous = {
       properties: previousArgs[1].properties,
-      data: previousArgs[1].data
+      data: previousArgs[1].data,
+      activeRowKey: previousArgs[1].activeRowKey,
+      activePropertyKey: previousArgs[1].activePropertyKey
     }
 
     var differences = diff(current, previous)
