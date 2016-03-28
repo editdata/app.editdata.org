@@ -134,10 +134,8 @@ function EditorContainer (props) {
         actions.editor.setActiveRow(null)
         actions.editor.setActiveProperty(null)
       },
-      ondestroy: function (event, rowKey) {
-        if (window.confirm('wait. are you sure you want to destroy all the data in this row?')) {
-          actions.editor.destroyRow(rowKey)
-        }
+      ondestroy: function (event) {
+        actions.modal('destroyRowConfirm', true)
       },
       onupdate: function (e, row) {
         actions.editor.updateDataRow(row)
@@ -266,6 +264,20 @@ function EditorContainer (props) {
       }
 
       return ColumnSettings(columnSettingsProps)
+    }
+
+    if (type === 'destroyRowConfirm') {
+      return h('div.u-center', {}, [
+        h('p', 'Are you sure you want to destroy all the data in this row?'),
+        h('button', {
+          onclick: function (e) {
+            actions.editor.destroyRow(props.editor.activeRow)
+            actions.editor.setActiveRow(null)
+            actions.editor.setActiveProperty(null)
+            actions.closeModals()
+          }
+        }, 'Delete Row')
+      ])
     }
   }
 }

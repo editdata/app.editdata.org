@@ -773,3 +773,8 @@ menu-item button:focus {
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
+
+/* Text centering utility */
+.u-center {
+  text-align: center;
+}
