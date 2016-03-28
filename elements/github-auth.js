@@ -42,14 +42,18 @@ function Profile (props) {
 function Auth (props) {
   var children = []
 
-  children.push(h('a', {
-    className: 'content-link',
+  children.push(h('a.content-link', {
     href: '/about'
   }, 'about'))
 
-  // children.push(h('a.content-link', {
-  //   href: '#/docs'
-  // }, 'docs'))
+  children.push(h('a.content-link', {
+    href: 'http://about.editdata.org',
+    target: '_blank'
+  }, 'docs'))
+
+  children.push(h('a.content-link', {
+    href: '/support'
+  }, 'support'))
 
   if (!props.user.profile) {
     children.push(SignInButton(h))

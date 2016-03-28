@@ -25,7 +25,7 @@ function About (props) {
       ]),
       h('p', [
         h('a.button', {
-          href: 'https://github.com/editdata/editdata.org/issues',
+          href: 'https://github.com/editdata/editdata.org/issues/new',
           target: '_blank'
         }, 'Report an issue')
       ])
