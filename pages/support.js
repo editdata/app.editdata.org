@@ -26,9 +26,9 @@ function Support (props) {
       h('p', 'Need features not available on EditData.org?'),
       h('p', [
         h('a.button', {
-          href: 'mailto:hi@editdata.org',
+          href: 'mailto:hi@editdata.org'
         }, 'Contact us about consulting')
-      ]),
+      ])
     ])
   ])
 }
