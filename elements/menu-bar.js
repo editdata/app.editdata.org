@@ -35,11 +35,14 @@ function MenuBar (props) {
     modal('createNewColumn', true)
   }
 
-  var openEmpty = MenuItem({ id: 'empty', text: 'New empty dataset', onclick: openNewFilePopup })
-  var openGithub = MenuItem({ id: 'github', text: 'GitHub', onclick: openNewFilePopup })
-
+  var openEmpty = MenuItem({ id: 'empty', text: 'New empty dataset' })
+  var openGithub = MenuItem({ id: 'github', text: 'GitHub' })
+  var openUpload = MenuItem({ id: 'upload', text: 'Upload CSV or JSON' })
   // var openDat = MenuItem({ id: 'dat', text: 'Dat' })
-  var openUpload = MenuItem({ id: 'upload', text: 'Upload CSV or JSON', onclick: openNewFilePopup })
+  var save = MenuItem({ id: 'save', text: 'Save' })
+  var exportItem = MenuItem({ id: 'export', text: 'Export' })
+  var newRowMenu = MenuItem({ id: 'new-row', text: 'New row' })
+  var newColumnMenu = MenuItem({ id: 'new-column', text: 'New column' })
 
   var openDropdown = Dropdown({
     id: 'open',
@@ -48,29 +51,33 @@ function MenuBar (props) {
       openEmpty,
       openGithub,
       openUpload
-    ],
-    onclick: function () {
-      menu('openFile', true)
-
-      function listener (e) {
-        var found = false
-        for (var element = e.target; element; element = element.parentNode) {
-          if (element.id === 'open') found = true
-        }
-        if (!found) {
-          if (menu) menu('openFile', false)
-          document.body.removeEventListener('click', listener)
-        }
-      }
-
-      document.body.addEventListener('click', listener)
-    }
+    ]
   })
 
-  var save = MenuItem({ id: 'save', text: 'Save', onclick: showSave })
-  var exportItem = MenuItem({ id: 'export', text: 'Export', onclick: showSave })
-  var newRowMenu = MenuItem({ id: 'new-row', text: 'New row', onclick: createNewRow })
-  var newColumnMenu = MenuItem({ id: 'new-column', text: 'New column', onclick: newColumn })
+  openEmpty.addEventListener('click', openNewFilePopup)
+  openGithub.addEventListener('click', openNewFilePopup)
+  openUpload.addEventListener('click', openNewFilePopup)
+  save.addEventListener('click', showSave)
+  exportItem.addEventListener('click', showSave)
+  newRowMenu.addEventListener('click', createNewRow)
+  newColumnMenu.addEventListener('click', newColumn)
+
+  openDropdown.addEventListener('click', function (e) {
+    menu('openFile', true)
+
+    function listener (e) {
+      var found = false
+      for (var element = e.target; element; element = element.parentNode) {
+        if (element.id === 'open') found = true
+      }
+      if (!found) {
+        if (menu) menu('openFile', false)
+        document.body.removeEventListener('click', listener)
+      }
+    }
+
+    document.body.addEventListener('click', listener)
+  })
 
   return h('div#menu', [
     Menu.render([
