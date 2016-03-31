@@ -31,9 +31,9 @@ var tree = render(function (state) {
 })
 
 app.on('*', function (action, state, oldState) {
-  console.log('oldState ->', oldState)
-  console.log('action ->', action)
-  console.log('state ->', state)
+  // console.log('oldState ->', oldState)
+  // console.log('action ->', action)
+  // console.log('state ->', state)
 
   var storedState = xtend({}, state)
   delete storedState.ui
