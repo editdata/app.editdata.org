@@ -10,13 +10,11 @@ module.exports = MenuBar
  * @param {Object} props
  */
 function MenuBar (props) {
-  var actions = props.actions || {}
   var menus = props.menus || {}
-
-  var openNew = actions.openNew
-  var newRow = actions.newRow
-  var modal = actions.modal
-  var menu = actions.menu
+  var openNew = props.openNew
+  var newRow = props.newRow
+  var modal = props.modal
+  var menu = props.menu
 
   function openNewFilePopup (event) {
     var slug = event.target.id

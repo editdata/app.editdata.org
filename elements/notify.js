@@ -3,10 +3,9 @@ var h = require('virtual-dom/h')
 module.exports = Notification
 
 function Notification (props) {
-  var actions = props.actions || {}
   var message = props.message
   var level = props.level
-  var close = actions.close
+  var close = props.close
 
   return h('div.notify.notify-' + level, {
     onclick: function (e) {

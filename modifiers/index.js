@@ -35,59 +35,58 @@ function modifyState (action, state) {
       notification.message = action.message
       return xtend({}, state, { notification: notification })
     case constants.NEW_ROW:
-      editor = xtend({}, state.editor)
+      var data = state.data.slice()
       var row = {
-        key: editor.data.length + 1,
+        key: data.length + 1,
         value: {}
       }
-      Object.keys(editor.properties).forEach(function (key) {
+      Object.keys(state.properties).forEach(function (key) {
         row.value[key] = null
       })
-      editor.data.push(row)
-      return xtend({}, state, { editor: editor })
+      data.push(row)
+      return xtend({}, state, { data: data })
     case constants.NEW_COLUMN:
       var property = action.property
-      editor = xtend({}, state.editor)
+      var properties = xtend({}, state.properties)
+      data = state.data.slice()
       if (!property.key) property.key = cuid()
       if (!property.default) property.default = null
       if (!property.type) property.type = ['string']
       if (typeof property.type === 'string') property.type = [property.type]
 
       var prop = schema.addProperty(property)
-      editor.properties[prop.key] = prop
+      properties[prop.key] = prop
 
-      editor.data.forEach(function (item) {
+      data.forEach(function (item) {
         item.value[property.key] = null
       })
-
-      return xtend({}, state, { editor: editor })
+      delete state.data
+      delete state.properties
+      return xtend({}, state, { properties: properties, data: data })
     case constants.DESTROY:
-      editor = xtend({}, state.editor)
-      editor.data = []
-      editor.properties = {}
-      return xtend({}, state, { editor: editor })
+      delete state.data
+      delete state.properties
+      return xtend({}, state, { data: [], properties: {} })
     case constants.DESTROY_ROW:
-      editor = xtend({}, state.editor)
-      var newData = editor.data.filter(function (row) {
+      data = state.data.slice()
+      var newData = data.filter(function (row) {
         return row.key !== action.key
       })
-      editor.data = newData
-      return xtend({}, state, { editor: editor })
+      delete state.data
+      return xtend({}, state, { data: newData })
     case constants.DESTROY_COLUMN:
-      editor = xtend({}, state.editor)
-      editor.data.forEach(function (item) {
+      data = state.data.slice()
+      data.forEach(function (item) {
         delete item.value[action.key]
       })
-      delete editor.properties[action.key]
-      return xtend({}, state, { editor: editor })
+      delete state.properties[action.key]
+      return xtend({}, state, { data: data })
     case constants.RENAME_COLUMN:
-      editor = xtend({}, state.editor)
-      editor.properties[action.key].name = action.newName
-      return xtend({}, state, { editor: editor })
+      state.properties[action.key].name = action.newName
+      return xtend({}, state)
     case constants.PROPERTY_TYPE:
-      editor = xtend({}, state.editor)
-      editor.properties[action.propertyKey].type = [action.propertyType]
-      return xtend({}, state, { editor: editor })
+      state.properties[action.propertyKey].type = [action.propertyType]
+      return xtend({}, state)
     case constants.SET_ACTIVE_ROW:
       editor = xtend({}, state.editor)
       editor.activeRow = action.activeRow
@@ -97,13 +96,13 @@ function modifyState (action, state) {
       editor.activeProperty = action.propertyKey
       return xtend({}, state, { editor: editor })
     case constants.UPDATE_ROW:
-      editor = xtend({}, state.editor)
-      editor.data.forEach(function (row, i) {
+      data = state.data.slice()
+      data.forEach(function (row, i) {
         if (row.key === action.row.key) {
-          editor.data[i] = action.row
+          data[i] = action.row
         }
       })
-      return xtend({}, state, { editor: editor })
+      return xtend({}, state, { data: data })
     case constants.SET_GITHUB_ORGS:
       action.orgs.unshift({ login: state.user.profile.login })
       return xtend({}, state, { githubOrgs: action.orgs })
@@ -120,11 +119,10 @@ function modifyState (action, state) {
     case constants.SELECTED_BRANCH:
       return xtend({}, state, { activeBranch: action.branch })
     case constants.SELECTED_FILE:
-      editor = xtend({}, editor)
-      editor.data = action.data
-      editor.properties = action.properties
-      editor.saveData = action.saveData || initialState.saveData
-      return xtend({}, state, { editor: editor })
+      state.data = action.data
+      state.properties = action.properties
+      state.editor.saveData = action.saveData || initialState.saveData
+      return xtend({}, state)
     case constants.SET_GITHUB_BRANCHES:
       return xtend({}, state, { githubBranches: action.branches })
     case constants.SET_GITHUB_FILES:
@@ -174,13 +172,11 @@ function modifyState (action, state) {
       file.type = action.fileType
       return xtend({}, state, { file: file })
     case constants.SET_FILE:
-      editor = xtend({}, state.editor)
-      editor.data = action.data
-      editor.properties = action.properties
-      editor.activeProperty = null
-      editor.activeRow = null
-      state.editor.properties = {}
-      return xtend({}, state, { editor: editor })
+      state.data = action.data
+      state.properties = action.properties
+      state.editor.activeProperty = null
+      state.editor.activeRow = null
+      return xtend({}, state)
     case constants.CLOSE_MODALS:
       ui = xtend({}, state.ui)
       Object.keys(ui.modals).forEach(function (key) {
