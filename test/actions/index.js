@@ -31,6 +31,5 @@ test('signOut', function (t) {
   var store = createStore()
   var actions = ActionCreators({ store: store })
   var action = actions.signOut()
-  console.log(action)
   t.equal(action.type, constants.SIGN_OUT)
 })
