@@ -14,9 +14,9 @@
     "bundle-js:staging": "browserify app.js -t [ envify --NODE_ENV staging ] -o  assets/bundle.js",
     "bundle": "npm run bundle-css && npm run bundle-js:production",
     "start": "budo app.js:assets/bundle.js --live --pushstate -- -t [ envify --NODE_ENV development ] -t brfs",
-    "test": "npm run lint && zuul -- ./test",
+    "test": "npm run lint && npm run test:testron",
     "test:testron": "browserify ./test | testron | tap-spec",
-    "test-local": "npm run lint && zuul --local 8080 -- ./test",
+    "test:zuul": "npm run lint && zuul -- ./test",
     "lint": "standard ./**/*.js"
   },
   "browserify": {
