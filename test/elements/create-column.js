@@ -12,15 +12,13 @@ test('CreateColumn returns a div element', function (t) {
   t.equal(element.tagName, 'DIV')
 })
 
-test('CreateColumn execs `actions.newColumn(name, type)` when button is clicked', function (t) {
+test('CreateColumn execs `props.onsubmit(event, column)` on submit', function (t) {
   t.plan(2)
 
   var vnode = CreateColumn({
-    actions: {
-      newColumn: function (name, type) {
-        t.equal(name, 'foo')
-        t.equal(type, 'number')
-      }
+    onsubmit: function (event, column) {
+      t.equal(column.name, 'foo')
+      t.equal(column.type, 'number')
     }
   })
 
