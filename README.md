@@ -1,4 +1,6 @@
-# [editdata.org](http://editdata.org)
+# editdata.org
+
+[![editdata](http://about.editdata.org/assets/editdata-1080x720.png)](http://editdata.org)
 
 ## Getting Started
 
@@ -19,10 +21,9 @@
 
 ## About
 
-editdata.org repurposes components from [flatsheet]
-to provide a simple free tool for editing data.
+EditData is a set of tools for collaborating on data.
 
-[flatsheet]: https://github.com/settings/applications/new
+EditData was previously named Flatsheet. We renamed the project to take focus away from the idea of spreadsheets, to expand the scope to editing data in a variety of ways.
 
 ## Contributing
 
