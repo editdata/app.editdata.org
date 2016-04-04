@@ -26,13 +26,11 @@ test('Notify returns a <p> with {props.message}', function (t) {
   t.equal(element.innerText, 'Foo')
 })
 
-test('Notify execs `props.actions.close` when button is clicked', function (t) {
+test('Notify execs `props.close` when button is clicked', function (t) {
   t.plan(1)
   var vnode = Notify({
-    actions: {
-      close: function () {
-        t.ok(true)
-      }
+    close: function () {
+      t.ok(true)
     }
   })
   var element = createElement(vnode)
