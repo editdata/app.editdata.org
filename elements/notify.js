@@ -14,7 +14,6 @@ function Notification (props) {
 
   return h('div.notify.notify-' + level, {
     onclick: function (e) {
-      console.log('heyo', props)
       if (close) close(e)
     }
   }, [
