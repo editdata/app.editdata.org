@@ -92,10 +92,9 @@ module.exports = function SaveActionCreators (store, commonActions) {
   function updatedGithubFile (message) {
     var state = store.getState()
     var fileType = state.file.type
-    console.log('updatedGithubFile', fileType)
+
     if (fileType === 'json') save(toJSON(state.properties, state.data))
     if (fileType === 'csv') {
-      console.log('state', state)
       toCSV(state.properties, state.data, function (err, data) {
         // TODO: Handle error
         if (err) console.error(err)
