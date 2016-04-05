@@ -45,11 +45,13 @@ module.exports = function EditorContainer (props) {
    */
 
   if (props.notification.message) {
+    console.log('welp')
     notification.actions = {
       close: function () {
-        actions.notification.set(null, null)
+        actions.notification.unset()
       }
     }
+    console.log(notification)
     Notification = Thunk(Notify, notification)
   }
 

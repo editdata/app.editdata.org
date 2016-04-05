@@ -14,7 +14,14 @@ module.exports = function NotificationActionCreators (store, commonActions) {
     })
   }
 
+  function unset () {
+    return store({
+      type: constants.UNSET_NOTIFICATION
+    })
+  }
+
   return {
-    set: set
+    set: set,
+    unset: unset
   }
 }

@@ -33,6 +33,8 @@ function modifyState (action, state) {
       notification.level = action.level
       notification.message = action.message
       return xtend({}, state, { notification: notification })
+    case constants.UNSET_NOTIFICATION:
+      return xtend({}, state, { notification: { level: null, message: null } })
     case constants.NEW_ROW:
       var data = state.data.slice()
       var row = {
