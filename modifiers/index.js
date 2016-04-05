@@ -120,7 +120,9 @@ function modifyState (action, state) {
     case constants.SELECTED_FILE:
       state.data = action.data
       state.properties = action.properties
-      state.editor.saveData = action.saveData || initialState.saveData
+      state.file.saveData = action.saveData || initialState.saveData
+      state.file.name = action.saveData.location.name
+      state.file.type = state.file.name.split('.')[1]
       return xtend({}, state)
     case constants.SET_GITHUB_BRANCHES:
       return xtend({}, state, { githubBranches: action.branches })
