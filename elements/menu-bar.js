@@ -36,7 +36,6 @@ function MenuBar (props) {
   var openEmpty = MenuItem({ id: 'empty', text: 'New empty dataset' })
   var openGithub = MenuItem({ id: 'github', text: 'GitHub' })
   var openUpload = MenuItem({ id: 'upload', text: 'Upload CSV or JSON' })
-  // var openDat = MenuItem({ id: 'dat', text: 'Dat' })
   var save = MenuItem({ id: 'save', text: 'Save' })
   var exportItem = MenuItem({ id: 'export', text: 'Export' })
   var newRowMenu = MenuItem({ id: 'new-row', text: 'New row' })

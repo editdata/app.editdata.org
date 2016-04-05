@@ -20,7 +20,6 @@ function modifyState (action, state) {
       return xtend({}, state, { url: newURL })
     case constants.SIGN_OUT:
       cookie.set('editdata', '', { expires: new Date(0) })
-      window.location = window.location.origin
       return initialState
     case constants.SET_USER:
       cookie.set('editdata', action.user.token)

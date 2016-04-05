@@ -103,6 +103,7 @@ module.exports = function EditorContainer (props) {
       row: activeRow,
       activeColumnKey: props.editor.activeProperty,
       properties: props.properties,
+      closeButtonText: 'x',
       onclose: function () {
         actions.editor.setActiveRow(null)
         actions.editor.setActiveProperty(null)
@@ -223,6 +224,7 @@ module.exports = function EditorContainer (props) {
       return CreateNewColumn({
         onsubmit: function (event, column) {
           actions.editor.newColumn(column.name, column.type)
+          actions.closeModals()
         }
       })
     }

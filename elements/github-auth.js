@@ -33,6 +33,7 @@ function Profile (props) {
     onclick: function (e) {
       e.preventDefault()
       actions.signOut(props.store)
+      actions.setRoute('/')
     }
   }, 'sign out'))
 
@@ -43,7 +44,8 @@ function Auth (props) {
   var children = []
 
   children.push(h('a.content-link', {
-    href: '/about'
+    href: '/about',
+    target: '_blank'
   }, 'about'))
 
   children.push(h('a.content-link', {
@@ -52,7 +54,8 @@ function Auth (props) {
   }, 'docs'))
 
   children.push(h('a.content-link', {
-    href: '/support'
+    href: '/support',
+    target: '_blank'
   }, 'support'))
 
   if (!props.user.profile) {

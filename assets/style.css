@@ -483,7 +483,8 @@ menu-item button:focus {
 
 
 
-.popup-close {
+.popup-close,
+.data-form-action-close {
   border: 1px solid #fff;
   padding: 8px 10px 10px 10px;
   margin: 10px;
@@ -493,10 +494,15 @@ menu-item button:focus {
   float: right;
 }
 
-.popup-close:hover {
+.popup-close:hover,
+.data-form-action-close:hover {
   border: 1px solid #f2f2f0;
   background-color: #f2f2f0;
   box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+.data-form-action-close {
+  margin: 0px;
 }
 
 .popup ul.item-list {
@@ -647,6 +653,7 @@ menu-item button:focus {
 
 .data-grid-row {
   list-style-type: none;
+  height: 40px;
 }
 
 .data-grid-row:last-child {
@@ -777,4 +784,27 @@ menu-item button:focus {
 /* Text centering utility */
 .u-center {
   text-align: center;
+}
+
+/* list-editor */
+.list-editor-hide-key {
+  display: none;
+}
+
+.list-editor-items {
+  margin: 0px;
+  padding: 0px;
+}
+
+.list-editor-item {
+  list-style-type: none;
+}
+
+.data-field-list-item {
+  display: inline-block;
+}
+
+.data-field-list-item::after {
+  content: ",";
+  margin-right: 2px;
 }
