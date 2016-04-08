@@ -748,23 +748,25 @@ menu-item button:focus {
   color: #222;
 }
 
-.data-grid-property-configure {
+button.data-grid-property-configure {
   float: right;
-  margin: 0px;
+  margin: 0px 5px 0px 0px;
   font-size: 14px;
   display: none;
   border: 0px;
   background: none;
   padding: 0px;
   cursor: pointer;
+  height: 40px;
 }
 
-.data-grid-property:hover .data-grid-property-configure {
+.data-grid-property:hover button.data-grid-property-configure {
   display: inherit;
 }
 
-.data-grid-property-configure:hover {
+button.data-grid-property-configure:hover {
   color: #222;
+
 }
 
 .data-grid-row .data-field:hover,
