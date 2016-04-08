@@ -1,5 +1,5 @@
 var h = require('virtual-dom/h')
-var Header = require('../elements/Header')
+var Header = require('../elements/header')
 
 module.exports = About
 
