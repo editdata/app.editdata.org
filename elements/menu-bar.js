@@ -22,7 +22,13 @@ function MenuBar (props) {
   }
 
   function showSave () {
-    modal('saveNewFile', true)
+    console.log('showSave clicked')
+    modal('saveFile', true)
+  }
+
+  function showExport () {
+    console.log('showExport clicked')
+    modal('exportFile', true)
   }
 
   function createNewRow () {
@@ -55,7 +61,7 @@ function MenuBar (props) {
   openGithub.addEventListener('click', openNewFilePopup)
   openUpload.addEventListener('click', openNewFilePopup)
   save.addEventListener('click', showSave)
-  exportItem.addEventListener('click', showSave)
+  exportItem.addEventListener('click', showExport)
   newRowMenu.addEventListener('click', createNewRow)
   newColumnMenu.addEventListener('click', newColumn)
 

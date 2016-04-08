@@ -48,7 +48,7 @@ module.exports = function (props) {
         if (onfilename) onfilename(e, e.target.value)
       }
     }),
-    h('h4', ' Note that the appropriate extension will be appended to the file name'),
+    h('p.help', ' Note that the appropriate extension will be appended to the file name'),
     filename ? OptionList : null
   ])
 }

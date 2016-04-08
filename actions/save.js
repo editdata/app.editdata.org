@@ -12,9 +12,8 @@ module.exports = function SaveActionCreators (store, commonActions) {
    */
   function downloadCSV () {
     var state = store.getState()
-    var editor = state.editor
     var file = state.file
-    toCSV(editor.properties, editor.data, function (err, csv) {
+    toCSV(state.properties, state.data, function (err, csv) {
       if (err) console.error(err)
       return saveBlob(csv, file.name + '.' + file.type)
     })
@@ -27,9 +26,8 @@ module.exports = function SaveActionCreators (store, commonActions) {
    */
   function downloadJSON () {
     var state = store.getState()
-    var editor = state.editor
     var file = state.file
-    return saveBlob(toJSON(editor.properties, editor.data), file.name + '.' + file.type)
+    return saveBlob(toJSON(state.properties, state.data), file.name + '.' + file.type)
   }
 
   /**
@@ -39,13 +37,12 @@ module.exports = function SaveActionCreators (store, commonActions) {
    */
   function newGithubFile (branch) {
     var state = store.getState()
-    var editor = state.editor
     var file = state.file
 
     if (file.type === 'json') {
-      save(toJSON(editor.properties, editor.data))
+      save(toJSON(state.properties, state.data))
     } else if (file.type === 'csv') {
-      toCSV(editor.properties, editor.data, function (err, data) {
+      toCSV(state.properties, state.data, function (err, data) {
         // TODO: Handle error
         if (err) console.error(err)
         return save(data)
