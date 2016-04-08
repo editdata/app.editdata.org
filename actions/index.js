@@ -82,7 +82,6 @@ module.exports = function ActionCreators (app) {
    * @return {Function}
    */
   function modal (modal, value) {
-    console.log('action: modal', modal, value)
     return app.store({
       type: constants.MODAL,
       modal: modal,

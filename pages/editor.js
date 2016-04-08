@@ -35,7 +35,7 @@ module.exports = function EditorContainer (props) {
     editorProps.activeModal = key
     return true
   })
-  console.log('editorProps.activeModal', editorProps.activeModal)
+
   if (editorProps.activeModal) {
     var Modal = getModal(props.ui.modals)
     CurrentModal = Popup({ onclose: actions.closeModals }, [ Modal ])
@@ -149,7 +149,6 @@ module.exports = function EditorContainer (props) {
       return true
     })
 
-    console.log('activeModal', activeModal)
     if (!activeModal) return
 
     if (activeModal === 'openNewGithub') {
@@ -184,7 +183,6 @@ module.exports = function EditorContainer (props) {
     }
 
     if (activeModal === 'saveFile') {
-      console.log('modal: saveFile')
       return SaveFile({
         file: props.file,
         onfilename: function (e, value) {
@@ -201,7 +199,6 @@ module.exports = function EditorContainer (props) {
     }
 
     if (activeModal === 'exportFile') {
-      console.log('modal: exportFile')
       return ExportFile({
         file: props.file,
         onfilename: function (e, value) {

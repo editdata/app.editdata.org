@@ -227,6 +227,15 @@ module.exports = function GithubActionCreators (store, commonActions) {
     getFiles()
   }
 
+  /**
+  * Unset active selections
+  */
+  function unsetSelections () {
+    return store({
+      type: constants.UNSET_ACTIVE_GITHUB_SELECTIONS
+    })
+  }
+
   return {
     auth: auth,
     setRepos: setRepos,
@@ -241,6 +250,7 @@ module.exports = function GithubActionCreators (store, commonActions) {
     setActiveBranch: setActiveBranch,
     setActiveRepo: setActiveRepo,
     setActiveFile: setActiveFile,
-    setActiveOrg: setActiveOrg
+    setActiveOrg: setActiveOrg,
+    unsetSelections: unsetSelections
   }
 }

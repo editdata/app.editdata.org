@@ -22,12 +22,10 @@ function MenuBar (props) {
   }
 
   function showSave () {
-    console.log('showSave clicked')
     modal('saveFile', true)
   }
 
   function showExport () {
-    console.log('showExport clicked')
     modal('exportFile', true)
   }
 

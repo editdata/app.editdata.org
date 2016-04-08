@@ -28,7 +28,7 @@ function SaveToGithub (props) {
     return h('div', [
       h('h1', 'Save a file to GitHub'),
       h('h2', 'Choose an organization:'),
-      h('button', { onclick: function () {
+      h('button.small.navigate', { onclick: function () {
         getOrgs()
       }}, 'refresh'),
       h('ul.item-list', PopupList(githubOrgs, {
@@ -44,10 +44,10 @@ function SaveToGithub (props) {
     return h('div', [
       h('h1', 'Save a file to GitHub'),
       h('h2', 'Choose a repository:'),
-      h('button.small', { onclick: function () {
+      h('button.small.navigate', { onclick: function () {
         getRepos()
       }}, 'refresh'),
-      h('button.small', { onclick: function () {
+      h('button.small.navigate', { onclick: function () {
         setActiveOrg(null)
       }}, 'back'),
       h('ul.item-list', PopupList(githubRepos, {
@@ -62,10 +62,10 @@ function SaveToGithub (props) {
   return h('div', [
     h('h1', 'Save a file to GitHub'),
     h('h2', 'Choose a branch:'),
-    h('button.small', { onclick: function () {
+    h('button.small.navigate', { onclick: function () {
       getBranches()
     }}, 'refresh'),
-    h('button.small', { onclick: function () {
+    h('button.small.navigate', { onclick: function () {
       setActiveRepo(null)
     }}, 'back'),
     h('ul.item-list', PopupList(githubBranches, {

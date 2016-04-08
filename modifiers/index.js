@@ -113,6 +113,10 @@ function modifyState (action, state) {
       return xtend({}, state, { githubRepos: [], activeRepo: null })
     case constants.CLEAR_ORGS:
       return xtend({}, state, { githubOrgs: [], activeOrg: null })
+    case constants.CLEAR_BRANCHES:
+      return xtend({}, state, { githubBranches: [], activeBranch: null })
+    case constants.UNSET_ACTIVE_GITHUB_SELECTIONS:
+      return xtend({}, state, { activeOrg: null, activeRepo: null, activeBranch: null })
     case constants.SELECTED_REPO:
       return xtend({}, state, { activeRepo: action.repo })
     case constants.SELECTED_ORG:
@@ -125,7 +129,7 @@ function modifyState (action, state) {
       state.file.saveData = action.saveData || initialState.saveData
       state.file.name = action.saveData.location.name
       state.file.type = state.file.name.split('.')[1]
-      return xtend({}, state)
+      return xtend({}, state, { activeOrg: null, activeRepo: null, activeBranch: null })
     case constants.SET_GITHUB_BRANCHES:
       return xtend({}, state, { githubBranches: action.branches })
     case constants.SET_GITHUB_FILES:
@@ -163,7 +167,7 @@ function modifyState (action, state) {
     case constants.SAVE_TO_GITHUB_SUCCESS:
       var file = xtend({}, state.file)
       file.saveData = action.saveData
-      return xtend({}, state, { file: file })
+      return xtend({}, state, { file: file, activeOrg: null, activeRepo: null, activeBranch: null })
     case constants.RESET:
       return xtend({}, state, { editor: initialState.editor })
     case constants.SET_FILENAME:
