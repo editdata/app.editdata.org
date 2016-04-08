@@ -49,7 +49,7 @@ function Auth (props) {
   }, 'about'))
 
   children.push(h('a.content-link', {
-    href: 'http://about.editdata.org',
+    href: 'http://editdata.org',
     target: '_blank'
   }, 'docs'))
 
