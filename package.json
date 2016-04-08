@@ -1,14 +1,14 @@
 {
-  "name": "editdata.org",
+  "name": "app.editdata.org",
   "description": "edit data. save it on github.",
   "version": "1.0.0",
   "repository": {
-    "url": "git://github.com/flatsheet/editdata.org.git"
+    "url": "git://github.com/editdata/app.editdata.org.git"
   },
   "main": "app.js",
   "scripts": {
-    "deploy:production": "npm run bundle-css && npm run bundle-js:production && surge . editdata.org",
-    "deploy:staging": "npm run bundle-css && npm run bundle-js:staging && surge . editdata.surge.sh",
+    "deploy:production": "npm run bundle-css && npm run bundle-js:production && surge . app.editdata.org",
+    "deploy:staging": "npm run bundle-css && npm run bundle-js:staging && surge . editdata-app.surge.sh",
     "bundle-css": "cssnext assets/deps.css assets/bundle.css",
     "bundle-js:production": "browserify app.js -t [ envify --NODE_ENV production ] -o  assets/bundle.js",
     "bundle-js:staging": "browserify app.js -t [ envify --NODE_ENV staging ] -o  assets/bundle.js",

@@ -14,7 +14,7 @@ var config = {
   production: {
     slug: 'editdata-production',
     client_id: '65dda308caf01e56f912',
-    redirect_uri: 'http://editdata.org',
+    redirect_uri: 'http://app.editdata.org',
     gatekeeper: 'http://192.241.225.150:9999'
   }
 }
