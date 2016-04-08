@@ -509,7 +509,7 @@ menu-item button:focus {
   margin: 0px;
   padding: 0px;
   overflow-y: auto;
-  height: 345px;
+  height: 315px;
 }
 
 .popup h2 {
@@ -545,6 +545,16 @@ menu-item button:focus {
 .popup .help {
   font-size: 14px;
   margin: 0px;
+}
+
+.popup button.small {
+  border: 1px solid #efefea;
+  background-color: #fcfcfa;
+  line-height: 20px;
+  height: 25px;
+  font-size: 0.7em;
+  padding: 0 5px;
+  margin-right: 5px;
 }
 
 /*

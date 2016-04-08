@@ -36,7 +36,7 @@ function OpenGithubFile (props) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose an organization:'),
-      h('button', { onclick: function () {
+      h('button.small.gray', { onclick: function () {
         getOrgs()
       }}, 'refresh'),
       h('ul.item-list', PopupList(githubOrgs, {
@@ -52,10 +52,10 @@ function OpenGithubFile (props) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose a repository:'),
-      h('button.small', { onclick: function () {
+      h('button.small.gray', { onclick: function () {
         getRepos()
       }}, 'refresh'),
-      h('button.small', { onclick: function () {
+      h('button.small.gray', { onclick: function () {
         setActiveOrg(null)
       }}, 'back'),
       h('ul.item-list', PopupList(githubRepos, {
@@ -71,10 +71,10 @@ function OpenGithubFile (props) {
     return h('div', [
       h('h1', 'Open a file from GitHub'),
       h('h2', 'Choose a branch:'),
-      h('button.small', { onclick: function () {
+      h('button.small.gray', { onclick: function () {
         getBranches()
       }}, 'refresh'),
-      h('button.small', { onclick: function () {
+      h('button.small.gray', { onclick: function () {
         setActiveRepo(null)
       }}, 'back'),
       h('ul.item-list', PopupList(githubBranches, {
@@ -88,10 +88,10 @@ function OpenGithubFile (props) {
   return h('div', [
     h('h1', 'Open a file from GitHub'),
     h('h2', 'Choose a file:'),
-    h('button.small', { onclick: function () {
+    h('button.small.gray', { onclick: function () {
       getFiles()
     }}, 'refresh'),
-    h('button.small', { onclick: function () {
+    h('button.small.gray', { onclick: function () {
       setActiveBranch(null)
     }}, 'back'),
     h('ul.item-list', PopupList(githubFiles, {
