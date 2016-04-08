@@ -136,7 +136,10 @@ function modifyState (action, state) {
       return xtend({}, state, { githubFiles: action.files })
     case constants.MODAL:
       var ui = xtend({}, state.ui)
+      var editor = xtend({}, state.editor)
+
       if (action.value) {
+        editor.activeProperty = null
         Object.keys(ui.modals).forEach(function (key) {
           if (key === action.modal) {
             ui.modals[key] = true
@@ -148,7 +151,7 @@ function modifyState (action, state) {
         ui.modals[action.modal] = false
       }
 
-      return xtend({}, state, { ui: ui })
+      return xtend({}, state, { ui: ui, editor: editor })
     case constants.MENU:
       ui = xtend({}, state.ui)
       if (action.value) {

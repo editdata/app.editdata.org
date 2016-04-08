@@ -31,6 +31,7 @@ var tree = render(function (state) {
 })
 
 app.on('*', function (action, state, oldState) {
+  console.log('ACTION', action.type, action)
   var storedState = xtend({}, state)
   delete storedState.ui
   store.set('editdata', storedState)
