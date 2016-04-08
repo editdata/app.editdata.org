@@ -136,7 +136,7 @@ function modifyState (action, state) {
       return xtend({}, state, { githubFiles: action.files })
     case constants.MODAL:
       var ui = xtend({}, state.ui)
-      var editor = xtend({}, state.editor)
+      editor = xtend({}, state.editor)
 
       if (action.value) {
         editor.activeProperty = null
