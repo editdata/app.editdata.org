@@ -1,6 +1,6 @@
 # app.editdata.org
 
-[![editdata](http://about.editdata.org/assets/editdata-1080x720.png)](http://editdata.org)
+[![editdata](http://editdata.org/assets/editdata-1080x720.png)](http://editdata.org)
 
 ## Getting Started
 
