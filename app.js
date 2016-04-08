@@ -10,8 +10,9 @@ var initialState = require('./lib/initial-state')
 var modifier = require('./modifiers')
 var store = new Storage()
 
+var config = require('./config')
 var app = createApp(vdom)
-var state = xtend({}, store.get('editdata') || initialState)
+var state = xtend({}, store.get(config.slug) || initialState)
 var render = app.start(modifier, state)
 var router = require('./lib/router')(app)
 app.router = router
@@ -34,7 +35,7 @@ app.on('*', function (action, state, oldState) {
   console.log('ACTION', action.type, action)
   var storedState = xtend({}, state)
   delete storedState.ui
-  store.set('editdata', storedState)
+  store.set(config.slug, storedState)
 })
 
 history(function (href) {

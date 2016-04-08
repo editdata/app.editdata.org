@@ -19,10 +19,10 @@ function modifyState (action, state) {
       newURL.query = qs.parse(newURL.query)
       return xtend({}, state, { url: newURL })
     case constants.SIGN_OUT:
-      cookie.set('editdata', '', { expires: new Date(0) })
+      cookie.set(state.config.slug, '', { expires: new Date(0) })
       return initialState
     case constants.SET_USER:
-      cookie.set('editdata', action.user.token)
+      cookie.set(state.config.slug, action.user.token)
       return xtend({}, state, { user: action.user })
     case constants.SET_USER_PROFILE:
       var user = xtend({}, state.user)
