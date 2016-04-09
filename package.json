@@ -38,8 +38,6 @@
     "data-form": "^3.0.0",
     "data-grid": "^3.0.0",
     "data-schema": "^1.4.3",
-    "deep-diff": "^0.3.3",
-    "deep-extend": "^0.4.1",
     "envify": "^3.4.0",
     "file-extension": "^2.0.1",
     "from2-array": "0.0.4",
@@ -58,7 +56,8 @@
     "virtual-app": "^3.0.0",
     "virtual-dom": "^2.1.1",
     "virtual-hook": "^1.0.1",
-    "xhr": "^2.2.0"
+    "xhr": "^2.2.0",
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
     "brfs": "^1.4.2",

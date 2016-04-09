@@ -3,7 +3,7 @@ var cuid = require('cuid')
 var cookie = require('cookie-cutter')
 var qs = require('qs')
 var url = require('url')
-var xtend = require('deep-extend')
+var xtend = require('xtend')
 
 var initialState = require('../lib/initial-state')
 var constants = require('../constants')

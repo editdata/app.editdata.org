@@ -2,7 +2,7 @@ var Storage = require('simple-local-storage')
 var history = require('sheet-router/history')
 var createApp = require('virtual-app')
 var vdom = require('virtual-dom')
-var xtend = require('deep-extend')
+var xtend = require('xtend')
 var url = require('url')
 
 var ActionCreators = require('./actions')

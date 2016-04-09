@@ -1,6 +1,6 @@
 var h = require('virtual-dom/h')
 var Thunk = require('vdom-thunk')
-var xtend = require('deep-extend')
+var xtend = require('xtend')
 
 var OpenUploadedFile = require('../elements/open-uploaded-file')
 var OpenGithubFile = require('../elements/open-github-file')
