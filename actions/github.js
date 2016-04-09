@@ -159,7 +159,7 @@ module.exports = function GithubActionCreators (store, commonActions) {
     if (state.activeOrg === state.user.profile.login) {
       return getUserRepos()
     }
-    orgRepos(state.user, state.activeOrg, function (err, repoList) {
+    orgRepos(state.user, state.activeOrg.login, function (err, repoList) {
       // TODO: Handle error
       if (err) console.error(err)
       return store({
