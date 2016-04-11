@@ -13,9 +13,9 @@ function About (props) {
       h('p', [
         'Learn more at ',
         h('a', {
-          href: 'http://about.editdata.org',
+          href: 'http://editdata.org',
           target: '_blank'
-        }, 'about.editdata.org')
+        }, 'editdata.org')
       ]),
       h('p', [
         h('a.button', {

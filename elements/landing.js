@@ -17,7 +17,7 @@ function Landing (props) {
       h('h1', 'Hello! Let\'s edit some data!'),
       h('p', 'editdata.org is a tool for curating data as editorial content.'),
       Button,
-      h('p', h('a', { href: 'http://about.editdata.org', target: '_blank' }, 'learn more about editdata')),
+      h('p', h('a', { href: 'http://editdata.org', target: '_blank' }, 'learn more about editdata')),
       h('p', h('a', { href: 'http://github.com/flatsheet/editdata.org', target: '_blank' }, 'editdata.org on github'))
     ])
   ])
