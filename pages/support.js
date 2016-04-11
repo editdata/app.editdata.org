@@ -12,7 +12,7 @@ function Support (props) {
       h('p', 'Want to learn more about the EditData project and how to use EditData.org?'),
       h('p', [
         h('a.button', {
-          href: 'http://data.org',
+          href: 'http://editdata.org',
           target: '_blank'
         }, 'Documentation')
       ]),
