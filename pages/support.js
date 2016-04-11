@@ -7,9 +7,9 @@ function Support (props) {
   return h('div.app-container', [
     Header(props),
     h('div.about.content-box', [
-      h('h1', 'Get help with EditData.org'),
+      h('h1', 'Get help with EditData'),
       h('h2', 'Report an issue, find documentation, contact us about building similar apps.'),
-      h('p', 'Want to learn more about the EditData project and how to use EditData.org?'),
+      h('p', 'Want to learn more about the EditData project and how to use the EditData app?'),
       h('p', [
         h('a.button', {
           href: 'http://editdata.org',
