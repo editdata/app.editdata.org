@@ -139,7 +139,7 @@ function modifyState (action, state) {
       editor = xtend({}, state.editor)
 
       if (action.value) {
-        editor.activeProperty = null
+        if (action.modal !== 'columnSettings') editor.activeProperty = null
         Object.keys(ui.modals).forEach(function (key) {
           if (key === action.modal) {
             ui.modals[key] = true
