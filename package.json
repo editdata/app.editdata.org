@@ -1,7 +1,7 @@
 {
   "name": "app.editdata.org",
   "description": "edit data. save it on github.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "url": "git://github.com/editdata/app.editdata.org.git"
   },
