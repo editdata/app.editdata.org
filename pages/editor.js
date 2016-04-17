@@ -90,6 +90,7 @@ module.exports = function EditorContainer (props) {
   /**
    * Data-form Component
    */
+  if (props.data.length === 0) props.editor.activeRow = null
   if (props.editor.activeRow) {
     var activeRowKey = props.editor.activeRow
     var activeRow
