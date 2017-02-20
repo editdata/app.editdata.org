@@ -108,6 +108,7 @@ module.exports = function GithubActionCreators (store, commonActions) {
    */
   function setActiveFile (file) {
     var state = store.getState()
+
     githubFile({
       owner: state.activeOrg.login,
       repo: state.activeRepo.name,
