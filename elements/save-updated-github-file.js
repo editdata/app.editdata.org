@@ -16,6 +16,12 @@ function SaveGitHubFile (props) {
 
   var message = ''
 
+  var helpText = [
+    'File ' + saveData.location.path,
+    'will be updated in ' + saveData.owner + '/' + saveData.repo,
+    'in branch ' + saveData.branch
+  ].join(' ')
+
   return ('div', [
     h('h1', 'Update ' + saveData.location.path + ' in GitHub repository'),
     h('h2', 'Add a commit message:'),
@@ -33,6 +39,6 @@ function SaveGitHubFile (props) {
         modal('saveNewFileToGithub', false)
       }
     }, 'Save to GitHub'),
-    h('p.help', 'File ' + saveData.location.path + ' will be updated in ' + saveData.owner + '/' + saveData.repo)
+    h('p.help', helpText)
   ])
 }

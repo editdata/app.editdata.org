@@ -102,7 +102,7 @@ module.exports = function EditorContainer (props) {
     })
 
     var formState = {
-      row: activeRow,
+      row: activeRow || {},
       activeColumnKey: props.editor.activeProperty,
       properties: props.properties,
       closeButtonText: 'x',

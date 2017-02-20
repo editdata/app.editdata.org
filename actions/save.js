@@ -105,6 +105,7 @@ module.exports = function SaveActionCreators (store, commonActions) {
         owner: state.file.saveData.owner,
         repo: state.file.saveData.repo,
         path: state.file.saveData.location.path,
+        branch: state.file.saveData.branch,
         message: message,
         content: data,
         sha: state.file.saveData.location.sha
