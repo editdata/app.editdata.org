@@ -1,7 +1,7 @@
 var config = {
   development: {
     slug: 'editdata-development',
-    client_id: 'c8ad659e602436645622',
+    client_id: process.env.EDITDATA_GITHUB_CLIENT_ID || 'e6fa0762c3c6db05d59e',
     redirect_uri: 'http://localhost:9966',
     gatekeeper: 'http://localhost:9999'
   },

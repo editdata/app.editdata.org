@@ -9,8 +9,9 @@
   * Authorization Callback URL: `http://localhost:9966`
 * Clone the [gatekeeper] repository
   * add your Github application's client id and secret to gatekeeper's `config.json`
-  * run gatekeeper.
+  * start gatekeeper by running `npm start` inside the gatekeeper directory.
 * Clone this repository
+* copy `example.config.js` to `config.js`: `cp example.config.js config.js`
 * add your Github client_id to the `development` config in `config.js`
 * run `npm install && npm run bundle` to get set up
 * run `npm start` for the server
