@@ -1,7 +1,7 @@
 var config = {
   development: {
     slug: 'editdata-development',
-    client_id: process.env.EDITDATA_GITHUB_CLIENT_ID || 'e6fa0762c3c6db05d59e',
+    client_id: 'c8ad659e602436645622',
     redirect_uri: 'http://localhost:9966',
     gatekeeper: 'http://localhost:9999'
   },
@@ -14,8 +14,8 @@ var config = {
   production: {
     slug: 'editdata-production',
     client_id: '65dda308caf01e56f912',
-    redirect_uri: 'http://app.editdata.org',
-    gatekeeper: 'http://192.241.225.150:9999'
+    redirect_uri: 'https://app.editdata.org',
+    gatekeeper: 'https://github-oauth.editdata.org'
   }
 }
 
